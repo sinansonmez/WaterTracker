@@ -1,0 +1,30 @@
+package com.afl.waterReminderDrinkAlarmMonitor.ui.utils
+
+
+import android.app.NotificationManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.util.Log
+import androidx.core.content.ContextCompat
+import com.afl.waterReminderDrinkAlarmMonitor.R
+
+class AlarmReceiver : BroadcastReceiver() {
+
+    private val TAG = AlarmReceiver::class.java.simpleName
+
+    override fun onReceive(context: Context?, intent: Intent?) {
+        Log.d("database", "onReceive() called with: context = [$context], intent = [$intent]")
+        if (context != null && intent != null) {
+            if (intent.extras != null) {
+                val notificationManager =
+                    ContextCompat.getSystemService(
+                        context!!,
+                        NotificationManager::class.java
+                    ) as NotificationManager
+
+                notificationManager.sendNotification(context.getString(R.string.notification_info), context)
+            }
+        }
+    }
+}

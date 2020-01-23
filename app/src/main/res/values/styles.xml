@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <!--Color-->
+        <item name="colorPrimary">@color/water_blue_100</item>
+        <item name="colorPrimaryVariant">@color/water_blue_150</item>
+        <item name="colorSecondary">@color/reply_orange_500</item>
+        <item name="colorSecondaryVariant">@color/reply_orange_400</item>
+
+        <item name="colorSurface">@color/reply_white_50</item>
+        <item name="colorError">@color/reply_red_400</item>
+
+        <item name="colorOnPrimary">@color/reply_white_50</item>
+        <item name="colorOnSecondary">@color/reply_black_900</item>
+        <item name="colorOnBackground">@color/reply_black_900</item>
+        <item name="colorOnSurface">@color/reply_black_900</item>
+        <item name="colorOnError">@color/reply_black_900</item>
+
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/water_blue_150</item>
+
+    </style>
+
+</resources>
