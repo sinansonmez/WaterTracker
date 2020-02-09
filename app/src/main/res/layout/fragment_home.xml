@@ -164,6 +164,8 @@
             android:id="@+id/drunkListContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:fillViewport="true"
             app:layout_constraintBottom_toTopOf="@id/adView"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -172,14 +174,17 @@
 
             <LinearLayout
                 android:id="@+id/drunkListLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal" />
+
         </HorizontalScrollView>
 
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             ads:adSize="BANNER"

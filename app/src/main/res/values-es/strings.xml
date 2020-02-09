@@ -39,6 +39,8 @@
     <string name="please_type_age_weigh">Por favor escriba su edad/peso</string>
     <string name="select_drink">Ooops. Por favor seleccione su bebida</string>
     <string name="notification_info">Es hora de beber agua</string>
+    <string name="drink_image_button_dialog_message">¿Eliminar la bebida?</string>
+    <string name="drunk_list_action_dialog_yes_button">SI</string>
     <string-array name="days">
         <item>Sunday</item>
         <item>Monday</item>
@@ -94,5 +96,21 @@
         <item>2 horas</item>
         <item>3 horas</item>
     </string-array>
+    <string name="drunk_list_action_dialog_no_button">NO</string>
+    <string name="history">History</string>
+    <string name="title_history">History</string>
+    <string name="selected_month">Selected month</string>
+    <string name="january">January</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="april">April</string>
+    <string name="december">December</string>
+    <string name="february">February</string>
+    <string name="june">June</string>
+    <string name="march">March</string>
+    <string name="may">May</string>
+    <string name="november">November</string>
+    <string name="october">October</string>
 
 </resources>

@@ -5,13 +5,13 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.afl.waterReminderDrinkAlarmMonitor.MainActivity
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.google.android.material.textfield.TextInputEditText
@@ -37,6 +37,12 @@ data class Drink(
 data class sum(
     var date: String = "",
     var total: Int = 0
+)
+
+data class FormattedDate(
+    var year: Int,
+    var month: Int,
+    var day: Int
 )
 
 // Notification ID.
@@ -106,6 +112,14 @@ fun TextInputEditText.hideKeyBoardOnPressAway() {
 // function to cancel all notification you may think to cancell first previous notifications and send new notification
 fun NotificationManager.cancelAllNotification() {
     cancelAll()
+}
+
+fun dateParser(date: String): FormattedDate {
+    val year = date.substring(0, 4).toInt()
+    val month = date.substring(5, 7).toInt()
+    val day = date.substring(8, 10).toInt()
+
+    return FormattedDate(year, month, day)
 }
 
 private val keyboardHider = View.OnFocusChangeListener { v, hasFocus ->

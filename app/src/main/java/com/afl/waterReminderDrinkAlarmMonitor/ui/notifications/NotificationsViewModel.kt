@@ -1,6 +1,7 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.notifications
 
 import android.app.Application
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.AndroidViewModel
@@ -11,9 +12,7 @@ import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.DatabaseHelper
 
 class NotificationsViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    private val context = getApplication<Application>().applicationContext
-
-    val db by lazy { DatabaseHelper(context) }
+    val db by lazy { DatabaseHelper(app.applicationContext) }
 
     private val _notPreference = MutableLiveData<Int>()
     val notPreference: LiveData<Int> = _notPreference

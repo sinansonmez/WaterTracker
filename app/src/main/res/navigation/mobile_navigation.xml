@@ -9,7 +9,7 @@
         android:id="@+id/navigation_home"
         android:name="com.afl.waterReminderDrinkAlarmMonitor.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_home_to_drinksFragment"
             app:destination="@id/drinksFragment" />
@@ -29,16 +29,22 @@
         android:name="com.afl.waterReminderDrinkAlarmMonitor.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
     <fragment
         android:id="@+id/drinksFragment"
         android:name="com.afl.waterReminderDrinkAlarmMonitor.ui.drinks.DrinksFragment"
         android:label="drinks_fragment"
-        tools:layout="@layout/drinks_fragment" >
+        tools:layout="@layout/drinks_fragment">
         <action
             android:id="@+id/action_drinksFragment_to_navigation_home"
             app:destination="@id/navigation_home"
             app:popUpTo="@+id/navigation_home" />
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.afl.waterReminderDrinkAlarmMonitor.ui.history.HistoryFragment"
+        android:label="@string/title_history"
+        tools:layout="@layout/history_fragment" />
 
 </navigation>

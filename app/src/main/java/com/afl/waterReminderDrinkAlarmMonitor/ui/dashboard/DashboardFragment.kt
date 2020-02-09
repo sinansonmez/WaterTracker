@@ -21,13 +21,17 @@ class DashboardFragment : Fragment() {
     private lateinit var dashboardViewModel: DashboardViewModel
     private lateinit var binding: FragmentDashboardBinding
 
+    val db by lazy {
+        DatabaseHelper(
+            this.requireContext()
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val db by lazy { DatabaseHelper(container!!.context) }
 
         // Inflate view and obtain an instance of the binding class
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
@@ -138,36 +142,6 @@ class DashboardFragment : Fragment() {
             // binding.waterSeekBar.setProgress(newAmount.toFloat())
         })
 
-        // function to read the data from database and set the values
-        fun readUserData() {
-
-            val user = db.readData()
-
-            // set metric selector
-            if (user.metric == "Metric") {
-                binding.metricRadio.position = 0
-                dashboardViewModel.metricHandlerOnCreate(0)
-            } else {
-                binding.metricRadio.position = 1
-                dashboardViewModel.metricHandlerOnCreate(1)
-            }
-
-            // set gender selector
-            if (user.gender == "Male") {
-                binding.genderRadio.position = 0
-                dashboardViewModel.genderHandlerOnCreate(0)
-            } else {
-                binding.genderRadio.position = 1
-                dashboardViewModel.genderHandlerOnCreate(1)
-            }
-
-            // set weight edit text
-            binding.weightEditText.setText(user.weight.toString())
-            // set age edit text
-            binding.ageEditText.setText(user.age.toString())
-            // set water seek bar to water amount
-            binding.waterSeekBar.setProgress(user.water.toFloat())
-        }
 
         if (db.checkUserTableCount() == 1) {
             readUserData()
@@ -182,5 +156,37 @@ class DashboardFragment : Fragment() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
+
+    // function to read the data from database and set the values
+    private fun readUserData() {
+
+        val user = db.readData()
+
+        // set metric selector
+        if (user.metric == "Metric") {
+            binding.metricRadio.position = 0
+            dashboardViewModel.metricHandlerOnCreate(0)
+        } else {
+            binding.metricRadio.position = 1
+            dashboardViewModel.metricHandlerOnCreate(1)
+        }
+
+        // set gender selector
+        if (user.gender == "Male") {
+            binding.genderRadio.position = 0
+            dashboardViewModel.genderHandlerOnCreate(0)
+        } else {
+            binding.genderRadio.position = 1
+            dashboardViewModel.genderHandlerOnCreate(1)
+        }
+
+        // set weight edit text
+        binding.weightEditText.setText(user.weight.toString())
+        // set age edit text
+        binding.ageEditText.setText(user.age.toString())
+        // set water seek bar to water amount
+        binding.waterSeekBar.setProgress(user.water.toFloat())
+    }
+
 
 }

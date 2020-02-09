@@ -14,10 +14,7 @@ import java.util.*
 
 class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    private val context = getApplication<Application>().applicationContext
-
-
-    val db by lazy { DatabaseHelper(context) }
+    val db by lazy { DatabaseHelper(app.applicationContext) }
 
     private val _text = MutableLiveData<String>().apply {
         value = ""
@@ -142,7 +139,7 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
     }
 
-    fun insertUpdateUser(user: User) {
+    private fun insertUpdateUser(user: User) {
 
         // check if there is a current user in the database update it otherwise insert it
         if (db.checkUserTableCount() < 1) {
@@ -153,10 +150,7 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun drunkAmountHandler() {
-
         _drunkAmount.value = db.readDrinkData()
-
-
     }
 
     fun drinkTypeHandler(drinkType: String) {
@@ -227,6 +221,12 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
                 if (_drinkAmount.value!! < 50) _drinkAmount.value = 50
             }
         }
+
+        //TODO performance icin coroutine kullanabilir misin bak
+//        viewModelScope.launch {
+//            db.readData()
+//        }
+
 
     }
 

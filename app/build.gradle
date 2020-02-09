@@ -11,8 +11,8 @@ android {
         applicationId "com.afl.waterReminderDrinkAlarmMonitor"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.6.1"
+        versionCode 10
+        versionName "1.7.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -68,5 +68,8 @@ dependencies {
 
     // google admob
     implementation 'com.google.android.gms:play-services-ads:18.3.0'
+
+    // chart library https://github.com/PhilJay/MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }

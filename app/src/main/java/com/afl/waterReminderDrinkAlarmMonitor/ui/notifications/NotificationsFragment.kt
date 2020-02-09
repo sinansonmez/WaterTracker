@@ -19,6 +19,7 @@ import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.DatabaseHelper
 
 class NotificationsFragment : Fragment() {
 
+    //TODO(Oncreate in icindekileri functionlara tasi ve asagiya gotur)
 
     private lateinit var notificationsViewModel: NotificationsViewModel
     private lateinit var binding: FragmentNotificationsBinding
@@ -67,7 +68,7 @@ class NotificationsFragment : Fragment() {
 
         // array adapter for starting and finishing hours
         val finishingHourArray = ArrayAdapter.createFromResource(
-            container!!.context,
+            container.context,
             R.array.finishing_hours_array,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
@@ -144,30 +145,6 @@ class NotificationsFragment : Fragment() {
                 AlarmScheduler.cancelAlarm(container.context)
             }
         })
-
-//        notificationsViewModel.startingTime.observe(this, Observer { newStart ->
-//            AlarmScheduler.cancelAlarm(container.context)
-//
-//            val notTimes = notificationsViewModel.notificationTimes.value
-//            Log.d("database", "new not times are $notTimes")
-//            AlarmScheduler.scheduleAlarm(container.context, notTimes!!)
-//        })
-//
-//        notificationsViewModel.finishingTime.observe(this, Observer { newStart ->
-//            AlarmScheduler.cancelAlarm(container.context)
-//
-//            val notTimes = notificationsViewModel.notificationTimes.value
-//            Log.d("database", "new not times are $notTimes")
-//            AlarmScheduler.scheduleAlarm(container.context, notTimes!!)
-//        })
-//
-//        notificationsViewModel.intervalTime.observe(this, Observer { newStart ->
-//            AlarmScheduler.cancelAlarm(container.context)
-//
-//            val notTimes = notificationsViewModel.notificationTimes.value
-//            Log.d("database", "new not times are $notTimes")
-//            AlarmScheduler.scheduleAlarm(container.context, notTimes!!)
-//        })
 
         return binding.root
     }

@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -97,7 +96,7 @@ class DatabaseHelper(val context: Context) :
 
         val result = sqliteDB.insert(TABLE_NAME_DRUNK, null, contentValues)
 
-        Log.d("database", contentValues.toString())
+//        Log.d("database", contentValues.toString())
 
 //        Toast.makeText(
 //            context,
@@ -130,17 +129,15 @@ class DatabaseHelper(val context: Context) :
         return if (sum.date == date) sum.total else 0
     }
 
-    //TODO(query where equals today olarak degistir ve bugunun iceceklerini anasayfada kullan)
-    //TODO(query hepsini okuyacak sekilde ve gunluk toplamlari okuyacak sekilde yap ve grafige koy. iki farkli function olabilir)
-    fun readDrinkDataDetails(): MutableList<Drink> {
+    // bu fonksiyon sadece bugun icilen icecekleri getiriyor
+    fun readDrinkDataDetailsSelectedDay(date: String): MutableList<Drink> {
         val drunkList = mutableListOf<Drink>()
         val sqliteDB = this.writableDatabase
-        val query = "SELECT * FROM $TABLE_NAME_DRUNK"
-        val result = sqliteDB.rawQuery(query,null)
+        val query = "SELECT * FROM $TABLE_NAME_DRUNK WHERE $COL_DATE_DRUNK=?"
+        val result = sqliteDB.rawQuery(query, arrayOf(date))
         if (result.moveToFirst()) {
             do {
                 val drink = Drink()
-//                sum.date = result.getString(result.getColumnIndex(COL_DATE_DRUNK))
                 drink.id = result.getString(result.getColumnIndex(COL_ID_DRUNK)).toInt()
                 drink.date = result.getString(result.getColumnIndex(COL_DATE_DRUNK))
                 drink.time = result.getString(result.getColumnIndex(COL_TIME_DRUNK))
@@ -152,8 +149,41 @@ class DatabaseHelper(val context: Context) :
         }
         result.close()
         sqliteDB.close()
-        Log.d("database",drunkList.toString())
+//        Log.d("database", drunkList.toString())
         return drunkList
+    }
+
+    fun readDrinkDataDetailsDaySum(): MutableList<Drink> {
+        val drunkList = mutableListOf<Drink>()
+        val sqliteDB = this.writableDatabase
+        val result = sqliteDB.query(
+            TABLE_NAME_DRUNK,
+            arrayOf(COL_DATE_DRUNK, "SUM($COL_AMOUNT_DRUNK) as amount", COL_METRIC_DRUNK),
+            null,
+            null,
+            COL_DATE_DRUNK,
+            null,
+            null
+        )
+        if (result.moveToFirst()) {
+            do {
+                val drink = Drink()
+                drink.date = result.getString(result.getColumnIndex(COL_DATE_DRUNK))
+                drink.amount = result.getString(result.getColumnIndex(COL_AMOUNT_DRUNK)).toInt()
+                drink.metric = result.getString(result.getColumnIndex(COL_METRIC_DRUNK))
+                drunkList.add(drink)
+            } while (result.moveToNext())
+        }
+        result.close()
+        sqliteDB.close()
+        return drunkList
+    }
+
+    // function to delete selected drink from the drunk list
+    fun deleteSelectedDrinkData(id: Int) {
+        val sqliteDB = this.writableDatabase
+        sqliteDB.delete(TABLE_NAME_DRUNK, "$COL_ID_DRUNK =?", arrayOf(id.toString()))
+        sqliteDB.close()
     }
 
     // user tablosundaki tum datayi okuyor
@@ -169,7 +199,6 @@ class DatabaseHelper(val context: Context) :
             user.gender = result.getString(result.getColumnIndex(COL_GENDER))
             user.metric = result.getString(result.getColumnIndex(COL_METRIC))
             user.water = result.getString(result.getColumnIndex(COL_WATER)).toInt()
-//            Log.d("database", "$user")
         }
         result.close()
         sqliteDB.close()
@@ -214,7 +243,7 @@ class DatabaseHelper(val context: Context) :
         val sqliteDB = this.writableDatabase
         val query = "SELECT * FROM $TABLE_NAME_NOT"
         val result = sqliteDB.rawQuery(query, null)
-        val count=  result.count
+        val count = result.count
 
         result.close()
         sqliteDB.close()
