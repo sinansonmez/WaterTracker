@@ -17,9 +17,11 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 
 private val count = 30
 
+
+// TODO(Convert database request to coroutines)
 class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    val db by lazy { DatabaseHelper(app.applicationContext) }
+    private val db by lazy { DatabaseHelper(app.applicationContext) }
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is history fragment"
@@ -27,7 +29,7 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
     val text: LiveData<String> = _text
 
     private val _drinks = MutableLiveData<MutableList<Drink>>().apply {
-        value = db.readDrinkDataDetailsDaySum().asReversed()
+        value = db.readDrinkDataDetailsDaySum()
     }
 
     val drinks: LiveData<MutableList<Drink>> = _drinks
@@ -35,17 +37,19 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
     //TODO(sifir yerine asagidaki yorumdaki gibi yap)
     //val monthForChart = monthStringToIntConverter(dateCollector(drinks)[0].split(" ")[0])
     private val _monthNumber = MutableLiveData<Int>().apply {
-        value = 0
+        value = monthStringToIntConverter(dateCollector()[0].split(" ")[0])
     }
 
     val monthNumber = _monthNumber
 
-    // grafik icerisindeki datayi hazirlayan fonksyion
-    fun generateLineData(drinks: MutableList<Drink>): LineData {
+    // function to prepare line data for chart based on live data _drinks
+    fun generateLineData(): LineData {
 
         //TODO(sadece monthnumbera gore degil month number ve year number a gore filtrelemen lazim)
         val selectedDrinks =
-            _drinks.value?.filter { it.date.substring(5, 7).toInt() == _monthNumber.value } as MutableList
+            _drinks.value?.filter {
+                it.date.substring(5, 7).toInt() == _monthNumber.value
+            } as MutableList
 
         val amountGraph = mutableListOf<Int>()
 
@@ -102,5 +106,94 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     }
 
+    // function to create a list of unique dates for spinner adapter
+    fun dateCollector(): MutableList<String> {
+
+        val reversedDrinkData = if (_drinks.value != null) {
+            _drinks.value?.asReversed()
+        } else {
+            mutableListOf(Drink())
+        }
+
+        // icecek icilen unique date listesini tutan liste
+        val dateList = mutableListOf<String>()
+
+        // unique datelerin ve toplam icilen miktar gibi diger bilgileri iceren ve fonksiyonun icinde gelen drinkDatanin her birini dateListe ekle
+        if (reversedDrinkData != null) {
+            for (drink in reversedDrinkData) {
+                if (!dateList.contains(drink.date)) {
+                    dateList.add(drink.date)
+                }
+            }
+        } else {
+            throw Exception("User need to drink first, drink list is null")
+        }
+
+        // 01-02-2020 seklindeki datayi January 2020 seklinde tutan liste
+        val formattedDateList = mutableListOf<String>()
+
+        // unique listte tutan her bir tarihi January 2020 olarak formatlayip formattedDateList listesine ekle
+        for (date in dateList) {
+
+            val month = monthIntToStringConverter(dateParser(date).month)
+            val year = dateParser(date).year
+
+            val formattedDatetobeIncluded = "$month $year"
+
+            if (!formattedDateList.contains(formattedDatetobeIncluded)) {
+                formattedDateList.add(formattedDatetobeIncluded)
+            }
+        }
+
+        return formattedDateList
+
+    }
+
+    //TODO(accessing string from viewmodel is risky because, viewmodel doesnt react to configuration changes, try to improve it)
+    // If int version of the month (e.g 1,2 ) is given string version of a month (e.g January, February) is returned
+    fun monthIntToStringConverter(monthNumber: Int): String {
+        var monthFormatted = ""
+
+        when (monthNumber) {
+            1 -> monthFormatted = app.getString(R.string.january)
+            2 -> monthFormatted = app.getString(R.string.february)
+            3 -> monthFormatted = app.getString(R.string.march)
+            4 -> monthFormatted = app.getString(R.string.april)
+            5 -> monthFormatted = app.getString(R.string.may)
+            6 -> monthFormatted = app.getString(R.string.june)
+            7 -> monthFormatted = app.getString(R.string.july)
+            8 -> monthFormatted = app.getString(R.string.august)
+            9 -> monthFormatted = app.getString(R.string.september)
+            10 -> monthFormatted = app.getString(R.string.october)
+            11 -> monthFormatted = app.getString(R.string.november)
+            12 -> monthFormatted = app.getString(R.string.december)
+        }
+
+        return monthFormatted
+    }
+
+    // If string version of a month (e.g January, February) is given int version of the month (e.g 1,2 ) is returned
+    fun monthStringToIntConverter(month: String): Int {
+        return when (month) {
+            app.getString(R.string.january) -> 1
+            app.getString(R.string.february) -> 2
+            app.getString(R.string.march) -> 3
+            app.getString(R.string.april) -> 4
+            app.getString(R.string.may) -> 5
+            app.getString(R.string.june) -> 6
+            app.getString(R.string.july) -> 7
+            app.getString(R.string.august) -> 8
+            app.getString(R.string.september) -> 9
+            app.getString(R.string.october) -> 10
+            app.getString(R.string.november) -> 11
+            app.getString(R.string.december) -> 12
+            else -> 0
+        }
+    }
+
+    //TODO(move drunkListCreator function to viewModel)
+    fun generateUIandDataForDrunkList() {
+
+    }
 
 }

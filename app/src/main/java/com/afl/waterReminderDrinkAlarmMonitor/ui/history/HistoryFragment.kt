@@ -58,13 +58,15 @@ class HistoryFragment : Fragment() {
         val drinks = db.readDrinkDataDetailsDaySum()
 
         //bu mevuct icilen tarihlerden ilkinin ayinin rakam halini chart function a veriyor ve o ay icin chart olusturuluyor
-        val monthForChart = monthStringToIntConverter(dateCollector(drinks)[0].split(" ")[0])
+        val monthForChart = historyViewModel.monthStringToIntConverter(
+            historyViewModel.dateCollector()[0].split(" ")[0]
+        )
 
         // spinner icindeki tarihleri hazirlayan fonksiyon
         monthDropdownMenu(drinks)
 
         //grafigi olusturan fonksiyon
-        chartFunction(container?.context!!, drinks, monthForChart)
+        chartFunction(container?.context!!)
 
         // grafik altindaki iceceklerin oldugu scroll viewlari hazirlayan fonksiyon
         drunkListCreator(container.context!!, drinks, monthForChart)
@@ -73,7 +75,7 @@ class HistoryFragment : Fragment() {
     }
 
     //grafigi olusturan fonksiyon
-    private fun chartFunction(context: Context, drinks: MutableList<Drink>, monthNumber: Int) {
+    private fun chartFunction(context: Context) {
         binding.drunkChart.description.isEnabled = false
 
         binding.drunkChart.setBackgroundColor(
@@ -125,14 +127,14 @@ class HistoryFragment : Fragment() {
             }
         }
 
-        binding.drunkChart.data = historyViewModel.generateLineData(drinks)
+        binding.drunkChart.data = historyViewModel.generateLineData()
         binding.drunkChart.invalidate()
     }
 
     // spinner icindeki tarihleri hazirlayan fonksiyon
     private fun monthDropdownMenu(drinkData: MutableList<Drink>) {
 
-        val months = dateCollector(drinkData)
+        val months = historyViewModel.dateCollector()
 
         val adapter = ArrayAdapter(context, R.layout.dropdown_menu_popup_item, months)
         binding.filledExposedDropdown.inputType = InputType.TYPE_NULL
@@ -140,7 +142,6 @@ class HistoryFragment : Fragment() {
         binding.filledExposedDropdown.onItemClickListener = monthSpinnerListener
         binding.filledExposedDropdown.setText(adapter.getItem(0), false)
     }
-
 
     // listener for month spinner
     val monthSpinnerListener = object : AdapterView.OnItemClickListener {
@@ -150,21 +151,24 @@ class HistoryFragment : Fragment() {
             val month = parent?.getItemAtPosition(pos).toString().split(" ")[0]
 
             // secimi yaptiktan sonra secilen ayin rakamaini chart function a ilet
-            val monthNumber = monthStringToIntConverter(month)
+            val monthNumber = historyViewModel.monthStringToIntConverter(month)
             historyViewModel.monthNumber.value = monthNumber
             val drinks = db.readDrinkDataDetailsDaySum()
-            chartFunction(context!!, drinks, monthNumber)
+            chartFunction(context!!)
 
             // secimi yaptiktan sonra icilen icecekler listesini guncelle
-            drunkListCreator(context,drinks,monthNumber)
+            drunkListCreator(context, drinks, monthNumber)
         }
 
     }
 
     //TODO(List view a cevir)
-    //TODO(spinnerdan secilen ayin iceceklerini getir)
     // grafik altindaki iceceklerin oldugu scroll viewlari hazirlayan fonksiyon
-    private fun drunkListCreator(context: Context?, drinkData: MutableList<Drink>, monthNumber: Int) {
+    private fun drunkListCreator(
+        context: Context?,
+        drinkData: MutableList<Drink>,
+        monthNumber: Int
+    ) {
 
         binding.drunkFullListLayout.removeAllViews()
 
@@ -172,7 +176,7 @@ class HistoryFragment : Fragment() {
         val dateList = mutableListOf<String>()
 
         val reversedDrinkData = drinkData.reversed().filter {
-            it.date.substring(5,7).toInt() == monthNumber
+            it.date.substring(5, 7).toInt() == monthNumber
         }
 
         // { it.date.substring(5, 7).toInt() == monthNumber } as MutableList
@@ -190,7 +194,7 @@ class HistoryFragment : Fragment() {
             val dateTextView = TextView(context).apply {
 
                 val day = dateParser(date).day
-                val month = monthIntToStringConverter(dateParser(date).month)
+                val month = historyViewModel.monthIntToStringConverter(dateParser(date).month)
                 val year = dateParser(date).year
 
                 // tarihi 25 ocak 2020 seklinde yaziyor
@@ -306,86 +310,10 @@ class HistoryFragment : Fragment() {
                 addView(linearLayoutForSelectedDayDrinks)
             }
 
+
             binding.drunkFullListLayout.addView(dateTextView)
             binding.drunkFullListLayout.addView(scrollViewForAllDrinksInSelectedDay)
 
-        }
-    }
-
-    // function to create a list of unique dates for spinner adapter
-    fun dateCollector(drinkData: MutableList<Drink>): MutableList<String> {
-
-        val reversedDrinkData = drinkData.reversed()
-
-        // icecek icilen unique date listesini tutan liste
-        val dateList = mutableListOf<String>()
-
-        // unique datelerin ve toplam icilen miktar gibi diger bilgileri iceren ve fonksiyonun icinde gelen drinkDatanin her birini dateListe ekle
-        for (drink in reversedDrinkData) {
-            if (!dateList.contains(drink.date)) {
-                dateList.add(drink.date)
-            }
-        }
-
-        // 01-02-2020 seklindeki datayi January 2020 seklinde tutan liste
-        val formattedDateList = mutableListOf<String>()
-
-        // unique listte tutan her bir tarihi January 2020 olarak formatlayip formattedDateList listesine ekle
-        for (date in dateList) {
-
-            val monthStringId = monthIntToStringConverter(dateParser(date).month)
-            val month = monthIntToStringConverter(dateParser(date).month)
-            val year = dateParser(date).year
-
-            val formattedDatetobeIncluded = "$month $year"
-
-            if (!formattedDateList.contains(formattedDatetobeIncluded)) {
-                formattedDateList.add(formattedDatetobeIncluded)
-            }
-        }
-
-        return formattedDateList
-
-    }
-
-    // bir ayin rakami verildiginde string olarak OCAK SUBAT degerini veriyor
-    fun monthIntToStringConverter(monthNumber: Int): String {
-        var monthFormatted = ""
-
-        when (monthNumber) {
-            1 -> monthFormatted = getString(R.string.january)
-            2 -> monthFormatted = getString(R.string.february)
-            3 -> monthFormatted = getString(R.string.march)
-            4 -> monthFormatted = getString(R.string.april)
-            5 -> monthFormatted = getString(R.string.may)
-            6 -> monthFormatted = getString(R.string.june)
-            7 -> monthFormatted = getString(R.string.july)
-            8 -> monthFormatted = getString(R.string.august)
-            9 -> monthFormatted = getString(R.string.september)
-            10 -> monthFormatted = getString(R.string.october)
-            11 -> monthFormatted = getString(R.string.november)
-            12 -> monthFormatted = getString(R.string.december)
-        }
-
-        return monthFormatted
-    }
-
-    // bir ayin OCAK SUBAT gibi string degeri verildiginde int olarak 1,2,3 degeri veriyoe
-    fun monthStringToIntConverter(month: String): Int {
-        return when (month) {
-            getString(R.string.january) -> 1
-            getString(R.string.february) -> 2
-            getString(R.string.march) -> 3
-            getString(R.string.april) -> 4
-            getString(R.string.may) -> 5
-            getString(R.string.june) -> 6
-            getString(R.string.july) -> 7
-            getString(R.string.august) -> 8
-            getString(R.string.september) -> 9
-            getString(R.string.october) -> 10
-            getString(R.string.november) -> 11
-            getString(R.string.december) -> 12
-            else -> 0
         }
     }
 
