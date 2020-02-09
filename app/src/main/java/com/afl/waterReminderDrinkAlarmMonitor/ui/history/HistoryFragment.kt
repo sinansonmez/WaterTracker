@@ -4,27 +4,21 @@ import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginLeft
-import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import androidx.databinding.DataBindingUtil
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.HistoryFragmentBinding
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.DatabaseHelper
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.Drink
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.dateParser
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
+import com.afl.waterReminderDrinkAlarmMonitor.utils.dateParser
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
-import java.lang.IllegalStateException
 
 class HistoryFragment : Fragment() {
 

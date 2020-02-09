@@ -5,9 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.DatabaseHelper
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.Drink
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.User
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
+import com.afl.waterReminderDrinkAlarmMonitor.model.User
 import com.xw.repo.BubbleSeekBar
 import java.text.SimpleDateFormat
 import java.util.*

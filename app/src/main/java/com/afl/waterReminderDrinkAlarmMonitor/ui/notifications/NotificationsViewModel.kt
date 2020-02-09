@@ -1,14 +1,13 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.notifications
 
 import android.app.Application
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.AlarmScheduler
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.utils.AlarmScheduler
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 
 class NotificationsViewModel(private val app: Application) : AndroidViewModel(app) {
 

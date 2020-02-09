@@ -1,18 +1,14 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.history
 
 import android.app.Application
-import android.util.Log
-import android.view.View
-import android.widget.AdapterView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.afl.waterReminderDrinkAlarmMonitor.R
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.DatabaseHelper
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.Drink
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.dateParser
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
+import com.afl.waterReminderDrinkAlarmMonitor.utils.dateParser
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData

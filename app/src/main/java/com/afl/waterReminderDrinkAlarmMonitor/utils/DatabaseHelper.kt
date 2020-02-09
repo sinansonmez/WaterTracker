@@ -1,10 +1,12 @@
-package com.afl.waterReminderDrinkAlarmMonitor.ui.utils
+package com.afl.waterReminderDrinkAlarmMonitor.utils
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
+import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
+import com.afl.waterReminderDrinkAlarmMonitor.model.User
+import com.afl.waterReminderDrinkAlarmMonitor.model.sum
 import java.text.SimpleDateFormat
 import java.util.*
 

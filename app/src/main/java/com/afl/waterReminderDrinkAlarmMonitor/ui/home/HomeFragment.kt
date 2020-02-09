@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.FragmentHomeBinding
 import com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel

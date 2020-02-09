@@ -1,4 +1,4 @@
-package com.afl.waterReminderDrinkAlarmMonitor.ui.utils
+package com.afl.waterReminderDrinkAlarmMonitor.utils
 
 
 import android.app.NotificationManager

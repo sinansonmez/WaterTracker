@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.FragmentDashboardBinding
 import com.google.android.material.snackbar.Snackbar
 import com.afl.waterReminderDrinkAlarmMonitor.*
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.DatabaseHelper
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.onChange
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.utils.onChange
 
 class DashboardFragment : Fragment() {
 
@@ -92,7 +92,7 @@ class DashboardFragment : Fragment() {
         })
 
         //observer for gender, if age and weight is empty guide user to enter age otherwise recalculate water amount
-        dashboardViewModel.gender.observe(this, Observer { newGender ->
+        dashboardViewModel.gender.observe(this, Observer { _ ->
             if (binding.weightEditText.text.isNullOrEmpty() or binding.ageEditText.text.isNullOrEmpty()) {
                 Snackbar.make(binding.root, getString(R.string.please_type_age_weigh), Snackbar.LENGTH_SHORT)
                     .show()
@@ -104,7 +104,7 @@ class DashboardFragment : Fragment() {
         })
 
         //observer for weight to calculate if age is also entered
-        dashboardViewModel.weight.observe(this, Observer { newWeight ->
+        dashboardViewModel.weight.observe(this, Observer { _ ->
             if (binding.ageEditText.text.isNullOrEmpty()) {
                 null
             } else {
@@ -114,7 +114,7 @@ class DashboardFragment : Fragment() {
         })
 
         //observer for weight to calculate if weight is also entered
-        dashboardViewModel.age.observe(this, Observer { newAge ->
+        dashboardViewModel.age.observe(this, Observer { _ ->
             if (binding.weightEditText.text.isNullOrEmpty()) {
                 null
             } else {

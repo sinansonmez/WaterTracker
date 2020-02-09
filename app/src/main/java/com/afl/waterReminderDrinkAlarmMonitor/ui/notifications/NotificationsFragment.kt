@@ -14,8 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.FragmentNotificationsBinding
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.AlarmScheduler
-import com.afl.waterReminderDrinkAlarmMonitor.ui.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.utils.AlarmScheduler
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 
 class NotificationsFragment : Fragment() {
 

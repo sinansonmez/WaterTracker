@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -37,10 +38,10 @@
         <activity android:name="com.afl.waterReminderDrinkAlarmMonitor.MainActivity" />
 
         <!-- For retrieving the broadcast sent by the system when the alarm is triggered -->
-        <receiver android:name="com.afl.waterReminderDrinkAlarmMonitor.ui.utils.AlarmReceiver" />
+        <receiver android:name="com.afl.waterReminderDrinkAlarmMonitor.utils.AlarmReceiver" />
 
         <!-- For listening to device reboot to reschedule alarms -->
-        <receiver android:name="com.afl.waterReminderDrinkAlarmMonitor.ui.utils.BootReceiver">
+        <receiver android:name="com.afl.waterReminderDrinkAlarmMonitor.utils.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -48,6 +49,5 @@
 
     </application>
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 </manifest>

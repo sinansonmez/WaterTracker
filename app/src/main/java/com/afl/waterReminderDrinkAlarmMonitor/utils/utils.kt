@@ -1,4 +1,4 @@
-package com.afl.waterReminderDrinkAlarmMonitor.ui.utils
+package com.afl.waterReminderDrinkAlarmMonitor.utils
 
 import android.app.Activity
 import android.app.NotificationManager
@@ -11,39 +11,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import com.afl.waterReminderDrinkAlarmMonitor.MainActivity
 import com.afl.waterReminderDrinkAlarmMonitor.R
+import com.afl.waterReminderDrinkAlarmMonitor.model.FormattedDate
 import com.google.android.material.textfield.TextInputEditText
-
-data class User(
-    var id: Int = 0,
-    var age: Int = 0,
-    var weight: Int = 0,
-    var gender: String = "",
-    var metric: String = "",
-    var water: Int = 0
-)
-
-data class Drink(
-    var id: Int = 0,
-    var date: String = "",
-    var time: String = "",
-    var drink: String = "",
-    var amount: Int = 0,
-    var metric: String = ""
-)
-
-data class sum(
-    var date: String = "",
-    var total: Int = 0
-)
-
-data class FormattedDate(
-    var year: Int,
-    var month: Int,
-    var day: Int
-)
 
 // Notification ID.
 private val NOTIFICATION_ID = 0
@@ -119,7 +90,11 @@ fun dateParser(date: String): FormattedDate {
     val month = date.substring(5, 7).toInt()
     val day = date.substring(8, 10).toInt()
 
-    return FormattedDate(year, month, day)
+    return FormattedDate(
+        year,
+        month,
+        day
+    )
 }
 
 private val keyboardHider = View.OnFocusChangeListener { v, hasFocus ->
