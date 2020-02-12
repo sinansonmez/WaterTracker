@@ -1,24 +1,33 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.history
 
 import android.app.Application
+import android.content.Context
+import android.widget.HorizontalScrollView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DrinksContainerGenerator
 import com.afl.waterReminderDrinkAlarmMonitor.utils.dateParser
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import kotlinx.coroutines.*
 
-private val count = 30
+private const val count = 30
 
 
 // TODO(Convert database request to coroutines)
+// TODO(methodlari ufak classlara bol)
+// TODO(history fonksiyonunu uyguluma kurulumunda test et)
 class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val db by lazy { DatabaseHelper(app.applicationContext) }
@@ -34,13 +43,27 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val drinks: LiveData<MutableList<Drink>> = _drinks
 
-    //TODO(sifir yerine asagidaki yorumdaki gibi yap)
-    //val monthForChart = monthStringToIntConverter(dateCollector(drinks)[0].split(" ")[0])
     private val _monthNumber = MutableLiveData<Int>().apply {
         value = monthStringToIntConverter(dateCollector()[0].split(" ")[0])
     }
 
     val monthNumber = _monthNumber
+
+    //TODO(https://medium.com/androiddevelopers/easy-coroutines-in-android-viewmodelscope-25bffb605471)
+    fun prepareUI(context: Context): LinearLayout {
+//        viewModelScope.launch(Dispatchers.IO){
+//           generateUIandDataForDrunkList(context)
+//        }
+
+        var user = LinearLayout(context)
+
+        GlobalScope.launch(Dispatchers.Main) {
+            user = generateUIandDataForDrunkList(context)
+        }
+
+        return user
+
+    }
 
     // function to prepare line data for chart based on live data _drinks
     fun generateLineData(): LineData {
@@ -151,7 +174,7 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     //TODO(accessing string from viewmodel is risky because, viewmodel doesnt react to configuration changes, try to improve it)
     // If int version of the month (e.g 1,2 ) is given string version of a month (e.g January, February) is returned
-    fun monthIntToStringConverter(monthNumber: Int): String {
+    private fun monthIntToStringConverter(monthNumber: Int): String {
         var monthFormatted = ""
 
         when (monthNumber) {
@@ -191,9 +214,96 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    //TODO(move drunkListCreator function to viewModel)
-    fun generateUIandDataForDrunkList() {
+    fun generateUIandDataForDrunkList(context: Context): LinearLayout {
 
+        val viewGenerator = DrinksContainerGenerator()
+
+        val linearLayoutForAllDrinkAndText =
+            viewGenerator.createLinearLayout("vertical", context)
+
+        // icecek icilen unique date listesini tutan liste
+        val dateList = mutableListOf<String>()
+
+        // reversed drink data but filtered with selected month
+        val reversedDrinkData =
+            _drinks.value?.asReversed()?.filter {
+                it.date.substring(5, 7).toInt() == _monthNumber.value
+            } as MutableList
+
+        // unique datelerin ve toplam icilen miktar gibi diger bilgileri iceren ve fonksiyonun icinde gelen drinkDatanin her birini dateListe ekle
+        for (drink in reversedDrinkData) {
+            if (!dateList.contains(drink.date)) {
+                dateList.add(drink.date)
+            }
+        }
+
+        //her bir tarih icin o gunde icilen icecekleri getir
+        for (date in dateList) {
+
+            val dateTextView = TextView(context).apply {
+
+                val day = dateParser(date).day
+                val month = monthIntToStringConverter(dateParser(date).month)
+                val year = dateParser(date).year
+
+                // tarihi 25 ocak 2020 seklinde yaziyor
+                text = "$day $month $year"
+                isAllCaps = true
+                setPadding(16, 0, 0, 0)
+
+                setBackgroundColor(ContextCompat.getColor(context, R.color.water_blue_50))
+                setTextColor(ContextCompat.getColor(context, R.color.reply_white_50))
+            }
+
+            // her gun icindeki iceceklerin toplu halde bulundugu linear layout sonra bunlari scroll edebilmek icin alttaki scroll view a koyuyorum
+            val linearLayoutForSelectedDayDrinks =
+                viewGenerator.createLinearLayout("horizontal", context)
+
+            // o gunde icilen butun iceceklerin listesi
+            val drinksInDate = db.readDrinkDataDetailsSelectedDay(date)
+
+            // Her bir drinkin adini, miktarini ve metrici getir
+            for (drink in drinksInDate) {
+
+                val drinkType = drink.drink
+                val drinkAmount = drink.amount.toString()
+                val metric = drink.metric
+
+                // her bir icecegi icinde tutacak bir linear layout olustur ve yukaridaki parametreleri uygula
+                val linearLayoutForEachDrink =
+                    viewGenerator.createLinearLayout("vertical", context)
+
+                // iciecek adini tutacak text view olustur
+                val drinkText =
+                    viewGenerator.createTextViewForDrinks(context, drinkType)
+
+                // iceceklerin miktarini tutacak text view olustur
+                val amountText =
+                    viewGenerator.createAmountTextViewForDrinks(context, drinkAmount, metric)
+
+                // iceceklerin gorselini tutacak image button view olustur ve stylingi yap
+                val imageView = viewGenerator.createImageViewForDrinks(context, drinkType)
+
+                // son olarak yularida olusturdugun viewlari once linear layouta ekle sonra linear layout'u da scrollable view icerisine ekle
+                linearLayoutForEachDrink.addView(imageView)
+                linearLayoutForEachDrink.addView(drinkText)
+                linearLayoutForEachDrink.addView(amountText)
+                linearLayoutForSelectedDayDrinks.addView(linearLayoutForEachDrink)
+
+            }
+
+            // o gunde icilen butun icecekleri tutan scroll view
+            val scrollViewForAllDrinksInSelectedDay =
+                HorizontalScrollView(context).apply {
+                    addView(linearLayoutForSelectedDayDrinks)
+                }
+
+            linearLayoutForAllDrinkAndText.addView(dateTextView)
+            linearLayoutForAllDrinkAndText.addView(scrollViewForAllDrinksInSelectedDay)
+
+        }
+
+        return linearLayoutForAllDrinkAndText
     }
 
 }

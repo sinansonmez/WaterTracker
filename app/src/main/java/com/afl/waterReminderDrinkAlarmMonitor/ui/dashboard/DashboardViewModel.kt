@@ -14,7 +14,7 @@ import java.util.*
 
 class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    val db by lazy { DatabaseHelper(app.applicationContext) }
+    private val db by lazy { DatabaseHelper(app.applicationContext) }
 
     private val _text = MutableLiveData<String>().apply {
         value = ""

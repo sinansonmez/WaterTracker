@@ -41,15 +41,6 @@
     <string name="notification_info">Es hora de beber agua</string>
     <string name="drink_image_button_dialog_message">¿Eliminar la bebida?</string>
     <string name="drunk_list_action_dialog_yes_button">SI</string>
-    <string-array name="days">
-        <item>Sunday</item>
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-    </string-array>
 
     <string-array name="starting_hours_array">
         <item>07:00</item>

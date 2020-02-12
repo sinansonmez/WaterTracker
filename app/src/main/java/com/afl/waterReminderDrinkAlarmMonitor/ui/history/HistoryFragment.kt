@@ -8,13 +8,10 @@ import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
-import androidx.core.view.setPadding
 import androidx.databinding.DataBindingUtil
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.HistoryFragmentBinding
 import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
-import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
-import com.afl.waterReminderDrinkAlarmMonitor.utils.dateParser
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
@@ -55,21 +52,14 @@ class HistoryFragment : Fragment() {
         // This is used so that the binding can observe LiveData updates
         binding.lifecycleOwner = this
 
-        val drinks = db.readDrinkDataDetailsDaySum()
-
-        //bu mevuct icilen tarihlerden ilkinin ayinin rakam halini chart function a veriyor ve o ay icin chart olusturuluyor
-        val monthForChart = historyViewModel.monthStringToIntConverter(
-            historyViewModel.dateCollector()[0].split(" ")[0]
-        )
-
         // spinner icindeki tarihleri hazirlayan fonksiyon
-        monthDropdownMenu(drinks)
+        monthDropdownMenu()
 
         //grafigi olusturan fonksiyon
         chartFunction(container?.context!!)
 
         // grafik altindaki iceceklerin oldugu scroll viewlari hazirlayan fonksiyon
-        drunkListCreator(container.context!!, drinks, monthForChart)
+        drunkListCreator(container.context!!)
 
         return binding.root
     }
@@ -127,12 +117,13 @@ class HistoryFragment : Fragment() {
             }
         }
 
-        binding.drunkChart.data = historyViewModel.generateLineData()
-        binding.drunkChart.invalidate()
+            binding.drunkChart.data = historyViewModel.generateLineData()
+            binding.drunkChart.invalidate()
+
     }
 
     // spinner icindeki tarihleri hazirlayan fonksiyon
-    private fun monthDropdownMenu(drinkData: MutableList<Drink>) {
+    private fun monthDropdownMenu() {
 
         val months = historyViewModel.dateCollector()
 
@@ -144,7 +135,7 @@ class HistoryFragment : Fragment() {
     }
 
     // listener for month spinner
-    val monthSpinnerListener = object : AdapterView.OnItemClickListener {
+    private val monthSpinnerListener = object : AdapterView.OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
 
             // split Ocak 2020 by space and pass month to value for chart generator
@@ -153,11 +144,10 @@ class HistoryFragment : Fragment() {
             // secimi yaptiktan sonra secilen ayin rakamaini chart function a ilet
             val monthNumber = historyViewModel.monthStringToIntConverter(month)
             historyViewModel.monthNumber.value = monthNumber
-            val drinks = db.readDrinkDataDetailsDaySum()
             chartFunction(context!!)
 
             // secimi yaptiktan sonra icilen icecekler listesini guncelle
-            drunkListCreator(context, drinks, monthNumber)
+            drunkListCreator(context!!)
         }
 
     }
@@ -165,156 +155,18 @@ class HistoryFragment : Fragment() {
     //TODO(List view a cevir)
     // grafik altindaki iceceklerin oldugu scroll viewlari hazirlayan fonksiyon
     private fun drunkListCreator(
-        context: Context?,
-        drinkData: MutableList<Drink>,
-        monthNumber: Int
+        context: Context
     ) {
 
-        binding.drunkFullListLayout.removeAllViews()
+        binding.drunkFullListContainer.removeAllViews()
 
-        // icecek icilen unique date listesini tutan liste
-        val dateList = mutableListOf<String>()
+        val linearLayoutGeneratorForDrinks = historyViewModel.generateUIandDataForDrunkList(context)
 
-        val reversedDrinkData = drinkData.reversed().filter {
-            it.date.substring(5, 7).toInt() == monthNumber
-        }
+        binding.drunkFullListContainer.addView(linearLayoutGeneratorForDrinks)
 
-        // { it.date.substring(5, 7).toInt() == monthNumber } as MutableList
-
-        // unique datelerin ve toplam icilen miktar gibi diger bilgileri iceren ve fonksiyonun icinde gelen drinkDatanin her birini dateListe ekle
-        for (drink in reversedDrinkData) {
-            if (!dateList.contains(drink.date)) {
-                dateList.add(drink.date)
-            }
-        }
-
-        //her bir tarih icin o gunde icilen icecekleri getir
-        for (date in dateList) {
-
-            val dateTextView = TextView(context).apply {
-
-                val day = dateParser(date).day
-                val month = historyViewModel.monthIntToStringConverter(dateParser(date).month)
-                val year = dateParser(date).year
-
-                // tarihi 25 ocak 2020 seklinde yaziyor
-                text = "$day $month $year"
-                isAllCaps = true
-                setPadding(16, 0, 0, 0)
-
-                setBackgroundColor(ContextCompat.getColor(context!!, R.color.water_blue_50))
-                setTextColor(ContextCompat.getColor(context, R.color.reply_white_50))
-            }
-
-            // linear layout parametreleri
-            val param = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-
-            param.gravity = Gravity.CENTER
-            param.setMargins(
-                16,
-                0,
-                16,
-                0
-            )
-
-            // her gun icindeki iceceklerin toplu halde bulundugu linear layout sonra bunlari scroll edebilmek icin alttaki scroll view a koyuyorum
-            val linearLayoutForSelectedDayDrinks = LinearLayout(context).apply {
-                id = View.generateViewId()
-                orientation = LinearLayout.HORIZONTAL
-                layoutParams = param
-            }
-
-            // o gunde icilen butun iceceklerin listesi
-            val drinksInDate = db.readDrinkDataDetailsSelectedDay(date)
-
-            // Her bir drinkin adini, miktarini ve metrici getir
-            for (drink in drinksInDate) {
-
-                val drinkType = drink.drink
-                val drinkAmount = drink.amount.toString()
-                val metric = drink.metric
-
-                // linear layout parametreleri
-                val paramForEachDrink = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-
-                paramForEachDrink.gravity = Gravity.CENTER
-                paramForEachDrink.setMargins(16, 0, 16, 0)
-
-                // her bir icecegi icinde tutacak bir linear layout olustur ve yukaridaki parametreleri uygula
-                val linearLayoutForEachDrink = LinearLayout(context).apply {
-                    orientation = LinearLayout.VERTICAL
-                    layoutParams = paramForEachDrink
-                }
-
-                // iciecek adini tutacak text view olustur
-                val drinkText = TextView(context).apply {
-                    text = when (drinkType) {
-                        "water" -> getString(R.string.water)
-                        "coffee" -> getString(R.string.coffee)
-                        "tea" -> getString(R.string.tea)
-                        "juice" -> getString(R.string.juice)
-                        "soda" -> getString(R.string.soda)
-                        "beer" -> getString(R.string.beer)
-                        "wine" -> getString(R.string.wine)
-                        "milk" -> getString(R.string.milk)
-                        "yogurt" -> getString(R.string.yogurt)
-                        "milkshake" -> getString(R.string.milkshake)
-                        "energy" -> getString(R.string.energy)
-                        "lemonade" -> getString(R.string.lemonade)
-                        else -> "Water"
-                    }
-
-                    setTextColor(ContextCompat.getColor(context!!, R.color.reply_black_800))
-
-                    isAllCaps = true
-                    gravity = Gravity.CENTER
-                }
-
-                // iceceklerin miktarini tutacak text view olustur
-                val amountText = TextView(context).apply {
-                    text = "$drinkAmount $metric"
-                    isAllCaps = true
-                    setPadding(5)
-                    gravity = Gravity.CENTER
-                }
-
-                // iceceklerin gorselini tutacak image button view olustur ve stylingi yap
-                val imageView = ImageButton(context).apply {
-
-                    val imageID = resources.getIdentifier(
-                        "com.afl.waterReminderDrinkAlarmMonitor:drawable/ic_${drinkType}_blue",
-                        null,
-                        null
-                    )
-                    setImageResource(imageID)
-                    setBackgroundColor(ContextCompat.getColor(context!!, R.color.reply_white_50))
-                    isClickable = true
-                }
-
-                // son olarak yularida olusturdugun viewlari once linear layouta ekle sonra linear layout'u da scrollable view icerisine ekle
-                linearLayoutForEachDrink.addView(imageView)
-                linearLayoutForEachDrink.addView(drinkText)
-                linearLayoutForEachDrink.addView(amountText)
-                linearLayoutForSelectedDayDrinks.addView(linearLayoutForEachDrink)
-
-            }
-
-            // o gunde icilen butun icecekleri tutan scroll view
-            val scrollViewForAllDrinksInSelectedDay = HorizontalScrollView(context).apply {
-                addView(linearLayoutForSelectedDayDrinks)
-            }
+//        binding.drunkFullListContainer.addView(historyViewModel.prepareUI(context))
 
 
-            binding.drunkFullListLayout.addView(dateTextView)
-            binding.drunkFullListLayout.addView(scrollViewForAllDrinksInSelectedDay)
-
-        }
     }
 
 }

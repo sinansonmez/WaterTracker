@@ -24,7 +24,7 @@ class DrinksFragment : Fragment() {
 
     private lateinit var dashboardViewModel: DashboardViewModel
     private lateinit var binding: DrinksFragmentBinding
-    var drinkButtonCheckStatus = false
+    private var drinkButtonCheckStatus = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

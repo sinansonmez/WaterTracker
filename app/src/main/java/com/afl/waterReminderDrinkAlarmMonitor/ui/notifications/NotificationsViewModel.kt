@@ -11,7 +11,7 @@ import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 
 class NotificationsViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    val db by lazy { DatabaseHelper(app.applicationContext) }
+    private val db by lazy { DatabaseHelper(app.applicationContext) }
 
     private val _notPreference = MutableLiveData<Int>()
     val notPreference: LiveData<Int> = _notPreference

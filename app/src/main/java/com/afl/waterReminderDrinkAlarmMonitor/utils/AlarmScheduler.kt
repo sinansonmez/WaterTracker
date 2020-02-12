@@ -40,7 +40,7 @@ object AlarmScheduler {
     }
 
     // yukaridaki fonksiyonun devami
-    fun startAlarm(datetimeToAlarm: Calendar, context: Context, intent: PendingIntent) {
+    private fun startAlarm(datetimeToAlarm: Calendar, context: Context, intent: PendingIntent) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
 //        eger gecmis bir zaman secilirse ertesi gune notification kuruyor

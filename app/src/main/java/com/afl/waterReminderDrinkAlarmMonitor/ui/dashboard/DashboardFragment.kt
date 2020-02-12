@@ -21,7 +21,7 @@ class DashboardFragment : Fragment() {
     private lateinit var dashboardViewModel: DashboardViewModel
     private lateinit var binding: FragmentDashboardBinding
 
-    val db by lazy {
+    private val db by lazy {
         DatabaseHelper(
             this.requireContext()
         )
@@ -151,7 +151,7 @@ class DashboardFragment : Fragment() {
     }
 
     // TODO(" bu functioni, onChange icinde cagirdiktan sonra her bir input typeta klavye kapaniyor")
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
 
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view!!.windowToken, 0)

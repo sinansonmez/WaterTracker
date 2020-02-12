@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
-import com.afl.waterReminderDrinkAlarmMonitor.model.sum
+import com.afl.waterReminderDrinkAlarmMonitor.model.Sum
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,8 +42,8 @@ class DatabaseHelper(val context: Context) :
 
 
     companion object {
-        private val DATABASE_NAME = "SQLITE_DATABASE.db"//database adı
-        private val DATABASE_VERSION = 1
+        private const val DATABASE_NAME = "SQLITE_DATABASE.db"//database adı
+        private const val DATABASE_VERSION = 1
     }
 
     // iki tablo var birincisi user tablosu, her uygulamada bir user oluyor
@@ -116,7 +116,7 @@ class DatabaseHelper(val context: Context) :
             "SELECT $COL_DATE_DRUNK, SUM($COL_AMOUNT_DRUNK) as Total FROM $TABLE_NAME_DRUNK GROUP BY $COL_DATE_DRUNK"
         val result = sqliteDB.rawQuery(query, null)
         result.moveToLast()
-        val sum = sum()
+        val sum = Sum()
         if (result.moveToLast()) {
             do {
                 sum.date = result.getString(result.getColumnIndex(COL_DATE_DRUNK))

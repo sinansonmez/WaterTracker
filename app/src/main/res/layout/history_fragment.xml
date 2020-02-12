@@ -58,14 +58,6 @@
             app:layout_constraintTop_toBottomOf="@id/drunkChart"
             app:layout_constraintVertical_weight="0.4">
 
-            <LinearLayout
-                android:id="@+id/drunkFullListLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-            </LinearLayout>
 
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

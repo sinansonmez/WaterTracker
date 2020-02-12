@@ -17,9 +17,7 @@ import com.afl.waterReminderDrinkAlarmMonitor.model.FormattedDate
 import com.google.android.material.textfield.TextInputEditText
 
 // Notification ID.
-private val NOTIFICATION_ID = 0
-private val REQUEST_CODE = 0
-private val FLAGS = 0
+private const val NOTIFICATION_ID = 0
 
 //change listener extension for TextInputEditText
 fun TextInputEditText.onChange(cb: (String) -> Unit) {

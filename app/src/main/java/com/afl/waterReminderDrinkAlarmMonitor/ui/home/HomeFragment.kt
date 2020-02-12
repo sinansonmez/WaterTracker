@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.core.view.setPadding
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -18,6 +17,7 @@ import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.FragmentHomeBinding
 import com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DrinksContainerGenerator
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.DecimalFormat
@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
     private lateinit var dashboardViewModel: DashboardViewModel
     private lateinit var binding: FragmentHomeBinding
 
-    val db by lazy {
+    private val db by lazy {
         DatabaseHelper(
             this.requireContext()
         )
@@ -133,6 +133,8 @@ class HomeFragment : Fragment() {
 
         val drunks = db.readDrinkDataDetailsSelectedDay(today)
 
+        val viewGenerator = DrinksContainerGenerator()
+
         binding.drunkListLayout.removeAllViews()
 
         for (drink in drunks) {
@@ -141,84 +143,35 @@ class HomeFragment : Fragment() {
             val drinkAmount = drink.amount.toString()
             val metric = drink.metric
 
-            // linear layout parametreleri
-            val param = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-
-            param.gravity = Gravity.CENTER
-            param.setMargins(16, 0, 16, 0)
-
-            // her bir icecegi icinde tutacak bir linear layout olustur ve yukaridaki parametreleri uygula
-            val linearLayout = LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
-                layoutParams = param
-            }
+            val linearLayout = viewGenerator.createLinearLayout("vertical", context)
 
             // iciecek adini tutacak text view olustur
-            val drinkText = TextView(context).apply {
-                text = when(drinkType) {
-                    "water" -> getString(R.string.water)
-                    "coffee" -> getString(R.string.coffee)
-                    "tea" -> getString(R.string.tea)
-                    "juice" -> getString(R.string.juice)
-                    "soda" -> getString(R.string.soda)
-                    "beer" -> getString(R.string.beer)
-                    "wine" -> getString(R.string.wine)
-                    "milk" -> getString(R.string.milk)
-                    "yogurt" -> getString(R.string.yogurt)
-                    "milkshake" -> getString(R.string.milkshake)
-                    "energy" -> getString(R.string.energy)
-                    "lemonade" -> getString(R.string.lemonade)
-                    else -> "Water"
-                }
-                setTextColor(ContextCompat.getColor(context!!, R.color.reply_black_800))
-
-                isAllCaps = true
-                gravity = Gravity.CENTER
-            }
+            val drinkText = viewGenerator.createTextViewForDrinks(context, drinkType)
 
             // iceceklerin miktarini tutacak text view olustur
-            val amountText = TextView(context).apply {
-                text = "$drinkAmount $metric"
-                isAllCaps = true
-                setPadding(5)
-                gravity = Gravity.CENTER
-            }
+            val amountText =
+                viewGenerator.createAmountTextViewForDrinks(context, drinkAmount, metric)
 
             // iceceklerin gorselini tutacak image button view olustur ve stylingi yap
-            val imageView = ImageButton(context).apply {
+            val imageView = viewGenerator.createImageViewForDrinks(context, drinkType)
 
-                val imageID = resources.getIdentifier(
-                    "com.afl.waterReminderDrinkAlarmMonitor:drawable/ic_${drinkType}_blue",
-                    null,
-                    null
-                )
-                setImageResource(imageID)
-                setBackgroundColor(ContextCompat.getColor(context!!, R.color.reply_white_50))
-                isClickable = true
-
-                // kullanici icecege tikladiginda dialog box ac ve silmek istedigini sor
-                setOnClickListener {
-
-                    MaterialAlertDialogBuilder(context)
-                        .setMessage(resources.getString(R.string.drink_image_button_dialog_message))
-                        .setPositiveButton(
-                            context.getString(R.string.drunk_list_action_dialog_yes_button),
-                            DialogInterface.OnClickListener { _, _ ->
-                                db.deleteSelectedDrinkData(drink.id)
-                                dashboardViewModel.drunkAmountHandler()
-                            })
-                        .setNegativeButton(
-                            context.getString(R.string.drunk_list_action_dialog_no_button),
-                            DialogInterface.OnClickListener { dialogInterface, _ ->
-                                dialogInterface.cancel()
-                            })
-                        .show()
-
-                }
+            imageView.setOnClickListener {
+                MaterialAlertDialogBuilder(context)
+                    .setMessage(resources.getString(R.string.drink_image_button_dialog_message))
+                    .setPositiveButton(
+                        context!!.getString(R.string.drunk_list_action_dialog_yes_button),
+                        DialogInterface.OnClickListener { _, _ ->
+                            db.deleteSelectedDrinkData(drink.id)
+                            dashboardViewModel.drunkAmountHandler()
+                        })
+                    .setNegativeButton(
+                        context.getString(R.string.drunk_list_action_dialog_no_button),
+                        DialogInterface.OnClickListener { dialogInterface, _ ->
+                            dialogInterface.cancel()
+                        })
+                    .show()
             }
+
 
             // son olarak yularida olusturdugun viewlari once linear layouta ekle sonra linear layout'u da scrollable view icerisine ekle
             linearLayout.addView(imageView)
@@ -226,6 +179,7 @@ class HomeFragment : Fragment() {
             linearLayout.addView(amountText)
             binding.drunkListLayout.addView(linearLayout)
         }
+
     }
 
 

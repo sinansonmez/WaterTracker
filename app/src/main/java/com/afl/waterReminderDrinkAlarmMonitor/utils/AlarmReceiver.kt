@@ -11,7 +11,6 @@ import com.afl.waterReminderDrinkAlarmMonitor.R
 
 class AlarmReceiver : BroadcastReceiver() {
 
-    private val TAG = AlarmReceiver::class.java.simpleName
 
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.d("database", "onReceive() called with: context = [$context], intent = [$intent]")
@@ -19,7 +18,7 @@ class AlarmReceiver : BroadcastReceiver() {
             if (intent.extras != null) {
                 val notificationManager =
                     ContextCompat.getSystemService(
-                        context!!,
+                        context,
                         NotificationManager::class.java
                     ) as NotificationManager
 
