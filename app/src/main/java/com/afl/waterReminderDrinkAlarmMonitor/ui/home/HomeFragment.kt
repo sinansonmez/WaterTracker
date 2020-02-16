@@ -4,20 +4,20 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.afl.waterReminderDrinkAlarmMonitor.MainActivity
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.FragmentHomeBinding
 import com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel
-import com.afl.waterReminderDrinkAlarmMonitor.utils.DrinksContainerGenerator
+import com.afl.waterReminderDrinkAlarmMonitor.utils.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.DecimalFormat
@@ -42,8 +42,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val user = db.readData()
-
         // Inflate view and obtain an instance of the binding class
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
@@ -57,12 +55,17 @@ class HomeFragment : Fragment() {
         // This is used so that the binding can observe LiveData updates
         binding.lifecycleOwner = this
 
+        //TODO(bu calisiyor her yere uygula)
+        val userData = dashboardViewModel.roomDenemeFun()
+        Log.d("deneme", "userData: $userData")
+
         //admob setup
         // dummy ad banner id ca-app-pub-3940256099942544/6300978111
         // real ad banner id ca-app-pub-7954399632679605/9743680462
         val adRequest = AdRequest.Builder().build()
         binding.adView.loadAd(adRequest)
 
+        val user = db.readData()
         val waterAmount = user.water
 
         // if user opens the app for the first time direct it to settings fragment
@@ -108,6 +111,14 @@ class HomeFragment : Fragment() {
 
         })
 
+        binding.drinksRecyclerView.layoutManager = LinearLayoutManager(container?.context, LinearLayoutManager.HORIZONTAL,false)
+        binding.drinksRecyclerView.isNestedScrollingEnabled = false
+        val today = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
+        val drunks = db.readDrinkDataDetailsSelectedDay(today)
+//        val drunks = dao.readDrinkDataDetailsSelectedDay(today)
+        binding.drinksRecyclerView.adapter = DrinksContainerAdapter(drunks)
+
+
         binding.drinkWaterButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_drinksFragment)
         }
@@ -135,7 +146,7 @@ class HomeFragment : Fragment() {
 
         val viewGenerator = DrinksContainerGenerator()
 
-        binding.drunkListLayout.removeAllViews()
+//        binding.drunkListLayout.removeAllViews()
 
         for (drink in drunks) {
             // Her bir drinkin adini, miktarini ve metrici getir
@@ -177,7 +188,7 @@ class HomeFragment : Fragment() {
             linearLayout.addView(imageView)
             linearLayout.addView(drinkText)
             linearLayout.addView(amountText)
-            binding.drunkListLayout.addView(linearLayout)
+//            binding.drunkListLayout.addView(linearLayout)
         }
 
     }

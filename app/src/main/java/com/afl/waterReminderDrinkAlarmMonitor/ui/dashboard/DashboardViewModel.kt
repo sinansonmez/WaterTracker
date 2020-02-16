@@ -4,17 +4,27 @@ import android.app.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
+import com.afl.waterReminderDrinkAlarmMonitor.MainActivity
 import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
+import com.afl.waterReminderDrinkAlarmMonitor.utils.AppDatabase
+import com.afl.waterReminderDrinkAlarmMonitor.utils.Repository
 import com.xw.repo.BubbleSeekBar
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
 class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val db by lazy { DatabaseHelper(app.applicationContext) }
+
+    //TODO(figure out how to access repository and call data)
+    val dao = MainActivity.database?.dao()
+
+
 
     private val _text = MutableLiveData<String>().apply {
         value = ""
@@ -42,7 +52,9 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
     val metric: LiveData<String> = _metric
 
     // variable to hold drunk amount
-    private val _drunkAmount = MutableLiveData<Int>()
+    private val _drunkAmount = MutableLiveData<Int>().apply {
+        db.readDrinkData()
+    }
     val drunkAmount: LiveData<Int> = _drunkAmount
 
     // variable to hold drink amount from drinks fragment that user choose
@@ -227,6 +239,19 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 //            db.readData()
 //        }
 
+
+    }
+
+    fun roomDenemeFun(): MutableList<Drink>? {
+        val today2 = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
+        val dao = MainActivity.database?.dao()
+        var userData = mutableListOf<Drink>()
+
+        viewModelScope.launch {
+            userData = Repository(dao).readDrinkDataDetailsSelectedDay(today2)!!
+        }
+
+        return userData
 
     }
 

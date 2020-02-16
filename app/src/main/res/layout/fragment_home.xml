@@ -160,7 +160,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mainInfoContainer" />
 
-        <HorizontalScrollView
+        <androidx.core.widget.NestedScrollView
+            android:orientation="horizontal"
             android:id="@+id/drunkListContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -172,14 +173,19 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/drinkWaterButton">
 
-            <LinearLayout
-                android:id="@+id/drunkListLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal" />
+<!--            <LinearLayout-->
+<!--                android:id="@+id/drunkListLayout"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="horizontal" />-->
 
-        </HorizontalScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/drinksRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </androidx.core.widget.NestedScrollView>
 
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"

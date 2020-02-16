@@ -4,4 +4,6 @@
     <dimen name="drinkContainerMargin">16dp</dimen>
     <dimen name="normalTextSize">16sp</dimen>
     <dimen name="notification_container_margin">10dp</dimen>
+    <dimen name="medium_level_margin_8dp">8dp</dimen>
+    <dimen name="small_level_margin_4dp">4dp</dimen>
 </resources>

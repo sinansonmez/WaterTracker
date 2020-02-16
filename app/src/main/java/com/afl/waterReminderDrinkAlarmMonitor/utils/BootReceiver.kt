@@ -46,14 +46,14 @@ class BootReceiver : BroadcastReceiver() {
 
             val notificationInfo = db.readNotData()
 
-            notPermission = notificationInfo[0]
+            notPermission = notificationInfo.notificationPreference
 
             Log.d("database", " permission is $notPermission")
 
             if (notPermission == 1) {
-                startingTime = notificationInfo[1]
-                finishingTime = notificationInfo[2]
-                intervalTime = notificationInfo[3]
+                startingTime = notificationInfo.startingTime
+                finishingTime = notificationInfo.finishingTime
+                intervalTime = notificationInfo.interval
                 notTimes = notificationTimesHandler(
                     startingTime = startingTime,
                     finishingTime = finishingTime,

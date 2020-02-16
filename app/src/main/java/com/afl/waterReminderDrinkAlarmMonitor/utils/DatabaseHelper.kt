@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
+import com.afl.waterReminderDrinkAlarmMonitor.model.Notification
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
 import com.afl.waterReminderDrinkAlarmMonitor.model.Sum
 import java.text.SimpleDateFormat
@@ -63,6 +64,7 @@ class DatabaseHelper(val context: Context) :
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
     }
 
+    //TODO(TAMAM)
     // yeni kullanici ekliyor
     fun insertData(
         user: User
@@ -86,6 +88,7 @@ class DatabaseHelper(val context: Context) :
 //        ).show()
     }
 
+    //TODO(TAMAM)
     // icilen icecegi ek bilgiler ile birlikte database yaziyor
     fun insertDrinkData(drink: Drink) {
         val sqliteDB = this.writableDatabase
@@ -109,6 +112,7 @@ class DatabaseHelper(val context: Context) :
         sqliteDB.close()
     }
 
+    //TODO(Tamam ancak date ten sonrasini implemente etmedin)
     // bu fonksiyon sadece son gunun toplam icilen miktari getiriyor
     fun readDrinkData(): Int {
         val sqliteDB = this.writableDatabase
@@ -131,6 +135,7 @@ class DatabaseHelper(val context: Context) :
         return if (sum.date == date) sum.total else 0
     }
 
+    //TODO(Tamam)
     // bu fonksiyon sadece bugun icilen icecekleri getiriyor
     fun readDrinkDataDetailsSelectedDay(date: String): MutableList<Drink> {
         val drunkList = mutableListOf<Drink>()
@@ -155,6 +160,7 @@ class DatabaseHelper(val context: Context) :
         return drunkList
     }
 
+    //TODO(bunu implemente et)
     fun readDrinkDataDetailsDaySum(): MutableList<Drink> {
         val drunkList = mutableListOf<Drink>()
         val sqliteDB = this.writableDatabase
@@ -181,6 +187,7 @@ class DatabaseHelper(val context: Context) :
         return drunkList
     }
 
+    //TODO(TAMAM)
     // function to delete selected drink from the drunk list
     fun deleteSelectedDrinkData(id: Int) {
         val sqliteDB = this.writableDatabase
@@ -188,6 +195,7 @@ class DatabaseHelper(val context: Context) :
         sqliteDB.close()
     }
 
+    //TODO(tamam)
     // user tablosundaki tum datayi okuyor
     fun readData(): User {
         val sqliteDB = this.writableDatabase
@@ -220,6 +228,7 @@ class DatabaseHelper(val context: Context) :
         return count
     }
 
+    //TODO(TAMAM)
     fun updateUser(user: User) {
         val sqliteDB = this.writableDatabase
         val query = "SELECT * FROM $TABLE_NAME"
@@ -253,18 +262,16 @@ class DatabaseHelper(val context: Context) :
         return count
     }
 
+    //TODO(TAMAM)
     fun insertNotificationInfo(
-        preference: Int,
-        startingTime: Int,
-        finishingTime: Int,
-        interval: Int
+        not:Notification
     ) {
         val sqliteDB = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(COL_PREF_NOT, preference)
-        contentValues.put(COL_START_NOT, startingTime)
-        contentValues.put(COL_FINISH_NOT, finishingTime)
-        contentValues.put(COL_INTERVAL_NOT, interval)
+        contentValues.put(COL_PREF_NOT, not.notificationPreference)
+        contentValues.put(COL_START_NOT, not.startingTime)
+        contentValues.put(COL_FINISH_NOT, not.finishingTime)
+        contentValues.put(COL_INTERVAL_NOT, not.interval)
 
         val result = sqliteDB.insert(TABLE_NAME_NOT, null, contentValues)
 
@@ -280,6 +287,7 @@ class DatabaseHelper(val context: Context) :
 
     }
 
+    //TODO(TAMAM)
     // function to update notification information for each column
     fun updateNotificationInfo(
         variable: Int,
@@ -316,17 +324,18 @@ class DatabaseHelper(val context: Context) :
 
     }
 
+    //TODO(Tamam)
     // user tablosundaki tum datayi okuyor
-    fun readNotData(): MutableList<Int> {
+    fun readNotData(): Notification {
         val sqliteDB = this.writableDatabase
         val query = "SELECT * FROM $TABLE_NAME_NOT LIMIT 1"
         val result = sqliteDB.rawQuery(query, null)
-        val notification = mutableListOf<Int>()
+        val notification = Notification()
         if (result.moveToFirst()) {
-            notification.add(result.getInt(result.getColumnIndex(COL_PREF_NOT)))
-            notification.add(result.getInt(result.getColumnIndex(COL_START_NOT)))
-            notification.add(result.getInt(result.getColumnIndex(COL_FINISH_NOT)))
-            notification.add(result.getInt(result.getColumnIndex(COL_INTERVAL_NOT)))
+            notification.notificationPreference = result.getInt(result.getColumnIndex(COL_PREF_NOT))
+            notification.startingTime = result.getInt(result.getColumnIndex(COL_START_NOT))
+            notification.finishingTime = result.getInt(result.getColumnIndex(COL_FINISH_NOT))
+            notification.interval = result.getInt(result.getColumnIndex(COL_INTERVAL_NOT))
 //            Log.d("database", " notification info is  $notification")
         }
         result.close()

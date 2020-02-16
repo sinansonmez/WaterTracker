@@ -9,9 +9,12 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.HistoryFragmentBinding
 import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DrinksContainerAdapter
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
@@ -59,7 +62,11 @@ class HistoryFragment : Fragment() {
         chartFunction(container?.context!!)
 
         // grafik altindaki iceceklerin oldugu scroll viewlari hazirlayan fonksiyon
-        drunkListCreator(container.context!!)
+//        drunkListCreator(container.context!!)
+
+        binding.drinkRecycleView.layoutManager = LinearLayoutManager(container.context)
+        val drinks = db.readDrinkDataDetailsDaySum()
+//        binding.drinkRecycleView.adapter = DrinksContainerAdapter(drinks)
 
         return binding.root
     }
