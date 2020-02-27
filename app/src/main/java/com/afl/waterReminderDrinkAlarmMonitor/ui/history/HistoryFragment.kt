@@ -9,16 +9,18 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.HistoryFragmentBinding
-import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
-import com.afl.waterReminderDrinkAlarmMonitor.utils.DrinksContainerAdapter
+import com.afl.waterReminderDrinkAlarmMonitor.utils.*
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.formatter.ValueFormatter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HistoryFragment : Fragment() {
 
@@ -42,6 +44,8 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        val dao = AppDatabase.getDatabase(container?.context).dao()
+
         // Inflate view and obtain an instance of the binding class
         binding = DataBindingUtil.inflate(inflater, R.layout.history_fragment, container, false)
 
@@ -58,11 +62,19 @@ class HistoryFragment : Fragment() {
         // spinner icindeki tarihleri hazirlayan fonksiyon
         monthDropdownMenu()
 
+        lifecycleScope.launch {
+            val user = Repository(dao).readUserData()
+
+            val limit = if (user != null) user.water else 0
+
+            chartFunction(container?.context!!, limit)
+        }
+
         //grafigi olusturan fonksiyon
-        chartFunction(container?.context!!)
+
 
         // grafik altindaki iceceklerin oldugu scroll viewlari hazirlayan fonksiyon
-//        drunkListCreator(container.context!!)
+        drunkListCreator(container?.context!!)
 
         binding.drinkRecycleView.layoutManager = LinearLayoutManager(container.context)
         val drinks = db.readDrinkDataDetailsDaySum()
@@ -72,60 +84,67 @@ class HistoryFragment : Fragment() {
     }
 
     //grafigi olusturan fonksiyon
-    private fun chartFunction(context: Context) {
-        binding.drunkChart.description.isEnabled = false
+    private suspend fun chartFunction(context: Context, limit: Int) {
 
-        binding.drunkChart.setBackgroundColor(
-            ContextCompat.getColor(
-                context,
-                R.color.reply_white_50
+        withContext(Dispatchers.Main) {
+
+            binding.drunkChart.description.isEnabled = false
+
+            binding.drunkChart.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.reply_white_50
+                )
             )
-        )
 
-        binding.drunkChart.setDrawGridBackground(false)
-        binding.drunkChart.setTouchEnabled(false)
+            binding.drunkChart.setDrawGridBackground(false)
+            binding.drunkChart.setTouchEnabled(false)
 
-        val l = binding.drunkChart.legend
-        l.isWordWrapEnabled = true
-        l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-        l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-        l.orientation = Legend.LegendOrientation.HORIZONTAL
-        l.setDrawInside(false)
+            val l = binding.drunkChart.legend
+            l.isWordWrapEnabled = true
+            l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+            l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+            l.orientation = Legend.LegendOrientation.HORIZONTAL
+            l.setDrawInside(false)
 
-        val rightAxis = binding.drunkChart.axisRight
-        rightAxis.isEnabled = false
-        rightAxis.setDrawGridLines(false)
-        rightAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
+            val rightAxis = binding.drunkChart.axisRight
+            rightAxis.isEnabled = false
+            rightAxis.setDrawGridLines(false)
+            rightAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
 
-        val leftAxis = binding.drunkChart.axisLeft
-        leftAxis.isEnabled = true
+            val leftAxis = binding.drunkChart.axisLeft
+            leftAxis.isEnabled = true
 
-        val limit = db.readData().water
-        val ll = LimitLine(limit.toFloat(), "target")
-        ll.lineColor = ContextCompat.getColor(context, R.color.reply_red_400)
-        ll.lineWidth = 4f
-        ll.textColor = ContextCompat.getColor(context, R.color.reply_red_400)
-        ll.textSize = 12f
+//        val limit = db.readData().water
 
-        leftAxis.addLimitLine(ll)
-        leftAxis.setDrawGridLines(false)
-        leftAxis.axisMaximum = limit.toFloat() + 500f
-        leftAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
+            val ll = LimitLine(limit.toFloat(), "target")
+            ll.lineColor = ContextCompat.getColor(context, R.color.reply_red_400)
+            ll.lineWidth = 4f
+            ll.textColor = ContextCompat.getColor(context, R.color.reply_red_400)
+            ll.textSize = 12f
 
-        val xAxis = binding.drunkChart.xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setCenterAxisLabels(true)
+            leftAxis.addLimitLine(ll)
+            leftAxis.setDrawGridLines(false)
+            leftAxis.axisMaximum = limit.toFloat() + 500f
+            leftAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
 
-        xAxis.setDrawGridLines(false)
-        xAxis.axisMinimum = 0f
-        xAxis.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                return value.toInt().toString()
+
+            val xAxis = binding.drunkChart.xAxis
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.setCenterAxisLabels(true)
+
+            xAxis.setDrawGridLines(false)
+            xAxis.axisMinimum = 0f
+            xAxis.valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return value.toInt().toString()
+                }
             }
-        }
 
             binding.drunkChart.data = historyViewModel.generateLineData()
             binding.drunkChart.invalidate()
+
+        }
 
     }
 
@@ -142,24 +161,23 @@ class HistoryFragment : Fragment() {
     }
 
     // listener for month spinner
-    private val monthSpinnerListener = object : AdapterView.OnItemClickListener {
-        override fun onItemClick(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-
+    private val monthSpinnerListener = AdapterView.OnItemClickListener { parent, view, pos, id ->
             // split Ocak 2020 by space and pass month to value for chart generator
             val month = parent?.getItemAtPosition(pos).toString().split(" ")[0]
 
             // secimi yaptiktan sonra secilen ayin rakamaini chart function a ilet
             val monthNumber = historyViewModel.monthStringToIntConverter(month)
             historyViewModel.monthNumber.value = monthNumber
-            chartFunction(context!!)
+
+            val dao = AppDatabase.getDatabase(context).dao()
+
+            //            chartFunction(context!!, limit)
 
             // secimi yaptiktan sonra icilen icecekler listesini guncelle
             drunkListCreator(context!!)
         }
 
-    }
-
-    //TODO(List view a cevir)
+    //TODO(Recycler view a cevir)
     // grafik altindaki iceceklerin oldugu scroll viewlari hazirlayan fonksiyon
     private fun drunkListCreator(
         context: Context

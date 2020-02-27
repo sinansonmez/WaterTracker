@@ -1,5 +1,6 @@
 package com.afl.waterReminderDrinkAlarmMonitor.utils
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.room.Dao
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
@@ -40,37 +41,43 @@ private const val COL_INTERVAL_NOT = "intervalTime"
 interface Dao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertData(user: User)
+    suspend fun insertData(user: User)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertDrinkData(drink: Drink)
+    suspend fun insertDrinkData(drink: Drink)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertNotificationInfo(not: Notification)
+    suspend fun insertNotificationInfo(not: Notification)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateUser(user: User)
+    suspend fun updateUser(user: User)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateNotificationInfo(not: Notification)
+    suspend fun updateNotificationInfo(not: Notification)
 
     @Delete
-    fun deleteSelectedDrinkData(not: Notification)
+    suspend fun deleteSelectedDrinkData(drink: Drink)
 
     @Query("SELECT $COL_DATE_DRUNK, SUM($COL_AMOUNT_DRUNK) as Total FROM $TABLE_NAME_DRUNK GROUP BY $COL_DATE_DRUNK")
-    fun readDrinkData(): Sum
+    fun readDrinkData(): LiveData<Sum>
+
+    @Query("SELECT $COL_DATE_DRUNK, SUM($COL_AMOUNT_DRUNK) as Total FROM $TABLE_NAME_DRUNK GROUP BY $COL_DATE_DRUNK")
+    suspend fun readDrinkSumData(): MutableList<Sum>
 
     @Query("SELECT * FROM $TABLE_NAME_DRUNK WHERE $COL_DATE_DRUNK= :date")
-    fun readDrinkDataDetailsSelectedDay(date: String): MutableList<Drink>
+    suspend fun readDrinkDataDetailsSelectedDay(date: String): MutableList<Drink>
 
     //TODO(Query degistir )
     @Query("SELECT * FROM $TABLE_NAME_DRUNK")
-    fun readDrinkDataDetailsDaySum(): MutableList<Drink>
+    suspend fun readDrinkDataDetailsDaySum(): MutableList<Drink>
 
     @Query("SELECT * FROM $TABLE_NAME LIMIT 1")
-    fun readData(): User
+    fun readData(): LiveData<User>
+
+    @Query("SELECT * FROM $TABLE_NAME LIMIT 1")
+    suspend fun readUserData(): User
 
     @Query("SELECT * FROM $TABLE_NAME_NOT LIMIT 1")
-    fun readNotData(): Notification
+    suspend fun readNotData(): Notification
 
 }

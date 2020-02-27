@@ -1,12 +1,12 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard
 
 import android.app.*
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
-import com.afl.waterReminderDrinkAlarmMonitor.MainActivity
 import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
@@ -21,10 +21,7 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val db by lazy { DatabaseHelper(app.applicationContext) }
 
-    //TODO(figure out how to access repository and call data)
-    val dao = MainActivity.database?.dao()
-
-
+    private val dao = AppDatabase.getDatabase(app).dao()
 
     private val _text = MutableLiveData<String>().apply {
         value = ""
@@ -53,7 +50,7 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
     // variable to hold drunk amount
     private val _drunkAmount = MutableLiveData<Int>().apply {
-        db.readDrinkData()
+        Repository(dao).readDrinkData()
     }
     val drunkAmount: LiveData<Int> = _drunkAmount
 
@@ -107,8 +104,6 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
             _age.value?.toInt()
         } else return 0F
 
-        //var water = _waterAmount.value
-
         _waterAmount.value = if (ageValue!! < 30) {
             weightValue!! * 40
         } else if (ageValue >= 30 || ageValue <= 55) {
@@ -137,7 +132,9 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
         _text.value =
             _waterAmount.value.toString() + if (_metric.value == "American") " OZ" else " ML"
 
-        val user = User(
+        Log.d("database", "water amount to be put in text: ${_waterAmount.value}")
+
+        val userToUpdate = User(
             age = ageValue,
             weight = weightValue!!,
             gender = _gender.value!!,
@@ -145,9 +142,10 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
             water = _waterAmount.value!!
         )
 
-        insertUpdateUser(user)
 
-        return user.water.toFloat()
+        insertUpdateUser(userToUpdate)
+
+        return userToUpdate.water.toFloat()
 
     }
 
@@ -155,24 +153,27 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
         // check if there is a current user in the database update it otherwise insert it
         if (db.checkUserTableCount() < 1) {
-            db.insertData(user)
+            viewModelScope.launch {
+                Repository(dao).insertData(user)
+            }
         } else {
-            db.updateUser(user)
+            viewModelScope.launch {
+                Repository(dao).updateUser(user)
+            }
         }
     }
 
     fun drunkAmountHandler() {
-        _drunkAmount.value = db.readDrinkData()
+        _drunkAmount.value = Repository(dao).readDrinkData()
     }
 
     fun drinkTypeHandler(drinkType: String) {
         _drinkType.value = drinkType
-//        Log.e("database", drinkType)
-//        Log.e("database", _drinkType.value)
     }
 
     fun drink() {
-        val user = db.readData()
+        val user = Repository(dao).readData()
+
         val drinkAmounts = when (_drinkType.value) {
             "water" -> 1.0
             "coffee" -> 0.8
@@ -194,7 +195,7 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
         val drinkType = _drinkType.value.toString()
 
         val amount = (_drinkAmount.value!!.toInt() * drinkAmounts).toInt()
-        val metric = if (user.metric == "American") "oz" else "ml"
+        val metric = if (user?.value?.metric == "American") "oz" else "ml"
 
 
         val drink =
@@ -206,9 +207,11 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
                 metric = metric
             )
 
-//        Log.e("database", drink.toString())
 
-        db.insertDrinkData(drink)
+        viewModelScope.launch {
+            Repository(dao).insertDrinkData(drink)
+        }
+
         drunkAmountHandler()
 
         _drinkType.value = ""
@@ -217,6 +220,7 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun drinkAmountHandler(action: String) {
         val user = db.readData()
+
 
         if (user.metric == "American") {
             if (action == "plus") {
@@ -233,25 +237,6 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
                 if (_drinkAmount.value!! < 50) _drinkAmount.value = 50
             }
         }
-
-        //TODO performance icin coroutine kullanabilir misin bak
-//        viewModelScope.launch {
-//            db.readData()
-//        }
-
-
-    }
-
-    fun roomDenemeFun(): MutableList<Drink>? {
-        val today2 = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
-        val dao = MainActivity.database?.dao()
-        var userData = mutableListOf<Drink>()
-
-        viewModelScope.launch {
-            userData = Repository(dao).readDrinkDataDetailsSelectedDay(today2)!!
-        }
-
-        return userData
 
     }
 

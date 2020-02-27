@@ -80,7 +80,6 @@ class NotificationsViewModel(private val app: Application) : AndroidViewModel(ap
             _notificationTimes.value?.add(startingTime)
         }
 
-
         if (_notificationTimes.value != null) {
             AlarmScheduler.scheduleAlarm(app, _notificationTimes.value!!)
         }

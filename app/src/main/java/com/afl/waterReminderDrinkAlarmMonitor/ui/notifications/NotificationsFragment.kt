@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +13,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.FragmentNotificationsBinding
 import com.afl.waterReminderDrinkAlarmMonitor.model.Notification
 import com.afl.waterReminderDrinkAlarmMonitor.utils.AlarmScheduler
+import com.afl.waterReminderDrinkAlarmMonitor.utils.AppDatabase
 import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.utils.Repository
+import kotlinx.coroutines.launch
 
 class NotificationsFragment : Fragment() {
 
@@ -25,11 +30,14 @@ class NotificationsFragment : Fragment() {
     private lateinit var notificationsViewModel: NotificationsViewModel
     private lateinit var binding: FragmentNotificationsBinding
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val dao = AppDatabase.getDatabase(container?.context).dao()
 
         val db by lazy { DatabaseHelper(container!!.context) }
 
@@ -88,47 +96,52 @@ class NotificationsFragment : Fragment() {
             binding.intervalSpinner.adapter = adapter
         }
 
+
+        //TODO(check notification table is not working properly, figure out how to use notCount variable above)
         // in the first opening insert dummy notification info otherwise read the data from database and set it to views
-        if (db.checkNotTableCount() == 0) {
-            db.insertNotificationInfo(
-                Notification()
-            )
-        } else {
 
-            val notificationInfo = db.readNotData()
+        lifecycleScope.launch {
+            val notificationInfo = Repository(dao).readNotData()
 
-            binding.notificationContainerTobeHidden.visibility =
-                (if (notificationInfo.notificationPreference == 1) View.VISIBLE else View.GONE)
+            if (notificationInfo == null) {
+                Repository(dao).insertNotificationInfo(Notification())
+            } else {
 
-            // starting time onCreate setting
-            binding.notificationPermissionSwitch.isChecked = notificationInfo.notificationPreference == 1
-            val editedStartingTime =
-                if (notificationInfo.startingTime < 10) {
+                binding.notificationContainerTobeHidden.visibility =
+                    (if (notificationInfo.notificationPreference == 1) View.VISIBLE else View.GONE)
+
+                // starting time onCreate setting
+                binding.notificationPermissionSwitch.isChecked = notificationInfo.notificationPreference == 1
+
+                val editedStartingTime = if (notificationInfo.startingTime < 10) {
                     "0" + notificationInfo.startingTime.toString() + ":00"
                 } else {
                     notificationInfo.startingTime.toString() + ":00"
                 }
-            binding.startingTimeSpinner.setSelection(
-                startingHourArray.getPosition(editedStartingTime)
-            )
 
-            // finishing time onCreate setting
-            val editedFinishingTime =
-                if (notificationInfo.finishingTime < 10) {
-                    "0" + notificationInfo.finishingTime.toString() + ":00"
-                } else {
-                    notificationInfo.finishingTime.toString() + ":00"
-                }
-            binding.finishingTimeSpinner.setSelection(
-                finishingHourArray.getPosition(editedFinishingTime)
-            )
+                binding.startingTimeSpinner.setSelection(
+                    startingHourArray.getPosition(editedStartingTime)
+                )
 
-            // interval time onCreate setting
-            val intervalTime =
-                notificationInfo.interval.toString() + if (notificationInfo.interval == 1) " hour" else " hours"
-            binding.intervalSpinner.setSelection(intevalHourArray.getPosition(intervalTime))
+                // finishing time onCreate setting
+                val editedFinishingTime = if (notificationInfo.finishingTime < 10) {
+                        "0" + notificationInfo.finishingTime.toString() + ":00"
+                    } else {
+                        notificationInfo.finishingTime.toString() + ":00"
+                    }
+
+                binding.finishingTimeSpinner.setSelection(
+                    finishingHourArray.getPosition(editedFinishingTime)
+                )
+
+                // interval time onCreate setting
+                val intervalTime =
+                    notificationInfo.interval.toString() + if (notificationInfo.interval == 1) " hour" else " hours"
+                binding.intervalSpinner.setSelection(intevalHourArray.getPosition(intervalTime))
+            }
 
         }
+
 
         // create channel function is called for notifications
         createChannel(
@@ -140,8 +153,10 @@ class NotificationsFragment : Fragment() {
             val notTimes = notificationsViewModel.notificationTimes.value
             if (newPref == 1) {
                 AlarmScheduler.scheduleAlarm(container.context, notTimes!!)
+                Log.d("database", "alarm scheduler is called within preference observer: $notTimes")
             } else {
                 AlarmScheduler.cancelAlarm(container.context)
+                Log.d("database", "alarm canceller is called with")
             }
         })
 
@@ -165,4 +180,5 @@ class NotificationsFragment : Fragment() {
         }
 
     }
+
 }

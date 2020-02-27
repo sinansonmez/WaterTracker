@@ -4,12 +4,17 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
         val db by lazy { DatabaseHelper(context!!) }
+
+        val dao = AppDatabase.getDatabase(context).dao()
 
         Log.d("database", "onReceive is called")
 
@@ -42,34 +47,35 @@ class BootReceiver : BroadcastReceiver() {
         }
 
         // if notification information is already included in the database
-        if (db.checkNotTableCount() == 1) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val notification = Repository(dao).readNotData()
 
-            val notificationInfo = db.readNotData()
+            if (notification != null) {
 
-            notPermission = notificationInfo.notificationPreference
+                notPermission = notification.notificationPreference
 
-            Log.d("database", " permission is $notPermission")
+                Log.d("database", " permission is $notification")
 
-            if (notPermission == 1) {
-                startingTime = notificationInfo.startingTime
-                finishingTime = notificationInfo.finishingTime
-                intervalTime = notificationInfo.interval
-                notTimes = notificationTimesHandler(
-                    startingTime = startingTime,
-                    finishingTime = finishingTime,
-                    intervalTime = intervalTime
-                )
+                if (notPermission == 1) {
+                    startingTime = notification.startingTime
+                    finishingTime = notification.finishingTime
+                    intervalTime = notification.interval
+                    notTimes = notificationTimesHandler(
+                        startingTime = startingTime,
+                        finishingTime = finishingTime,
+                        intervalTime = intervalTime
+                    )
 
-                if (context != null && intent?.action.equals("android.intent.action.BOOT_COMPLETED")) {
+                    if (context != null && intent?.action.equals("android.intent.action.BOOT_COMPLETED")) {
 
-                    Log.d("database", "alarm scheduler is called")
+                        Log.d("database", "alarm scheduler is called")
 
-                    AlarmScheduler.scheduleAlarm(context, notTimes)
+                        AlarmScheduler.scheduleAlarm(context, notTimes)
 
+                    }
                 }
             }
         }
-
 
     }
 }

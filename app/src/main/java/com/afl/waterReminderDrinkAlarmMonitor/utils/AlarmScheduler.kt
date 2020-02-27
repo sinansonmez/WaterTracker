@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import java.util.*
 
 object AlarmScheduler {
@@ -26,7 +27,7 @@ object AlarmScheduler {
 
             val pendingIntent = createPendingIntent(context,time)
 
-//            Log.d("database", "alarm is scheduled for $time")
+            Log.d("database", "alarm is scheduled for $time")
 
             startAlarm(
                 datetimeToAlarm,

@@ -5,11 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
-import com.afl.waterReminderDrinkAlarmMonitor.model.Notification
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
-import com.afl.waterReminderDrinkAlarmMonitor.model.Sum
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class DatabaseHelper(val context: Context) :
@@ -44,18 +40,18 @@ class DatabaseHelper(val context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "SQLITE_DATABASE.db"//database adı
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 5
     }
 
     // iki tablo var birincisi user tablosu, her uygulamada bir user oluyor
     // ikincisi ise icilen icecegin historysini tutan tablo
     override fun onCreate(db: SQLiteDatabase?) {
         val createTable =
-            "CREATE TABLE $TABLE_NAME ($COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COL_WEIGHT INTEGER, $COL_GENDER  VARCHAR(256),$COL_METRIC VARCHAR(256), $COL_AGE INTEGER ,$COL_WATER INTEGER)"
+            "CREATE TABLE IF NOT EXISTS $TABLE_NAME ($COL_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, $COL_WEIGHT INTEGER NOT NULL, $COL_GENDER  TEXT NOT NULL, $COL_METRIC TEXT NOT NULL, $COL_AGE INTEGER NOT NULL ,$COL_WATER INTEGER NOT NULL)"
         val createTableDrunk =
-            "CREATE TABLE $TABLE_NAME_DRUNK ($COL_ID_DRUNK INTEGER PRIMARY KEY AUTOINCREMENT, $COL_DATE_DRUNK VARCHAR(256), $COL_TIME_DRUNK  VARCHAR(256),$COL_DRINK_DRUNK VARCHAR(256), $COL_AMOUNT_DRUNK INTEGER ,$COL_METRIC_DRUNK VARCHAR(256))"
+            "CREATE TABLE IF NOT EXISTS $TABLE_NAME_DRUNK ($COL_ID_DRUNK INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, $COL_DATE_DRUNK TEXT NOT NULL, $COL_TIME_DRUNK TEXT NOT NULL,$COL_DRINK_DRUNK TEXT NOT NULL, $COL_AMOUNT_DRUNK INTEGER NOT NULL,$COL_METRIC_DRUNK TEXT NOT NULL)"
         val createTableNotification =
-            "CREATE TABLE $TABLE_NAME_NOT ($COL_ID_NOT INTEGER PRIMARY KEY AUTOINCREMENT, $COL_PREF_NOT INTEGER, $COL_START_NOT INTEGER, $COL_FINISH_NOT INTEGER,$COL_INTERVAL_NOT INTEGER)"
+            "CREATE TABLE IF NOT EXISTS  $TABLE_NAME_NOT ($COL_ID_NOT INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, $COL_PREF_NOT INTEGER NOT NULL, $COL_START_NOT INTEGER NOT NULL, $COL_FINISH_NOT INTEGER NOT NULL, $COL_INTERVAL_NOT INTEGER NOT NULL)"
         db?.execSQL(createTable)
         db?.execSQL(createTableDrunk)
         db?.execSQL(createTableNotification)
@@ -64,103 +60,7 @@ class DatabaseHelper(val context: Context) :
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
     }
 
-    //TODO(TAMAM)
-    // yeni kullanici ekliyor
-    fun insertData(
-        user: User
-    ) {
-        val sqliteDB = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(COL_AGE, user.age)
-        contentValues.put(COL_WEIGHT, user.weight)
-        contentValues.put(COL_GENDER, user.gender)
-        contentValues.put(COL_METRIC, user.metric)
-        contentValues.put(COL_WATER, user.water)
-
-        val result = sqliteDB.insert(TABLE_NAME, null, contentValues)
-
-        sqliteDB.close()
-
-//        Toast.makeText(
-//            context,
-//            if (result != -1L) "Kayıt Başarılı + $result" else "Kayıt yapılamadı.",
-//            Toast.LENGTH_SHORT
-//        ).show()
-    }
-
-    //TODO(TAMAM)
-    // icilen icecegi ek bilgiler ile birlikte database yaziyor
-    fun insertDrinkData(drink: Drink) {
-        val sqliteDB = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(COL_DATE_DRUNK, drink.date)
-        contentValues.put(COL_TIME_DRUNK, drink.time)
-        contentValues.put(COL_DRINK_DRUNK, drink.drink)
-        contentValues.put(COL_AMOUNT_DRUNK, drink.amount)
-        contentValues.put(COL_METRIC_DRUNK, drink.metric)
-
-        val result = sqliteDB.insert(TABLE_NAME_DRUNK, null, contentValues)
-
-//        Log.d("database", contentValues.toString())
-
-//        Toast.makeText(
-//            context,
-//            if (result != -1L) "Kayıt Başarılı + $result" else "Kayıt yapılamadı.",
-//            Toast.LENGTH_SHORT
-//        ).show()
-
-        sqliteDB.close()
-    }
-
-    //TODO(Tamam ancak date ten sonrasini implemente etmedin)
-    // bu fonksiyon sadece son gunun toplam icilen miktari getiriyor
-    fun readDrinkData(): Int {
-        val sqliteDB = this.writableDatabase
-        val query =
-            "SELECT $COL_DATE_DRUNK, SUM($COL_AMOUNT_DRUNK) as Total FROM $TABLE_NAME_DRUNK GROUP BY $COL_DATE_DRUNK"
-        val result = sqliteDB.rawQuery(query, null)
-        result.moveToLast()
-        val sum = Sum()
-        if (result.moveToLast()) {
-            do {
-                sum.date = result.getString(result.getColumnIndex(COL_DATE_DRUNK))
-                sum.total = result.getString(result.getColumnIndex("Total")).toInt()
-            } while (result.moveToNext())
-        }
-
-        val date = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
-        result.close()
-        sqliteDB.close()
-        // eger gun bugunun gunu degilse 0 getiriyor
-        return if (sum.date == date) sum.total else 0
-    }
-
-    //TODO(Tamam)
-    // bu fonksiyon sadece bugun icilen icecekleri getiriyor
-    fun readDrinkDataDetailsSelectedDay(date: String): MutableList<Drink> {
-        val drunkList = mutableListOf<Drink>()
-        val sqliteDB = this.writableDatabase
-        val query = "SELECT * FROM $TABLE_NAME_DRUNK WHERE $COL_DATE_DRUNK=?"
-        val result = sqliteDB.rawQuery(query, arrayOf(date))
-        if (result.moveToFirst()) {
-            do {
-                val drink = Drink()
-                drink.id = result.getString(result.getColumnIndex(COL_ID_DRUNK)).toInt()
-                drink.date = result.getString(result.getColumnIndex(COL_DATE_DRUNK))
-                drink.time = result.getString(result.getColumnIndex(COL_TIME_DRUNK))
-                drink.drink = result.getString(result.getColumnIndex(COL_DRINK_DRUNK))
-                drink.amount = result.getString(result.getColumnIndex(COL_AMOUNT_DRUNK)).toInt()
-                drink.metric = result.getString(result.getColumnIndex(COL_METRIC_DRUNK))
-                drunkList.add(drink)
-            } while (result.moveToNext())
-        }
-        result.close()
-        sqliteDB.close()
-//        Log.d("database", drunkList.toString())
-        return drunkList
-    }
-
-    //TODO(bunu implemente et)
+    //TODO(bunun querysini update et)
     fun readDrinkDataDetailsDaySum(): MutableList<Drink> {
         val drunkList = mutableListOf<Drink>()
         val sqliteDB = this.writableDatabase
@@ -187,7 +87,6 @@ class DatabaseHelper(val context: Context) :
         return drunkList
     }
 
-    //TODO(TAMAM)
     // function to delete selected drink from the drunk list
     fun deleteSelectedDrinkData(id: Int) {
         val sqliteDB = this.writableDatabase
@@ -195,7 +94,6 @@ class DatabaseHelper(val context: Context) :
         sqliteDB.close()
     }
 
-    //TODO(tamam)
     // user tablosundaki tum datayi okuyor
     fun readData(): User {
         val sqliteDB = this.writableDatabase
@@ -228,66 +126,7 @@ class DatabaseHelper(val context: Context) :
         return count
     }
 
-    //TODO(TAMAM)
-    fun updateUser(user: User) {
-        val sqliteDB = this.writableDatabase
-        val query = "SELECT * FROM $TABLE_NAME"
-        val result = sqliteDB.rawQuery(query, null)
-        if (result.moveToFirst()) {
-            do {
-                val cv = ContentValues()
-                cv.put(COL_AGE, user.age)
-                cv.put(COL_GENDER, user.gender)
-                cv.put(COL_WEIGHT, user.weight)
-                cv.put(COL_METRIC, user.metric)
-                cv.put(COL_WATER, user.water)
-                sqliteDB.update(TABLE_NAME, cv, null, null)
-            } while (result.moveToNext())
-        }
-
-        result.close()
-        sqliteDB.close()
-    }
-
-    // user tablosunda kullanici var mi kontrol ediyor
-    fun checkNotTableCount(): Int {
-        val sqliteDB = this.writableDatabase
-        val query = "SELECT * FROM $TABLE_NAME_NOT"
-        val result = sqliteDB.rawQuery(query, null)
-        val count = result.count
-
-        result.close()
-        sqliteDB.close()
-
-        return count
-    }
-
-    //TODO(TAMAM)
-    fun insertNotificationInfo(
-        not:Notification
-    ) {
-        val sqliteDB = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(COL_PREF_NOT, not.notificationPreference)
-        contentValues.put(COL_START_NOT, not.startingTime)
-        contentValues.put(COL_FINISH_NOT, not.finishingTime)
-        contentValues.put(COL_INTERVAL_NOT, not.interval)
-
-        val result = sqliteDB.insert(TABLE_NAME_NOT, null, contentValues)
-
-//        Log.d("database", if (result != -1L) "Kayıt Başarılı + $result" else "Kayıt yapılamadı.")
-
-//        Toast.makeText(
-//            context,
-//            if (result != -1L) "Kayıt Başarılı + $result" else "Kayıt yapılamadı.",
-//            Toast.LENGTH_SHORT
-//        ).show()
-
-        sqliteDB.close()
-
-    }
-
-    //TODO(TAMAM)
+    //TODO(bunu tasi)
     // function to update notification information for each column
     fun updateNotificationInfo(
         variable: Int,
@@ -324,22 +163,4 @@ class DatabaseHelper(val context: Context) :
 
     }
 
-    //TODO(Tamam)
-    // user tablosundaki tum datayi okuyor
-    fun readNotData(): Notification {
-        val sqliteDB = this.writableDatabase
-        val query = "SELECT * FROM $TABLE_NAME_NOT LIMIT 1"
-        val result = sqliteDB.rawQuery(query, null)
-        val notification = Notification()
-        if (result.moveToFirst()) {
-            notification.notificationPreference = result.getInt(result.getColumnIndex(COL_PREF_NOT))
-            notification.startingTime = result.getInt(result.getColumnIndex(COL_START_NOT))
-            notification.finishingTime = result.getInt(result.getColumnIndex(COL_FINISH_NOT))
-            notification.interval = result.getInt(result.getColumnIndex(COL_INTERVAL_NOT))
-//            Log.d("database", " notification info is  $notification")
-        }
-        result.close()
-        sqliteDB.close()
-        return notification
-    }
 }

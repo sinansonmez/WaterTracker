@@ -7,7 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import androidx.room.Room
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.ActivityMainBinding
 import com.afl.waterReminderDrinkAlarmMonitor.utils.AppDatabase
 import com.google.android.gms.ads.MobileAds
@@ -23,10 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        MainActivity.database =
-            Room.databaseBuilder(this, AppDatabase::class.java, "SQLITE_DATABASE.db")
-                .addMigrations(AppDatabase.migration)
-                .build()
+        database = AppDatabase.getDatabase(this)
 
         MobileAds.initialize(this) {}
 

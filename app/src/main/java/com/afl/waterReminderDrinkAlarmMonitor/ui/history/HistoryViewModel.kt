@@ -11,10 +11,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.afl.waterReminderDrinkAlarmMonitor.R
-import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
-import com.afl.waterReminderDrinkAlarmMonitor.utils.DrinksContainerGenerator
-import com.afl.waterReminderDrinkAlarmMonitor.utils.dateParser
+import com.afl.waterReminderDrinkAlarmMonitor.utils.*
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -25,12 +23,12 @@ import kotlinx.coroutines.*
 private const val count = 30
 
 
-// TODO(Convert database request to coroutines)
-// TODO(methodlari ufak classlara bol)
-// TODO(history fonksiyonunu uyguluma kurulumunda test et)
+// TODO(history fonksiyonunu uyguluma kurulumunda hata veriyor)
 class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val db by lazy { DatabaseHelper(app.applicationContext) }
+
+    private val dao = AppDatabase.getDatabase(app).dao()
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is history fragment"
@@ -48,22 +46,6 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     val monthNumber = _monthNumber
-
-    //TODO(https://medium.com/androiddevelopers/easy-coroutines-in-android-viewmodelscope-25bffb605471)
-    fun prepareUI(context: Context): LinearLayout {
-//        viewModelScope.launch(Dispatchers.IO){
-//           generateUIandDataForDrunkList(context)
-//        }
-
-        var user = LinearLayout(context)
-
-        GlobalScope.launch(Dispatchers.Main) {
-            user = generateUIandDataForDrunkList(context)
-        }
-
-        return user
-
-    }
 
     // function to prepare line data for chart based on live data _drinks
     fun generateLineData(): LineData {
@@ -259,38 +241,48 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
             val linearLayoutForSelectedDayDrinks =
                 viewGenerator.createLinearLayout("horizontal", context)
 
-            // o gunde icilen butun iceceklerin listesi
-            val drinksInDate = db.readDrinkDataDetailsSelectedDay(date)
 
-            // Her bir drinkin adini, miktarini ve metrici getir
-            for (drink in drinksInDate) {
+            viewModelScope.launch {
 
-                val drinkType = drink.drink
-                val drinkAmount = drink.amount.toString()
-                val metric = drink.metric
+                // o gunde icilen butun iceceklerin listesi
+                val drinksInDate = Repository(dao).readDrinkDataDetailsSelectedDay(date)
 
-                // her bir icecegi icinde tutacak bir linear layout olustur ve yukaridaki parametreleri uygula
-                val linearLayoutForEachDrink =
-                    viewGenerator.createLinearLayout("vertical", context)
+                if (drinksInDate != null) {
+                    withContext(Dispatchers.Main){
+                        // Her bir drinkin adini, miktarini ve metrici getir
+                        for (drink in drinksInDate) {
 
-                // iciecek adini tutacak text view olustur
-                val drinkText =
-                    viewGenerator.createTextViewForDrinks(context, drinkType)
+                            val drinkType = drink.drink
+                            val drinkAmount = drink.amount.toString()
+                            val metric = drink.metric
 
-                // iceceklerin miktarini tutacak text view olustur
-                val amountText =
-                    viewGenerator.createAmountTextViewForDrinks(context, drinkAmount, metric)
+                            // her bir icecegi icinde tutacak bir linear layout olustur ve yukaridaki parametreleri uygula
+                            val linearLayoutForEachDrink =
+                                viewGenerator.createLinearLayout("vertical", context)
 
-                // iceceklerin gorselini tutacak image button view olustur ve stylingi yap
-                val imageView = viewGenerator.createImageViewForDrinks(context, drinkType)
+                            // iciecek adini tutacak text view olustur
+                            val drinkText =
+                                viewGenerator.createTextViewForDrinks(context, drinkType)
 
-                // son olarak yularida olusturdugun viewlari once linear layouta ekle sonra linear layout'u da scrollable view icerisine ekle
-                linearLayoutForEachDrink.addView(imageView)
-                linearLayoutForEachDrink.addView(drinkText)
-                linearLayoutForEachDrink.addView(amountText)
-                linearLayoutForSelectedDayDrinks.addView(linearLayoutForEachDrink)
+                            // iceceklerin miktarini tutacak text view olustur
+                            val amountText =
+                                viewGenerator.createAmountTextViewForDrinks(context, drinkAmount, metric)
 
+                            // iceceklerin gorselini tutacak image button view olustur ve stylingi yap
+                            val imageView = viewGenerator.createImageViewForDrinks(context, drinkType)
+
+                            // son olarak yularida olusturdugun viewlari once linear layouta ekle sonra linear layout'u da scrollable view icerisine ekle
+                            linearLayoutForEachDrink.addView(imageView)
+                            linearLayoutForEachDrink.addView(drinkText)
+                            linearLayoutForEachDrink.addView(amountText)
+                            linearLayoutForSelectedDayDrinks.addView(linearLayoutForEachDrink)
+
+                        }
+                    }
+                }
             }
+
+
 
             // o gunde icilen butun icecekleri tutan scroll view
             val scrollViewForAllDrinksInSelectedDay =
