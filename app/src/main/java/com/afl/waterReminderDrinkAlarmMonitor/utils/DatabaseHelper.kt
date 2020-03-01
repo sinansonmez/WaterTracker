@@ -1,6 +1,5 @@
 package com.afl.waterReminderDrinkAlarmMonitor.utils
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -60,16 +59,15 @@ class DatabaseHelper(val context: Context) :
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
     }
 
-    //TODO(bunun querysini update et)
     fun readDrinkDataDetailsDaySum(): MutableList<Drink> {
         val drunkList = mutableListOf<Drink>()
         val sqliteDB = this.writableDatabase
         val result = sqliteDB.query(
             TABLE_NAME_DRUNK,
-            arrayOf(COL_DATE_DRUNK, "SUM($COL_AMOUNT_DRUNK) as amount", COL_METRIC_DRUNK),
+            arrayOf(COL_DATE_DRUNK, "SUM($COL_AMOUNT_DRUNK) as amount", COL_METRIC_DRUNK), //columns
             null,
             null,
-            COL_DATE_DRUNK,
+            COL_DATE_DRUNK, // group by
             null,
             null
         )
@@ -85,13 +83,6 @@ class DatabaseHelper(val context: Context) :
         result.close()
         sqliteDB.close()
         return drunkList
-    }
-
-    // function to delete selected drink from the drunk list
-    fun deleteSelectedDrinkData(id: Int) {
-        val sqliteDB = this.writableDatabase
-        sqliteDB.delete(TABLE_NAME_DRUNK, "$COL_ID_DRUNK =?", arrayOf(id.toString()))
-        sqliteDB.close()
     }
 
     // user tablosundaki tum datayi okuyor
@@ -124,43 +115,6 @@ class DatabaseHelper(val context: Context) :
         sqliteDB.close()
 
         return count
-    }
-
-    //TODO(bunu tasi)
-    // function to update notification information for each column
-    fun updateNotificationInfo(
-        variable: Int,
-        action: String
-    ) {
-        val sqliteDB = this.writableDatabase
-        val query = "SELECT * FROM $TABLE_NAME_NOT"
-        val result = sqliteDB.rawQuery(query, null)
-        if (result.moveToFirst()) {
-            do {
-                val cv = ContentValues()
-
-                when (action) {
-                    "preference" -> {
-                        cv.put(COL_PREF_NOT, variable)
-                    }
-                    "starting_time" -> {
-                        cv.put(COL_START_NOT, variable)
-                    }
-                    "finishing_time" -> {
-                        cv.put(COL_FINISH_NOT, variable)
-                    }
-                    "interval_time" -> {
-                        cv.put(COL_INTERVAL_NOT, variable)
-                    }
-                }
-
-                sqliteDB.update(TABLE_NAME_NOT, cv, null, null)
-            } while (result.moveToNext())
-        }
-
-        result.close()
-        sqliteDB.close()
-
     }
 
 }

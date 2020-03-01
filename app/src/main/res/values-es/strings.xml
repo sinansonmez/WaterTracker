@@ -90,7 +90,7 @@
     <string name="drunk_list_action_dialog_no_button">NO</string>
     <string name="history">History</string>
     <string name="title_history">History</string>
-    <string name="selected_month">Selected month</string>
+    <string name="selected_month">Mes seleccionado</string>
     <string name="january">January</string>
     <string name="july">July</string>
     <string name="august">August</string>

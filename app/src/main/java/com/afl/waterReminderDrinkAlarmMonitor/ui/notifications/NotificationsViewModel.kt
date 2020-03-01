@@ -6,12 +6,16 @@ import android.widget.AdapterView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.afl.waterReminderDrinkAlarmMonitor.utils.AlarmScheduler
+import com.afl.waterReminderDrinkAlarmMonitor.utils.AppDatabase
 import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
+import com.afl.waterReminderDrinkAlarmMonitor.utils.Repository
+import kotlinx.coroutines.launch
 
 class NotificationsViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    private val db by lazy { DatabaseHelper(app.applicationContext) }
+    private val dao = AppDatabase.getDatabase(app).dao()
 
     private val _notPreference = MutableLiveData<Int>()
     val notPreference: LiveData<Int> = _notPreference
@@ -30,30 +34,70 @@ class NotificationsViewModel(private val app: Application) : AndroidViewModel(ap
     val notificationTimes: LiveData<MutableList<Int>> = _notificationTimes
 
 
-    fun notificationPreferenceHandler(preference: Int, action: String = "preference") {
+    fun notificationPreferenceHandler(preference: Int) {
         _notPreference.value = preference
-        db.updateNotificationInfo(preference, action)
+
+        viewModelScope.launch {
+            val notification = Repository(dao).readNotData()
+
+            if(notification != null) {
+                notification.notificationPreference = preference
+                Repository(dao).updateNotificationInfo(notification)
+            }
+        }
+
     }
 
     // after you receive selected item from listener you check
     fun timeHandler(selectedItem: String, spinnerType: String) {
 
         when (spinnerType) {
+
             "starting_time" -> {
                 val startTime = selectedItem.substring(0, 2).toInt()
                 _startingTime.value = startTime
-                db.updateNotificationInfo(startTime, "starting_time")
+
+                viewModelScope.launch {
+                    val notification = Repository(dao).readNotData()
+
+                    if(notification != null) {
+                        notification.startingTime = startTime
+                        Repository(dao).updateNotificationInfo(notification)
+                    }
+                }
+
             }
+
             "finishing_time" -> {
                 val finishTime = selectedItem.substring(0, 2).toInt()
                 _finishingTime.value = finishTime
-                db.updateNotificationInfo(finishTime, "finishing_time")
+
+                viewModelScope.launch {
+                    val notification = Repository(dao).readNotData()
+
+                    if(notification != null) {
+                        notification.finishingTime = finishTime
+                        Repository(dao).updateNotificationInfo(notification)
+                    }
+                }
+
             }
+
             "interval_time" -> {
                 val intervalTime = selectedItem.substring(0, 1).toInt()
                 _intervalTime.value = intervalTime
-                db.updateNotificationInfo(intervalTime, "interval_time")
+
+                viewModelScope.launch {
+                    val notification = Repository(dao).readNotData()
+
+                    if(notification != null) {
+                        notification.interval = intervalTime
+                        Repository(dao).updateNotificationInfo(notification)
+                    }
+                }
+
             }
+
             else -> return
         }
 
@@ -83,9 +127,6 @@ class NotificationsViewModel(private val app: Application) : AndroidViewModel(ap
         if (_notificationTimes.value != null) {
             AlarmScheduler.scheduleAlarm(app, _notificationTimes.value!!)
         }
-
-
-//        Log.d("database", "new notification times are ${notificationTimes.value}")
 
     }
 

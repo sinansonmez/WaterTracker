@@ -1,9 +1,11 @@
 package com.afl.waterReminderDrinkAlarmMonitor.utils
 
-import android.content.DialogInterface
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
@@ -13,9 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-//TODO()
-// once ana sayfadaki drink listi hazirlayabilirsin
-// https://www.youtube.com/watch?v=53BsyxwSBJk&list=PL0dzCUj1L5JGfHj1lwxOq67zAJV3e1S9S&index=3&t=0s
 class DrinksContainerAdapter(private val drinks: MutableList<Drink>) :
     RecyclerView.Adapter<CustomViewHolder>() {
 
@@ -26,17 +25,16 @@ class DrinksContainerAdapter(private val drinks: MutableList<Drink>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val containerForDrinks =
-            layoutInflater.inflate(R.layout.single_drink_container, parent, false)
+
+        val containerForDrinks = layoutInflater.inflate(R.layout.single_drink_container, parent, false)
+
         return CustomViewHolder(containerForDrinks)
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
 
         when (holder) {
-            is CustomViewHolder -> {
-                holder.bind(drinks[position])
-            }
+            is CustomViewHolder -> { holder.bind(drinks[position]) }
         }
 
     }
@@ -44,7 +42,6 @@ class DrinksContainerAdapter(private val drinks: MutableList<Drink>) :
 
 }
 
-//TODO(drink name i resource dan getir boylelikle farkli dillere cevirilince drink name de cevrilmis olur)
 class CustomViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
     private val drinkNameText = view.drinkText
@@ -52,7 +49,7 @@ class CustomViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     private val drinkImage = view.drinkImage
 
     fun bind(drink: Drink) {
-        drinkNameText.text = drink.drink
+        drinkNameText.text = drinkNameGetter(drink.drink, view.context)
         amountText.text = "${drink.amount} ${drink.metric}"
 
         val imageID = view.context.resources.getIdentifier(
@@ -67,13 +64,12 @@ class CustomViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
             MaterialAlertDialogBuilder(view.context)
                 .setMessage(view.context.resources.getString(R.string.drink_image_button_dialog_message))
-                .setPositiveButton(view.context.getString(R.string.drunk_list_action_dialog_yes_button)) { _, _ ->
+                .setPositiveButton(view.context.getString(R.string.drunk_list_action_dialog_yes_button)) { dialogInterface, _ ->
                     val dao = AppDatabase.getDatabase(view.context).dao()
                     CoroutineScope(Dispatchers.IO).launch {
                         Repository(dao).deleteSelectedDrinkData(drink)
+                        it.findNavController().navigate(R.id.action_navigation_home_self)
                     }
-                    //TODO(database i rooma tasiyip drunk readDrinkData Livedata yaptiginda database degistiginde ana sayfa guncellenir )
-                    //                    dashboardViewModel.drunkAmountHandler()
                 }.setNegativeButton(view.context.getString(R.string.drunk_list_action_dialog_no_button)) { dialogInterface, _ ->
                     dialogInterface.cancel()
                 }
@@ -83,6 +79,27 @@ class CustomViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
     }
 
+}
+
+private fun drinkNameGetter(drink:String, context: Context): String {
+
+    return when (drink) {
+        "water" -> context.getString(R.string.water)
+        "coffee" -> context.getString(R.string.coffee)
+        "tea" -> context.getString(R.string.tea)
+        "juice" -> context.getString(R.string.juice)
+        "soda" -> context.getString(R.string.soda)
+        "beer" -> context.getString(R.string.beer)
+        "wine" -> context.getString(R.string.wine)
+        "milk" -> context.getString(R.string.milk)
+        "yogurt" -> context.getString(R.string.yogurt)
+        "milkshake" -> context.getString(R.string.milkshake)
+        "energy" -> context.getString(R.string.energy)
+        "lemonade" -> context.getString(R.string.lemonade)
+        else -> "Drink"
+    }
 
 }
+
+
 

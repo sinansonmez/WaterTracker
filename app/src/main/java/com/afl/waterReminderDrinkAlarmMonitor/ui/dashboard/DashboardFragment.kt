@@ -58,13 +58,21 @@ class DashboardFragment : Fragment() {
 
         binding.ageEditText.onChange {
             if (binding.ageEditText.text.isNullOrEmpty()) {
-                Snackbar.make(binding.root, getString(R.string.please_type_age), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.please_type_age),
+                    Snackbar.LENGTH_SHORT
+                ).show()
             } else dashboardViewModel.ageHandler(it)
         }
 
         binding.weightEditText.onChange {
             if (binding.weightEditText.text.isNullOrEmpty()) {
-                Snackbar.make(binding.root, getString(R.string.please_type_weight), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.please_type_weight),
+                    Snackbar.LENGTH_SHORT
+                ).show()
             } else dashboardViewModel.weightHandler(it)
         }
 
@@ -84,7 +92,6 @@ class DashboardFragment : Fragment() {
                 binding.waterSeekBar.setProgress(progress)
             }
 
-            Log.d("database", "weight is called with $newWeight")
         })
 
         //observer for weight to calculate if weight is also entered
@@ -96,7 +103,6 @@ class DashboardFragment : Fragment() {
                 binding.waterSeekBar.setProgress(progress)
             }
 
-            Log.d("database", "age is called with $newAge")
         })
 
         // observer for metric value, if value is metric max value is set to 200 or vice versa
@@ -110,7 +116,6 @@ class DashboardFragment : Fragment() {
                 binding.waterSeekBar.setProgress(progress)
             }
 
-            Log.d("database", "metric is called with $newMetric")
 
             // this is an if statement to set the max value of water seek bar dynamically
             if (newMetric == "American") {
@@ -124,7 +129,11 @@ class DashboardFragment : Fragment() {
         //observer for gender, if age and weight is empty guide user to enter age otherwise recalculate water amount
         dashboardViewModel.gender.observe(this, Observer { newGender ->
             if (binding.weightEditText.text.isNullOrEmpty() or binding.ageEditText.text.isNullOrEmpty()) {
-                Snackbar.make(binding.root, getString(R.string.please_type_age_weigh), Snackbar.LENGTH_SHORT)
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.please_type_age_weigh),
+                    Snackbar.LENGTH_SHORT
+                )
                     .show()
             } else {
                 val progress = dashboardViewModel.waterCalculate()
@@ -132,14 +141,11 @@ class DashboardFragment : Fragment() {
 
             }
 
-            Log.d("database", "gender is called with $newGender")
         })
 
         //observer for water seek bar to update it is status when water amount is changed
         dashboardViewModel.waterAmount.observe(this, Observer { newAmount ->
 
-            //TODO(observerda kontrol bu sayfaya gelince en bastan hesaplama yapiyor ve 3000 unutuyor)
-            // ifli bir kural yazmak lazim
             val user = db.readData()
 
             //su miktari degistigi takdirde kullanici databasedden alinir, su miktari yeni su miktari ile guncellenir, text guncellenir, waterseekbar guncellenir ve database update edilir
@@ -152,15 +158,24 @@ class DashboardFragment : Fragment() {
                 Repository(dao).updateUser(user)
             }
 
+            Log.d("database", "water amount observer is called wiht: $newAmount")
+
         })
 
 
-        //TODO(bunu coroutine cekince problem oluyor)
-        if (db.checkUserTableCount() == 1) {
-//            lifecycleScope.launch {
-//                val user = Repository(dao).readUserData()
-                readUserData()
+
+//        lifecycleScope.launch {
+//            val user = Repository(dao).readUserData()
+//
+//            if (user != null) {
+//                withContext(Dispatchers.Main) {
+//                    readUserData()
+//                }
 //            }
+//        }
+
+        if (db.checkUserTableCount() == 1) {
+            readUserData(dao)
         }
 
 
@@ -175,41 +190,42 @@ class DashboardFragment : Fragment() {
     }
 
     // function to read the data from database and set the values
-    private fun readUserData() {
+    private fun readUserData(dao: Dao) {
 
-        val user = db.readData()
-//        val user = Repository(dao).readUserData()
+        lifecycleScope.launch {
+            val user = Repository(dao).readUserData()
 
-//        withContext(Dispatchers.Main) {
-            // set metric selector
-            if (user != null && user.metric == "American") {
-                binding.metricRadio.position = 1
-                dashboardViewModel.metricHandlerOnCreate(1)
-            } else {
-                binding.metricRadio.position = 0
-                dashboardViewModel.metricHandlerOnCreate(0)
+            withContext(Dispatchers.Main) {
+                // set metric selector
+                if (user != null && user.metric == "American") {
+                    binding.metricRadio.position = 1
+                    dashboardViewModel.metricHandlerOnCreate(1)
+                } else {
+                    binding.metricRadio.position = 0
+                    dashboardViewModel.metricHandlerOnCreate(0)
+                }
+
+
+                // set gender selector
+                if (user != null && user.gender == "Female") {
+                    binding.genderRadio.position = 1
+                    dashboardViewModel.genderHandlerOnCreate(1)
+                } else {
+                    binding.genderRadio.position = 0
+                    dashboardViewModel.genderHandlerOnCreate(0)
+                }
+
+                if (user != null) {
+                    // set weight edit text
+                    binding.weightEditText.setText(user.weight.toString())
+                    // set age edit text
+                    binding.ageEditText.setText(user.age.toString())
+                    // set water seek bar to water amount
+                    binding.waterSeekBar.setProgress(user.water.toFloat())
+                }
             }
 
-
-            // set gender selector
-            if (user != null && user.gender == "Female") {
-                binding.genderRadio.position = 1
-                dashboardViewModel.genderHandlerOnCreate(1)
-            } else {
-                binding.genderRadio.position = 0
-                dashboardViewModel.genderHandlerOnCreate(0)
-            }
-
-            if (user != null) {
-                // set weight edit text
-                binding.weightEditText.setText(user.weight.toString())
-                // set age edit text
-                binding.ageEditText.setText(user.age.toString())
-                // set water seek bar to water amount
-                binding.waterSeekBar.setProgress(user.water.toFloat())
-            }
-
-//        }
+        }
 
     }
 

@@ -37,8 +37,8 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val _drinks = MutableLiveData<MutableList<Drink>>().apply {
         value = db.readDrinkDataDetailsDaySum()
+//        value = Repository(dao).readDrinkData()
     }
-
     val drinks: LiveData<MutableList<Drink>> = _drinks
 
     private val _monthNumber = MutableLiveData<Int>().apply {

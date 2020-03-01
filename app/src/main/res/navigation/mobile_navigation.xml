@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_setting"
             app:destination="@id/navigation_setting" />
+        <action
+            android:id="@+id/action_navigation_home_self"
+            app:destination="@+id/navigation_home" />
     </fragment>
 
     <fragment

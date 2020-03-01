@@ -2,13 +2,11 @@ package com.afl.waterReminderDrinkAlarmMonitor.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -73,67 +71,23 @@ class HomeFragment : Fragment() {
             val waterAmount = user?.water
             val metric = user?.metric
 
-            Log.d("database", "user: $user")
-
-
             navigateToDashboardScreen(waterAmount)
             adjustProgressWheel(drunkAmount, waterAmount, metric)
-        }
 
-
-
-
-
-        // dynamically creating drunk list
-//        drunkListCreator(container?.context)
-
-        // icilmesi gereken su miktari degistikce progress wheeldaki su miktarini guncelliyor
-        dashboardViewModel.waterAmount.observe(this, Observer { newAmount ->
-            binding.wheelProgress.setStepCountText(newAmount.toString())
-            binding.targetText.text = newAmount.toString()
-        })
-
-        // icilen miktar guncelledikce progress wheelini tamamlanma oraninini, wheel icindeki Perc texti ve altinda yazan drunk amountu guncelliyor
-        dashboardViewModel.drunkAmount.observe(this, Observer { newDrunkAmount ->
-
-//            val user = db.readData()
-//            val waterAmount = user.water
-            val waterAmount = dashboardViewModel.waterAmount.value
-
-            Log.d("database", "water amount: $waterAmount")
-
-            val newPerc = drunkAmountPercFormatter(newDrunkAmount, waterAmount)
-            binding.wheelProgress.setPercentage(newPerc)
-
-            val newPercText = drunkAmountPercTextFormatter(newDrunkAmount, waterAmount)
-            binding.wheelProgress.setStepCountText(newPercText)
-
-            binding.drunkText.text = newDrunkAmount.toString()
-            //TODO(metrici de koy)
-//            binding.drunkText.text = newDrunkAmount.toString() + metric
-
-//            drunkListCreator(container?.context)
-
-        })
-
-        binding.drinksRecyclerView.layoutManager =
-            LinearLayoutManager(container?.context, LinearLayoutManager.HORIZONTAL, false)
-        binding.drinksRecyclerView.isNestedScrollingEnabled = false
-        val today = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
-
-        lifecycleScope.launch {
+            val today = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
             val drunks = Repository(dao).readDrinkDataDetailsSelectedDay(today)
 
             withContext(Dispatchers.Main){
                 if (drunks != null) {
                     binding.drinksRecyclerView.adapter = DrinksContainerAdapter(drunks)
+
                 }
             }
-
-
         }
 
+        binding.drinksRecyclerView.layoutManager = LinearLayoutManager(container?.context, LinearLayoutManager.HORIZONTAL, false)
 
+        binding.drinksRecyclerView.isNestedScrollingEnabled = false
 
         binding.drinkWaterButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_drinksFragment)
@@ -161,70 +115,6 @@ class HomeFragment : Fragment() {
             drunkAmount.toFloat().div(waterAmount.toFloat())
         } else {
             0f
-        }
-
-    }
-
-    private fun drunkListCreator(context: Context?, dao: Dao) {
-
-        val today = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
-
-//        val drunks = db.readDrinkDataDetailsSelectedDay(today)
-
-        lifecycleScope.launch {
-            val drunks = Repository(dao).readDrinkDataDetailsSelectedDay(today)
-
-            withContext(Dispatchers.Main){
-                val viewGenerator = DrinksContainerGenerator()
-
-//        binding.drunkListLayout.removeAllViews()
-
-                if(drunks != null) {
-                    for (drink in drunks) {
-                        // Her bir drinkin adini, miktarini ve metrici getir
-                        val drinkType = drink.drink
-                        val drinkAmount = drink.amount.toString()
-                        val metric = drink.metric
-
-                        val linearLayout = viewGenerator.createLinearLayout("vertical", context)
-
-                        // iciecek adini tutacak text view olustur
-                        val drinkText = viewGenerator.createTextViewForDrinks(context, drinkType)
-
-                        // iceceklerin miktarini tutacak text view olustur
-                        val amountText =
-                            viewGenerator.createAmountTextViewForDrinks(context, drinkAmount, metric)
-
-                        // iceceklerin gorselini tutacak image button view olustur ve stylingi yap
-                        val imageView = viewGenerator.createImageViewForDrinks(context, drinkType)
-
-                        imageView.setOnClickListener {
-                            MaterialAlertDialogBuilder(context)
-                                .setMessage(resources.getString(R.string.drink_image_button_dialog_message))
-                                .setPositiveButton(
-                                    context!!.getString(R.string.drunk_list_action_dialog_yes_button)
-                                ) { _, _ ->
-                                    db.deleteSelectedDrinkData(drink.id)
-                                    dashboardViewModel.drunkAmountHandler()
-                                }
-                                .setNegativeButton(
-                                    context.getString(R.string.drunk_list_action_dialog_no_button)
-                                ) { dialogInterface, _ ->
-                                    dialogInterface.cancel()
-                                }
-                                .show()
-                        }
-
-
-                        // son olarak yularida olusturdugun viewlari once linear layouta ekle sonra linear layout'u da scrollable view icerisine ekle
-                        linearLayout.addView(imageView)
-                        linearLayout.addView(drinkText)
-                        linearLayout.addView(amountText)
-//            binding.drunkListLayout.addView(linearLayout)
-                    }
-                }
-
-            }
         }
 
     }

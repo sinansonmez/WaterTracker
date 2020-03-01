@@ -9,7 +9,6 @@ import com.afl.waterReminderDrinkAlarmMonitor.model.Sum
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
 
 private const val DATABASE_NAME = "SQLITE_DATABASE.db"
-private const val DATABASE_VERSION = 2
 
 private const val TABLE_NAME = "User"
 private const val COL_ID = "id"
@@ -35,8 +34,6 @@ private const val COL_FINISH_NOT = "finishingTime"
 private const val COL_INTERVAL_NOT = "intervalTime"
 
 
-//TODO(https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin/index.html?index=..%2F..index#10)
-//TODO(https://www.raywenderlich.com/69-data-persistence-with-room)
 @Dao
 interface Dao {
 
@@ -67,8 +64,7 @@ interface Dao {
     @Query("SELECT * FROM $TABLE_NAME_DRUNK WHERE $COL_DATE_DRUNK= :date")
     suspend fun readDrinkDataDetailsSelectedDay(date: String): MutableList<Drink>
 
-    //TODO(Query degistir )
-    @Query("SELECT * FROM $TABLE_NAME_DRUNK")
+    @Query("SELECT $COL_ID_DRUNK, $COL_TIME_DRUNK, $COL_DATE_DRUNK, $COL_DRINK_DRUNK, SUM($COL_AMOUNT_DRUNK) as amount, $COL_METRIC_DRUNK FROM $TABLE_NAME_DRUNK GROUP BY $COL_DATE_DRUNK")
     suspend fun readDrinkDataDetailsDaySum(): MutableList<Drink>
 
     @Query("SELECT * FROM $TABLE_NAME LIMIT 1")

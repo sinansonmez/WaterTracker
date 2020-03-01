@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.HistoryFragmentBinding
 import com.afl.waterReminderDrinkAlarmMonitor.utils.*
@@ -21,6 +23,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HistoryFragment : Fragment() {
 
@@ -31,13 +35,6 @@ class HistoryFragment : Fragment() {
 
     private lateinit var historyViewModel: HistoryViewModel
     private lateinit var binding: HistoryFragmentBinding
-
-    private val db by lazy {
-        DatabaseHelper(
-            this.requireContext()
-        )
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,18 +64,24 @@ class HistoryFragment : Fragment() {
 
             val limit = if (user != null) user.water else 0
 
+            //grafigi olusturan fonksiyon
             chartFunction(container?.context!!, limit)
+
+            val today =
+                SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
+            val drinks = Repository(dao).readDrinkDataDetailsSelectedDay(today)
+
+            if (drinks != null) {
+                binding.drinkRecycleView.adapter = DrinksContainerAdapter(drinks)
+            }
+
         }
 
-        //grafigi olusturan fonksiyon
-
-
+        //TODO(rcycler view a donustur)
         // grafik altindaki iceceklerin oldugu scroll viewlari hazirlayan fonksiyon
-        drunkListCreator(container?.context!!)
+        // drunkListCreator(container?.context!!)
 
-        binding.drinkRecycleView.layoutManager = LinearLayoutManager(container.context)
-        val drinks = db.readDrinkDataDetailsDaySum()
-//        binding.drinkRecycleView.adapter = DrinksContainerAdapter(drinks)
+        binding.drinkRecycleView.layoutManager = LinearLayoutManager(container?.context, LinearLayoutManager.HORIZONTAL, false)
 
         return binding.root
     }
@@ -115,9 +118,7 @@ class HistoryFragment : Fragment() {
             val leftAxis = binding.drunkChart.axisLeft
             leftAxis.isEnabled = true
 
-//        val limit = db.readData().water
-
-            val ll = LimitLine(limit.toFloat(), "target")
+            val ll = LimitLine(limit.toFloat(), getString(R.string.target))
             ll.lineColor = ContextCompat.getColor(context, R.color.reply_red_400)
             ll.lineWidth = 4f
             ll.textColor = ContextCompat.getColor(context, R.color.reply_red_400)
@@ -125,7 +126,7 @@ class HistoryFragment : Fragment() {
 
             leftAxis.addLimitLine(ll)
             leftAxis.setDrawGridLines(false)
-            leftAxis.axisMaximum = limit.toFloat() + 500f
+            leftAxis.axisMaximum = limit.toFloat() + limit / 4.toFloat()
             leftAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
 
 
@@ -162,23 +163,21 @@ class HistoryFragment : Fragment() {
 
     // listener for month spinner
     private val monthSpinnerListener = AdapterView.OnItemClickListener { parent, view, pos, id ->
-            // split Ocak 2020 by space and pass month to value for chart generator
-            val month = parent?.getItemAtPosition(pos).toString().split(" ")[0]
+        // split Ocak 2020 by space and pass month to value for chart generator
+        val month = parent?.getItemAtPosition(pos).toString().split(" ")[0]
 
-            // secimi yaptiktan sonra secilen ayin rakamaini chart function a ilet
-            val monthNumber = historyViewModel.monthStringToIntConverter(month)
-            historyViewModel.monthNumber.value = monthNumber
+        // secimi yaptiktan sonra secilen ayin rakamaini chart function a ilet
+        val monthNumber = historyViewModel.monthStringToIntConverter(month)
+        historyViewModel.monthNumber.value = monthNumber
 
-            val dao = AppDatabase.getDatabase(context).dao()
+        val dao = AppDatabase.getDatabase(context).dao()
 
-            //            chartFunction(context!!, limit)
+        //            chartFunction(context!!, limit)
 
-            // secimi yaptiktan sonra icilen icecekler listesini guncelle
-            drunkListCreator(context!!)
-        }
+        // secimi yaptiktan sonra icilen icecekler listesini guncelle
+        drunkListCreator(context!!)
+    }
 
-    //TODO(Recycler view a cevir)
-    // grafik altindaki iceceklerin oldugu scroll viewlari hazirlayan fonksiyon
     private fun drunkListCreator(
         context: Context
     ) {

@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.DrinksFragmentBinding
 import com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 class DrinksFragment : Fragment() {
 
@@ -57,8 +59,12 @@ class DrinksFragment : Fragment() {
                 Snackbar.make(binding.root, getString(R.string.select_drink), Snackbar.LENGTH_SHORT)
                     .show()
             } else {
-                dashboardViewModel.drink()
-                it.findNavController().navigate(R.id.action_drinksFragment_to_navigation_home)
+
+                lifecycleScope.launch {
+                    dashboardViewModel.drink()
+                    it.findNavController().navigate(R.id.action_drinksFragment_to_navigation_home)
+                }
+
             }
 
         }
