@@ -27,8 +27,5 @@ class SplashScreenActivity : AppCompatActivity() {
             startActivity(home)
             finish()
         }, SPLASH_TIMEOUT_TIME.toLong())
-
     }
-
-
 }

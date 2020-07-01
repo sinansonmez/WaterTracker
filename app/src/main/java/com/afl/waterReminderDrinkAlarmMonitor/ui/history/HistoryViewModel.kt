@@ -22,8 +22,7 @@ import kotlinx.coroutines.*
 
 private const val count = 30
 
-
-// TODO(history fonksiyonunu uyguluma kurulumunda hata veriyor)
+// TODO(history fonksiyonunu uyguluma kurulumunda hata veriyor dolayisiyla icilen sifir ise uyari mesaji ver ve bos ekran goster)
 class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val db by lazy { DatabaseHelper(app.applicationContext) }

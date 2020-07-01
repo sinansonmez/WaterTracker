@@ -10,6 +10,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.ActivityMainBinding
 import com.afl.waterReminderDrinkAlarmMonitor.utils.AppDatabase
 import com.google.android.gms.ads.MobileAds
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,10 +43,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_history
             )
         )
+        Timber.plant(Timber.DebugTree())
 
         navView.setupWithNavController(navController)
-
     }
-
-
 }

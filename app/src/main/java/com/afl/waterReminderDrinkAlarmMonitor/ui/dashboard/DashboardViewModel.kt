@@ -1,30 +1,20 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard
 
 import android.app.*
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
-import com.afl.waterReminderDrinkAlarmMonitor.utils.AppDatabase
-import com.afl.waterReminderDrinkAlarmMonitor.utils.Repository
 import com.xw.repo.BubbleSeekBar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
 class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
-    private val db by lazy { DatabaseHelper(app.applicationContext) }
-
-    private val dao = AppDatabase.getDatabase(app).dao()
+    val db by lazy { DatabaseHelper(app.applicationContext) }
 
     private val _text = MutableLiveData<String>().apply {
         value = ""
@@ -43,28 +33,23 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
     private val _weight = MutableLiveData<String>()
     val weight: LiveData<String> = _weight
 
-    //variable to hold waterAmount data
+    // variable to hold waterAmount data
     private val _waterAmount = MutableLiveData<Int>()
     val waterAmount: LiveData<Int> = _waterAmount
 
-    //variable to hold metric value
+    // variable to hold metric value
     private val _metric = MutableLiveData<String>().apply { value = "Metric" }
     val metric: LiveData<String> = _metric
 
     // variable to hold drunk amount
-    private val _drunkAmount = MutableLiveData<Int>().apply {
-        Repository(dao).readDrinkData()
-    }
+    private val _drunkAmount = MutableLiveData<Int>()
     val drunkAmount: LiveData<Int> = _drunkAmount
 
     // variable to hold drink amount from drinks fragment that user choose
     private val _drinkAmount = MutableLiveData<Int>().apply {
+        val user = db.readData()
 
-        viewModelScope.launch {
-            val user = Repository(dao).readUserData()
-            value = if (user?.metric == "American") 8 else 200
-        }
-
+        value = if (user.metric == "American") 8 else 200
     }
     val drinkAmount: LiveData<Int> = _drinkAmount
 
@@ -110,6 +95,8 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
             _age.value?.toInt()
         } else return 0F
 
+        //var water = _waterAmount.value
+
         _waterAmount.value = if (ageValue!! < 30) {
             weightValue!! * 40
         } else if (ageValue >= 30 || ageValue <= 55) {
@@ -126,24 +113,19 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
             _waterAmount.value = (_waterAmount.value!! / 29.574).toInt()
         }
 
+        val userFromDatabase = db.readData()
+
         // eger kullanicinin database de bir water i varsa tekrardan su hesaplama direk onu kaydet
-
-
-        viewModelScope.launch {
-            val user = Repository(dao).readUserData()
-
-            if (user != null) {
-                _waterAmount.value = user.water
-            } else {
-                _waterAmount.value
-            }
-
-            _text.value =
-                _waterAmount.value.toString() + if (_metric.value == "American") " OZ" else " ML"
-
+        if (db.checkUserTableCount() == 1) {
+            _waterAmount.value = userFromDatabase.water
+        } else {
+            _waterAmount.value
         }
 
-        val userToUpdate = User(
+        _text.value =
+            _waterAmount.value.toString() + if (_metric.value == "American") " OZ" else " ML"
+
+        val user = User(
             age = ageValue,
             weight = weightValue!!,
             gender = _gender.value!!,
@@ -151,67 +133,58 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
             water = _waterAmount.value!!
         )
 
-        insertUpdateUser(userToUpdate)
+        insertUpdateUser(user)
 
-        return userToUpdate.water.toFloat()
-
+        return user.water.toFloat()
     }
 
     private fun insertUpdateUser(user: User) {
 
-        viewModelScope.launch {
-            val userInDB = Repository(dao).readUserData()
-
-            // check if there is a current user in the database update it otherwise insert it
-            if (userInDB != null) {
-                Repository(dao).updateUser(user)
-            } else {
-                Repository(dao).insertData(user)
-            }
+        // check if there is a current user in the database update it otherwise insert it
+        if (db.checkUserTableCount() < 1) {
+            db.insertData(user)
+        } else {
+            db.updateUser(user)
         }
-
     }
 
     fun drunkAmountHandler() {
-        _drunkAmount.value = Repository(dao).readDrinkData()
+        _drunkAmount.value = db.readDrinkData()
     }
 
     fun drinkTypeHandler(drinkType: String) {
         _drinkType.value = drinkType
+//        Log.e("database", drinkType)
+//        Log.e("database", _drinkType.value)
     }
 
-    suspend fun drink() {
+    fun drink() {
+        val user = db.readData()
+        val drinkAmounts = when (_drinkType.value) {
+            "water" -> 1.0
+            "coffee" -> 0.8
+            "tea" -> 0.85
+            "juice" -> 0.55
+            "soda" -> 0.6
+            "beer" -> -1.6
+            "wine" -> -1.6
+            "milk" -> 0.78
+            "yogurt" -> 0.5
+            "milkshake" -> 0.55
+            "energy" -> 0.6
+            "lemonade" -> 0.8
+            else -> 0.0
+        }
 
-        withContext(Dispatchers.IO) {
+        val date = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
+        val time = SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().time).toString()
+        val drinkType = _drinkType.value.toString()
 
-            val userInDBInDrink = Repository(dao).readUserData()
+        val amount = (_drinkAmount.value!!.toInt() * drinkAmounts).toInt()
+        val metric = if (user.metric == "American") "oz" else "ml"
 
-            val drinkAmounts = when (_drinkType.value) {
-                "water" -> 1.0
-                "coffee" -> 0.8
-                "tea" -> 0.85
-                "juice" -> 0.55
-                "soda" -> 0.6
-                "beer" -> -1.6
-                "wine" -> -1.6
-                "milk" -> 0.78
-                "yogurt" -> 0.5
-                "milkshake" -> 0.55
-                "energy" -> 0.6
-                "lemonade" -> 0.8
-                else -> 0.0
-            }
-
-            val date = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
-            val time = SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().time).toString()
-            val drinkType = _drinkType.value.toString()
-
-            val amount = (_drinkAmount.value!!.toInt() * drinkAmounts).toInt()
-            val metric = if (userInDBInDrink != null) {
-                if (userInDBInDrink.metric == "American") "oz" else "ml"
-            } else "ml"
-
-            val drink = Drink(
+        val drink =
+            Drink(
                 date = date,
                 time = time,
                 drink = drinkType,
@@ -219,46 +192,35 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
                 metric = metric
             )
 
-            Repository(dao).insertDrinkData(drink)
+        db.insertDrinkData(drink)
+        drunkAmountHandler()
 
-            withContext(Dispatchers.Main) {
-                drunkAmountHandler()
-                _drinkType.value = ""
-            }
-
-        }
-
-
-
+        _drinkType.value = ""
     }
 
     fun drinkAmountHandler(action: String) {
+        val user = db.readData()
 
-//        val user = db.readData()
-
-        viewModelScope.launch {
-            val user = Repository(dao).readUserData()
-
-            if (user != null) {
-                if (user.metric == "American") {
-                    if (action == "plus") {
-                        _drinkAmount.value = _drinkAmount.value?.plus(1)
-                    } else {
-                        _drinkAmount.value = _drinkAmount.value?.minus(1)
-                        if (_drinkAmount.value!! < 1) _drinkAmount.value = 1
-                    }
-                } else {
-                    if (action == "plus") {
-                        _drinkAmount.value = _drinkAmount.value?.plus(50)
-                    } else {
-                        _drinkAmount.value = _drinkAmount.value?.minus(50)
-                        if (_drinkAmount.value!! < 50) _drinkAmount.value = 50
-                    }
-                }
+        if (user.metric == "American") {
+            if (action == "plus") {
+                _drinkAmount.value = _drinkAmount.value?.plus(1)
+            } else {
+                _drinkAmount.value = _drinkAmount.value?.minus(1)
+                if (_drinkAmount.value!! < 1) _drinkAmount.value = 1
             }
-
+        } else {
+            if (action == "plus") {
+                _drinkAmount.value = _drinkAmount.value?.plus(50)
+            } else {
+                _drinkAmount.value = _drinkAmount.value?.minus(50)
+                if (_drinkAmount.value!! < 50) _drinkAmount.value = 50
+            }
         }
 
+        //TODO performance icin coroutine kullanabilir misin bak
+//        viewModelScope.launch {
+//            db.readData()
+//        }
     }
 
     val seekbarHandler = object : BubbleSeekBar.OnProgressChangedListener {
@@ -286,6 +248,4 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
         ) {
         }
     }
-
-
 }

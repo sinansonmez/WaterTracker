@@ -20,11 +20,11 @@
             android:id="@+id/selectDrinkText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="6dp"
+            android:layout_margin="@dimen/_6sdp"
             android:text="@string/select_your_drink"
             android:textAlignment="center"
             android:textColor="@color/reply_black_900"
-            android:textSize="20sp"
+            android:textSize="@dimen/_20ssp"
             app:layout_constraintBottom_toTopOf="@id/firstRowDrinkContainer"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -34,7 +34,7 @@
             android:id="@+id/firstRowDrinkContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/drinkContainerMargin"
+            android:layout_marginTop="@dimen/_16sdp"
             android:gravity="center"
             app:layout_constraintBottom_toTopOf="@id/secondRowDrinkContainer"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -43,33 +43,32 @@
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/waterButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_water"
-                android:drawablePadding="0dp"
                 android:gravity="center"
                 android:tag="water"
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/water"
                 android:textOn="@string/water"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/coffeeButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_coffee"
@@ -79,17 +78,17 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/coffee"
                 android:textOn="@string/coffee"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/teaButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_tea"
@@ -99,17 +98,17 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/tea"
                 android:textOn="@string/tea"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/juiceButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_juice"
@@ -119,7 +118,7 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/juice"
                 android:textOn="@string/juice"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
@@ -132,7 +131,7 @@
             android:id="@+id/secondRowDrinkContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/drinkContainerMargin"
+            android:layout_marginTop="@dimen/_16sdp"
             android:gravity="center"
             app:layout_constraintBottom_toTopOf="@id/thirdRowDrinkContainer"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -141,13 +140,13 @@
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/sodaButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_soda"
@@ -157,17 +156,17 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/soda"
                 android:textOn="@string/soda"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/beerButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_beer"
@@ -177,17 +176,17 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/beer"
                 android:textOn="@string/beer"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/wineButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_wine"
@@ -197,17 +196,17 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/wine"
                 android:textOn="@string/wine"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/milkButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_milk"
@@ -217,11 +216,11 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/milk"
                 android:textOn="@string/milk"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
         </LinearLayout>
@@ -230,7 +229,7 @@
             android:id="@+id/thirdRowDrinkContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/drinkContainerMargin"
+            android:layout_marginTop="@dimen/_16sdp"
             android:gravity="center"
             app:layout_constraintBottom_toTopOf="@id/guidelineDrinkFragment"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -239,13 +238,13 @@
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/yogurtButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_yogurt"
@@ -255,17 +254,17 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/yogurt"
                 android:textOn="@string/yogurt"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/milkshakeButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_milkshake"
@@ -275,17 +274,17 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/milkshake"
                 android:textOn="@string/milkshake"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/energyButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_energy"
@@ -295,17 +294,17 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/energy"
                 android:textOn="@string/energy"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <ToggleButton
                 android:id="@+id/lemonadeButton"
-                android:layout_width="@dimen/drinks_button_height_width"
-                android:layout_height="@dimen/drinks_button_height_width"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:drawableTop="@drawable/ic_lemonade"
@@ -315,11 +314,11 @@
                 android:textColor="@color/reply_white_50"
                 android:textOff="@string/lemonade"
                 android:textOn="@string/lemonade"
-                android:textSize="@dimen/drinks_button_text_size" />
+                android:textSize="@dimen/_8ssp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
         </LinearLayout>
@@ -345,20 +344,20 @@
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/plusButton"
-                android:layout_width="60sp"
+                android:layout_width="@dimen/_50ssp"
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> dashboardViewModel.drinkAmountHandler(`plus`)}"
                 android:text="+"
-                android:textSize="24sp" />
+                android:textSize="@dimen/_20sdp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <TextView
@@ -367,7 +366,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{dashboardViewModel.drinkAmount.toString()}"
                 android:textColor="@color/reply_black_900"
-                android:textSize="26sp" />
+                android:textSize="@dimen/_20ssp" />
 
             <TextView
                 android:id="@+id/metricText"
@@ -375,25 +374,25 @@
                 android:layout_height="wrap_content"
                 android:text=" ml"
                 android:textColor="@color/reply_black_900"
-                android:textSize="26sp" />
+                android:textSize="@dimen/_20ssp" />
 
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/minusButton"
-                android:layout_width="60sp"
+                android:layout_width="@dimen/_50ssp"
                 android:layout_height="wrap_content"
                 android:onClick="@{() ->dashboardViewModel.drinkAmountHandler(`minus`)}"
                 android:text="-"
-                android:textSize="24sp" />
+                android:textSize="@dimen/_20sdp" />
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_weight="1" />
         </LinearLayout>
 
@@ -401,7 +400,7 @@
             android:id="@+id/drinkButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="@dimen/_30sdp"
             android:text="@string/drink"
             app:layout_constraintBottom_toTopOf="@id/adView"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -411,11 +410,11 @@
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+            ads:adUnitId="ca-app-pub-7954399632679605/9743680462"
             ads:layout_constraintBottom_toBottomOf="parent"
             ads:layout_constraintTop_toBottomOf="@id/drinkButton" />
 

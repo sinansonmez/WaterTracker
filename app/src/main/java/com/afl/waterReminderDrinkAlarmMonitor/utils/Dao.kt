@@ -33,7 +33,6 @@ private const val COL_START_NOT = "startingTime"
 private const val COL_FINISH_NOT = "finishingTime"
 private const val COL_INTERVAL_NOT = "intervalTime"
 
-
 @Dao
 interface Dao {
 
@@ -75,5 +74,4 @@ interface Dao {
 
     @Query("SELECT * FROM $TABLE_NAME_NOT LIMIT 1")
     suspend fun readNotData(): Notification
-
 }

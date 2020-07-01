@@ -15,21 +15,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <com.app.progresviews.ProgressWheel
             android:id="@+id/wheelProgress"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:barWidth="20dp"
-            app:countText="1.000"
+            android:layout_height="@dimen/_150sdp"
+            app:barWidth="@dimen/_15sdp"
+            app:countText="0"
             app:countTextColor="@android:color/black"
-            app:countTextSize="30sp"
+            app:countTextSize="@dimen/_20ssp"
             app:defTextColor="@android:color/black"
-            app:defTextSize="15sp"
+            app:defTextSize="@dimen/_10ssp"
             app:layout_constraintBottom_toTopOf="@id/mainInfoContainer"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:marginBtwText="15dp"
+            app:marginBtwText="@dimen/_15sdp"
             app:percentage="270"
             app:progressColor="@color/water_blue_100" />
 
@@ -47,7 +48,7 @@
                 android:id="@+id/drunkInfoContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="12dp">
+                android:padding="@dimen/_12sdp">
 
                 <com.google.android.material.circularreveal.CircularRevealRelativeLayout
                     android:layout_width="wrap_content"
@@ -56,14 +57,14 @@
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="6dp"
+                        android:padding="@dimen/_6sdp"
                         android:src="@drawable/circle" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:padding="6dp"
+                        android:padding="@dimen/_6sdp"
                         android:src="@drawable/ic_water" />
 
                 </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
@@ -77,17 +78,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="6dp"
+                        android:layout_margin="@dimen/_6sdp"
                         android:text="@string/drunk"
                         android:textColor="@color/reply_black_800"
-                        android:textSize="@dimen/normalTextSize"
+                        android:textSize="@dimen/_16ssp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/drunkText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="6dp"
+                        android:layout_margin="@dimen/_6sdp"
                         android:text="800 ML"
                         android:textColor="@color/reply_black_800" />
 
@@ -98,7 +99,7 @@
                 android:id="@+id/targetInfoContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="12dp">
+                android:padding="@dimen/_12sdp">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
@@ -109,17 +110,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="6dp"
+                        android:layout_margin="@dimen/_6sdp"
                         android:text="@string/target"
                         android:textColor="@color/reply_black_800"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/_16ssp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/targetText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="6dp"
+                        android:layout_margin="@dimen/_6sdp"
                         android:text="1.000 ML"
                         android:textColor="@color/reply_black_800" />
 
@@ -129,7 +130,7 @@
                 <com.google.android.material.circularreveal.CircularRevealRelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp">
+                    android:layout_margin="@dimen/_6sdp">
 
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -161,40 +162,33 @@
             app:layout_constraintTop_toBottomOf="@id/mainInfoContainer" />
 
         <androidx.core.widget.NestedScrollView
-            android:orientation="horizontal"
             android:id="@+id/drunkListContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
             android:fillViewport="true"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@id/adView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/drinkWaterButton">
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/drunkListLayout"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="horizontal" />-->
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/drinksRecyclerView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/_50sdp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+            ads:adUnitId="ca-app-pub-7954399632679605/9743680462"
             ads:layout_constraintBottom_toBottomOf="parent"
             ads:layout_constraintTop_toBottomOf="@id/drunkListContainer" />
 

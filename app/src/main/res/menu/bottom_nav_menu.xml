@@ -6,11 +6,12 @@
         android:icon="@drawable/ic_drop_black"
         android:title="@string/title_home" />
 
-    <item
+<!--    TODO historyi tamamladıktan sonra uncomment et-->
+<!--    <item
         android:id="@+id/navigation_history"
         android:icon="@drawable/ic_history_black_24dp"
         android:title="@string/history"
-        />
+        />-->
 
     <item
         android:id="@+id/navigation_notifications"

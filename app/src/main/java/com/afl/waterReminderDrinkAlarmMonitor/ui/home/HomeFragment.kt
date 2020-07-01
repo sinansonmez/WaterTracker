@@ -1,9 +1,7 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.home
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -17,8 +15,8 @@ import com.afl.waterReminderDrinkAlarmMonitor.databinding.FragmentHomeBinding
 import com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel
 import com.afl.waterReminderDrinkAlarmMonitor.utils.*
 import com.google.android.gms.ads.AdRequest
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.*
+import timber.log.Timber
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,7 +31,6 @@ class HomeFragment : Fragment() {
             this.requireContext()
         )
     }
-
 
     @SuppressLint("NewApi")
     override fun onCreateView(
@@ -57,7 +54,7 @@ class HomeFragment : Fragment() {
         // This is used so that the binding can observe LiveData updates
         binding.lifecycleOwner = this
 
-        //admob setup
+        // admob setup
         // dummy ad banner id ca-app-pub-3940256099942544/6300978111
         // real ad banner id ca-app-pub-7954399632679605/9743680462
         val adRequest = AdRequest.Builder().build()
@@ -74,37 +71,37 @@ class HomeFragment : Fragment() {
             navigateToDashboardScreen(waterAmount)
             adjustProgressWheel(drunkAmount, waterAmount, metric)
 
-            val today = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
+            val today =
+                SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
             val drunks = Repository(dao).readDrinkDataDetailsSelectedDay(today)
 
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 if (drunks != null) {
                     binding.drinksRecyclerView.adapter = DrinksContainerAdapter(drunks)
-
                 }
             }
         }
-
-        binding.drinksRecyclerView.layoutManager = LinearLayoutManager(container?.context, LinearLayoutManager.HORIZONTAL, false)
+        binding.drinksRecyclerView.layoutManager =
+            LinearLayoutManager(container?.context, LinearLayoutManager.HORIZONTAL, false)
 
         binding.drinksRecyclerView.isNestedScrollingEnabled = false
 
         binding.drinkWaterButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_drinksFragment)
+            Timber.d("button is pushed")
         }
 
         return binding.root
     }
 
     private fun drunkAmountPercFormatter(drunkAmount: Int?, waterAmount: Int?): Int {
-        val perc = percentageParser(drunkAmount,waterAmount)
+        val perc = percentageParser(drunkAmount, waterAmount)
         return (perc.times(360F)).toInt()
-
     }
 
     private fun drunkAmountPercTextFormatter(drunkAmount: Int?, waterAmount: Int?): String {
 
-        val perc = percentageParser(drunkAmount,waterAmount)
+        val perc = percentageParser(drunkAmount, waterAmount)
         val df = DecimalFormat("##%")
         return if (waterAmount == 0) "0%" else df.format(perc)
     }
@@ -116,7 +113,6 @@ class HomeFragment : Fragment() {
         } else {
             0f
         }
-
     }
 
     private suspend fun getDrinkAmount(dao: Dao): Int? {
@@ -131,7 +127,6 @@ class HomeFragment : Fragment() {
         } else {
             if (sum!![size!!].date == date) sum[size].total else 0
         }
-
     }
 
     private suspend fun adjustProgressWheel(drunkAmount: Int?, waterAmount: Int?, metric: String?) {
@@ -146,9 +141,7 @@ class HomeFragment : Fragment() {
             val metricAbbr = if (metric == "American") " OZ" else " ML"
             binding.drunkText.text = drunkAmount.toString() + metricAbbr
             binding.targetText.text = waterAmount.toString() + metricAbbr
-
         }
-
     }
 
     private suspend fun navigateToDashboardScreen(waterAmount: Int?) {
@@ -160,8 +153,5 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.action_navigation_home_to_navigation_setting)
             }
         }
-
     }
-
-
 }

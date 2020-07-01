@@ -13,8 +13,8 @@ android {
         applicationId "com.afl.waterReminderDrinkAlarmMonitor"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 10
-        versionName "1.7.1"
+        versionCode 11
+        versionName "1.7.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -88,5 +88,12 @@ dependencies {
 
     // chart library https://github.com/PhilJay/MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // scalable size units
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.intuit.ssp:ssp-android:1.0.6'
+
+    // timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
 }

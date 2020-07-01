@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/dateText"
         android:layout_width="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/_16sdp"
         android:background="@color/water_blue_50"
         android:textColor="@color/reply_white_50"
         android:textAllCaps="true"

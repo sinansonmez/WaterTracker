@@ -17,8 +17,8 @@
         <LinearLayout
             android:id="@+id/notificationPermissionContainer"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_margin="@dimen/notification_container_margin"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_margin="@dimen/_10sdp"
             android:background="@drawable/notification_container_border"
             android:gravity="center"
             android:orientation="horizontal"
@@ -30,17 +30,17 @@
                 android:id="@+id/notificationPermissionText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10sdp"
                 android:layout_weight="0.6"
                 android:text="@string/allow_notifications"
                 android:textColor="@color/reply_black_900"
-                android:textSize="@dimen/normalTextSize" />
+                android:textSize="@dimen/_14ssp" />
 
             <com.suke.widget.SwitchButton
                 android:id="@+id/notificationPermissionSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/_10sdp"
                 app:sb_checked_color="@color/water_blue_100" />
 
 
@@ -51,15 +51,15 @@
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/notification_container_margin"
+            android:layout_marginTop="@dimen/_10sdp"
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@id/notificationPermissionContainer">
 
             <LinearLayout
                 android:id="@+id/notificationStartTimeContainer"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_margin="@dimen/notification_container_margin"
+                android:layout_height="@dimen/_56sdp"
+                android:layout_margin="@dimen/_10sdp"
                 android:background="@drawable/notification_container_border"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -72,11 +72,11 @@
                     android:id="@+id/notificationStartTimeText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_margin="@dimen/_10sdp"
                     android:layout_weight="0.7"
                     android:text="@string/start_time"
                     android:textColor="@color/reply_black_900"
-                    android:textSize="@dimen/normalTextSize" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <Spinner
                     android:spinnerMode="dialog"
@@ -84,15 +84,15 @@
                     android:id="@+id/startingTimeSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp" />
+                    android:layout_margin="@dimen/_10sdp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/notificationEndTimeContainer"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_margin="@dimen/notification_container_margin"
+                android:layout_height="@dimen/_56sdp"
+                android:layout_margin="@dimen/_10sdp"
                 android:background="@drawable/notification_container_border"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -105,11 +105,11 @@
                     android:id="@+id/notificationEndTimeText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_margin="@dimen/_10sdp"
                     android:layout_weight="0.7"
                     android:text="@string/finish_time"
                     android:textColor="@color/reply_black_900"
-                    android:textSize="@dimen/normalTextSize" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <Spinner
                     android:spinnerMode="dialog"
@@ -117,15 +117,15 @@
                     android:id="@+id/finishingTimeSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp" />
+                    android:layout_margin="@dimen/_10sdp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/notificationIntervalContainer"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_margin="@dimen/notification_container_margin"
+                android:layout_height="@dimen/_56sdp"
+                android:layout_margin="@dimen/_10sdp"
                 android:background="@drawable/notification_container_border"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -138,11 +138,11 @@
                     android:id="@+id/notificationIntervalText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_margin="@dimen/_10sdp"
                     android:layout_weight="0.7"
                     android:text="@string/interval"
                     android:textColor="@color/reply_black_900"
-                    android:textSize="@dimen/normalTextSize" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <Spinner
                     android:spinnerMode="dialog"
@@ -150,7 +150,7 @@
                     android:id="@+id/intervalSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp" />
+                    android:layout_margin="@dimen/_10sdp" />
 
             </LinearLayout>
 

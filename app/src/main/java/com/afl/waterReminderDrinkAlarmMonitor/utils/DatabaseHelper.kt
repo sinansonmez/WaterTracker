@@ -1,11 +1,14 @@
 package com.afl.waterReminderDrinkAlarmMonitor.utils
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
+import com.afl.waterReminderDrinkAlarmMonitor.model.Sum
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DatabaseHelper(val context: Context) :
     SQLiteOpenHelper(
@@ -36,7 +39,6 @@ class DatabaseHelper(val context: Context) :
     private val COL_FINISH_NOT = "finishingTime"
     private val COL_INTERVAL_NOT = "intervalTime"
 
-
     companion object {
         private const val DATABASE_NAME = "SQLITE_DATABASE.db"//database adı
         private const val DATABASE_VERSION = 5
@@ -56,8 +58,7 @@ class DatabaseHelper(val context: Context) :
         db?.execSQL(createTableNotification)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-    }
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
 
     fun readDrinkDataDetailsDaySum(): MutableList<Drink> {
         val drunkList = mutableListOf<Drink>()
@@ -83,6 +84,41 @@ class DatabaseHelper(val context: Context) :
         result.close()
         sqliteDB.close()
         return drunkList
+    }
+
+    fun updateUser(user: User) {
+        val sqliteDB = this.writableDatabase
+        val query = "SELECT * FROM $TABLE_NAME"
+        val result = sqliteDB.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val cv = ContentValues()
+                cv.put(COL_AGE, user.age)
+                cv.put(COL_GENDER, user.gender)
+                cv.put(COL_WEIGHT, user.weight)
+                cv.put(COL_METRIC, user.metric)
+                cv.put(COL_WATER, user.water)
+                sqliteDB.update(TABLE_NAME, cv, null, null)
+            } while (result.moveToNext())
+        }
+
+        result.close()
+        sqliteDB.close()
+    }
+
+    // yeni kullanici ekliyor
+    fun insertData(user: User) {
+        val sqliteDB = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COL_AGE, user.age)
+        contentValues.put(COL_WEIGHT, user.weight)
+        contentValues.put(COL_GENDER, user.gender)
+        contentValues.put(COL_METRIC, user.metric)
+        contentValues.put(COL_WATER, user.water)
+
+        val result = sqliteDB.insert(TABLE_NAME, null, contentValues)
+
+        sqliteDB.close()
     }
 
     // user tablosundaki tum datayi okuyor
@@ -117,4 +153,40 @@ class DatabaseHelper(val context: Context) :
         return count
     }
 
+    // bu fonksiyon sadece son gunun toplam icilen miktari getiriyor
+    fun readDrinkData(): Int {
+        val sqliteDB = this.writableDatabase
+        val query =
+            "SELECT $COL_DATE_DRUNK, SUM($COL_AMOUNT_DRUNK) as Total FROM $TABLE_NAME_DRUNK GROUP BY $COL_DATE_DRUNK"
+        val result = sqliteDB.rawQuery(query, null)
+        result.moveToLast()
+        val sum = Sum()
+        if (result.moveToLast()) {
+            do {
+                sum.date = result.getString(result.getColumnIndex(COL_DATE_DRUNK))
+                sum.total = result.getString(result.getColumnIndex("Total")).toInt()
+            } while (result.moveToNext())
+        }
+
+        val date = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
+        result.close()
+        sqliteDB.close()
+        // eger gun bugunun gunu degilse 0 getiriyor
+        return if (sum.date == date) sum.total else 0
+    }
+
+    // icilen icecegi ek bilgiler ile birlikte database yaziyor
+    fun insertDrinkData(drink: Drink) {
+        val sqliteDB = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COL_DATE_DRUNK, drink.date)
+        contentValues.put(COL_TIME_DRUNK, drink.time)
+        contentValues.put(COL_DRINK_DRUNK, drink.drink)
+        contentValues.put(COL_AMOUNT_DRUNK, drink.amount)
+        contentValues.put(COL_METRIC_DRUNK, drink.metric)
+
+        val result = sqliteDB.insert(TABLE_NAME_DRUNK, null, contentValues)
+
+        sqliteDB.close()
+    }
 }
