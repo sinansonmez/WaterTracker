@@ -19,7 +19,7 @@ import com.google.android.material.textfield.TextInputEditText
 // Notification ID.
 private const val NOTIFICATION_ID = 0
 
-//change listener extension for TextInputEditText
+// change listener extension for TextInputEditText
 fun TextInputEditText.onChange(cb: (String) -> Unit) {
 
     this.addTextChangedListener(object : TextWatcher {
@@ -33,12 +33,9 @@ fun TextInputEditText.onChange(cb: (String) -> Unit) {
             start: Int,
             count: Int,
             after: Int
-        ) {
-        }
+        ) {}
 
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        }
-
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
 }
 
@@ -105,6 +102,3 @@ private fun hideKeyboardFrom(view: View) {
     val imm = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
-
-
-

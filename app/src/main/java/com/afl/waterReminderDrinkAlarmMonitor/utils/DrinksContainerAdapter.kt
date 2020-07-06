@@ -1,7 +1,6 @@
 package com.afl.waterReminderDrinkAlarmMonitor.utils
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,10 +35,7 @@ class DrinksContainerAdapter(private val drinks: MutableList<Drink>) :
         when (holder) {
             is CustomViewHolder -> { holder.bind(drinks[position]) }
         }
-
     }
-
-
 }
 
 class CustomViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -74,11 +70,8 @@ class CustomViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
                     dialogInterface.cancel()
                 }
                 .show()
-
         }
-
     }
-
 }
 
 private fun drinkNameGetter(drink:String, context: Context): String {
@@ -98,8 +91,4 @@ private fun drinkNameGetter(drink:String, context: Context): String {
         "lemonade" -> context.getString(R.string.lemonade)
         else -> "Drink"
     }
-
 }
-
-
-

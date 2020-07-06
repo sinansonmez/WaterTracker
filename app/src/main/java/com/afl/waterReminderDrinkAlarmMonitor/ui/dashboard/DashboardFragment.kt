@@ -1,5 +1,6 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,18 +9,19 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.lifecycleScope
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.FragmentDashboardBinding
 import com.google.android.material.snackbar.Snackbar
 import com.afl.waterReminderDrinkAlarmMonitor.*
 import com.afl.waterReminderDrinkAlarmMonitor.utils.*
-import kotlinx.coroutines.*
+import com.google.firebase.analytics.FirebaseAnalytics
 import timber.log.Timber
 
+// TODO coroutine gecisi tamamla
 class DashboardFragment : Fragment() {
 
     private lateinit var dashboardViewModel: DashboardViewModel
     private lateinit var binding: FragmentDashboardBinding
+    private lateinit var mFirebaseAnalytics: FirebaseAnalytics
 
     private val db by lazy {
         DatabaseHelper(
@@ -116,7 +118,7 @@ class DashboardFragment : Fragment() {
         // observer for gender, if age and weight is empty guide user to enter age otherwise recalculate water amount
         dashboardViewModel.gender.observe(this, Observer { newGender ->
             if (binding.weightEditText.text.isNullOrEmpty() or binding.ageEditText.text.isNullOrEmpty()) {
-                //TODO(bu uyari dolu olsa da cikiyor)
+                // TODO(bu uyari dolu olsa da cikiyor)
                 Snackbar.make(
                     binding.root,
                     getString(R.string.please_type_age_weigh),
@@ -140,10 +142,6 @@ class DashboardFragment : Fragment() {
             binding.waterAmountText.text = newAmount.toString() + metricText
 
             db.updateUser(user)
-
-//            lifecycleScope.launch {
-//                Repository(dao).updateUser(user)
-//            }
         })
 
         if (db.checkUserTableCount() == 1) {
@@ -153,10 +151,19 @@ class DashboardFragment : Fragment() {
         return binding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mFirebaseAnalytics.setCurrentScreen(this.activity!!, this.javaClass.simpleName, this.javaClass.simpleName)
+    }
+
     // function to read the data from database and set the values
     private fun readUserData(dao: Dao) {
 
-        // TODO bu kısmı coroutineden cıkarırsak düzeliyor ancak bu sefer yas ve kilo edit text set edilmiyor
         val user = db.readData()
 
         // set metric selector
@@ -178,6 +185,8 @@ class DashboardFragment : Fragment() {
         }
 
         // set weight edit text
+        // TODO java.lang.IndexOutOfBoundsException: setSpan (4 ... 4) ends beyond length 3 hatasi cozumu olabilir
+        // binding.weightEditText.setText("")
         binding.weightEditText.setText(user.weight.toString())
         // set age edit text
         binding.ageEditText.setText(user.age.toString())

@@ -10,9 +10,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.ActivityMainBinding
 import com.afl.waterReminderDrinkAlarmMonitor.utils.AppDatabase
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import timber.log.Timber
 
+// TODO back buttona basinca ana ekrana gitsin
 class MainActivity : AppCompatActivity() {
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private lateinit var binding: ActivityMainBinding
 
@@ -23,9 +28,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        database = AppDatabase.getDatabase(this)
-
+        // Obtain the FirebaseAnalytics instance.
+        firebaseAnalytics = Firebase.analytics
         MobileAds.initialize(this) {}
+
+        database = AppDatabase.getDatabase(this)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -46,5 +53,10 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
 
         navView.setupWithNavController(navController)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
     }
 }

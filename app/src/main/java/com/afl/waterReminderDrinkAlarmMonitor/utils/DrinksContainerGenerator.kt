@@ -9,14 +9,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.afl.waterReminderDrinkAlarmMonitor.R
 
-
 class DrinksContainerGenerator {
 
     fun createLinearLayout(orientation: String, context: Context?): LinearLayout {
 
         // linear layout parametreleri
         val paramForAllDrinks = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
@@ -33,7 +32,6 @@ class DrinksContainerGenerator {
             }
 
         return linearLayoutForAllDrinkAndText
-
     }
 
     fun createTextViewForDrinks(context: Context?, drinkType: String): TextView {
@@ -85,5 +83,4 @@ class DrinksContainerGenerator {
             isClickable = true
         }
     }
-
 }

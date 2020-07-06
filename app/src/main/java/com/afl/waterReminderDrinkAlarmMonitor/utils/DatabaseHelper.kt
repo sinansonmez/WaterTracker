@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
 import com.afl.waterReminderDrinkAlarmMonitor.model.Sum
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -60,6 +61,8 @@ class DatabaseHelper(val context: Context) :
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
 
+    // her günün toplam içilen miktarı bir liste olarak getiriyor
+    //
     fun readDrinkDataDetailsDaySum(): MutableList<Drink> {
         val drunkList = mutableListOf<Drink>()
         val sqliteDB = this.writableDatabase
@@ -81,6 +84,8 @@ class DatabaseHelper(val context: Context) :
                 drunkList.add(drink)
             } while (result.moveToNext())
         }
+        Timber.d("drunk list: $drunkList")
+        Timber.d("drunk list size: ${drunkList.size}")
         result.close()
         sqliteDB.close()
         return drunkList

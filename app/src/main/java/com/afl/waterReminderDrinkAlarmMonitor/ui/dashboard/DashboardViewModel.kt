@@ -12,6 +12,7 @@ import com.xw.repo.BubbleSeekBar
 import java.text.SimpleDateFormat
 import java.util.*
 
+// TODO coroutine gecisi tamamla
 class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val db by lazy { DatabaseHelper(app.applicationContext) }
@@ -148,14 +149,12 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun drunkAmountHandler() {
+    private fun drunkAmountHandler() {
         _drunkAmount.value = db.readDrinkData()
     }
 
     fun drinkTypeHandler(drinkType: String) {
         _drinkType.value = drinkType
-//        Log.e("database", drinkType)
-//        Log.e("database", _drinkType.value)
     }
 
     fun drink() {

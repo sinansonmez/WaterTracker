@@ -1,8 +1,11 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -15,7 +18,10 @@ import com.afl.waterReminderDrinkAlarmMonitor.databinding.FragmentHomeBinding
 import com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel
 import com.afl.waterReminderDrinkAlarmMonitor.utils.*
 import com.google.android.gms.ads.AdRequest
-import kotlinx.coroutines.*
+import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -25,6 +31,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var dashboardViewModel: DashboardViewModel
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var mFirebaseAnalytics: FirebaseAnalytics
 
     private val db by lazy {
         DatabaseHelper(
@@ -88,10 +95,23 @@ class HomeFragment : Fragment() {
 
         binding.drinkWaterButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_drinksFragment)
-            Timber.d("button is pushed")
         }
 
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mFirebaseAnalytics.setCurrentScreen(
+            this.activity!!,
+            this.javaClass.simpleName,
+            this.javaClass.simpleName
+        )
     }
 
     private fun drunkAmountPercFormatter(drunkAmount: Int?, waterAmount: Int?): Int {

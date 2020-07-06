@@ -55,7 +55,7 @@ interface Dao {
     suspend fun deleteSelectedDrinkData(drink: Drink)
 
     @Query("SELECT $COL_DATE_DRUNK, SUM($COL_AMOUNT_DRUNK) as Total FROM $TABLE_NAME_DRUNK GROUP BY $COL_DATE_DRUNK")
-    fun readDrinkData(): LiveData<Sum>
+    fun readDrinkData(): LiveData<MutableList<Sum>>
 
     @Query("SELECT $COL_DATE_DRUNK, SUM($COL_AMOUNT_DRUNK) as Total FROM $TABLE_NAME_DRUNK GROUP BY $COL_DATE_DRUNK")
     suspend fun readDrinkSumData(): MutableList<Sum>

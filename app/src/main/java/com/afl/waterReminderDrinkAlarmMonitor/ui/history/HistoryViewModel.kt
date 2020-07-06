@@ -18,11 +18,12 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
+import timber.log.Timber
 
 private const val count = 30
 
-// TODO(history fonksiyonunu uyguluma kurulumunda hata veriyor dolayisiyla icilen sifir ise uyari mesaji ver ve bos ekran goster)
 class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val db by lazy { DatabaseHelper(app.applicationContext) }
@@ -36,24 +37,30 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val _drinks = MutableLiveData<MutableList<Drink>>().apply {
         value = db.readDrinkDataDetailsDaySum()
-//        value = Repository(dao).readDrinkData()
     }
     val drinks: LiveData<MutableList<Drink>> = _drinks
 
-    private val _monthNumber = MutableLiveData<Int>().apply {
-        value = monthStringToIntConverter(dateCollector()[0].split(" ")[0])
-    }
-
+    private val _monthNumber = MutableLiveData<Int>()
     val monthNumber = _monthNumber
+
+    init {
+        if (_drinks.value!!.isNotEmpty()) _monthNumber.value =
+            monthStringToIntConverter(dateCollector()[0].split(" ")[0])
+    }
 
     // function to prepare line data for chart based on live data _drinks
     fun generateLineData(): LineData {
 
-        //TODO(sadece monthnumbera gore degil month number ve year number a gore filtrelemen lazim)
+        // TODO(sadece monthnumbera gore degil month number ve year number a gore filtrelemen lazim)
+        // çünkü kullanıcı uyguylamayı kullanırken 1 yıl geçtiyse
+        // hem önceki yılın Ocak ayını hem de bu senenin Ocak ayını getirir
         val selectedDrinks =
             _drinks.value?.filter {
                 it.date.substring(5, 7).toInt() == _monthNumber.value
             } as MutableList
+
+        Timber.d("drinks: ${drinks.value}")
+        Timber.d("selected drinks: ${selectedDrinks}")
 
         val amountGraph = mutableListOf<Int>()
 
@@ -68,7 +75,6 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
             if (drinkIndexDay.count() == 1) {
                 amountGraph.add(drinkIndexDay[0].amount)
             } else amountGraph.add(0)
-
         }
 
         val d = LineData()
@@ -80,7 +86,6 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
                 Entry(index + 0.5f, amountGraph[index].toFloat())
             )
         }
-
 
         val set = LineDataSet(entries, "Daily Drunk Amount")
         set.mode = LineDataSet.Mode.CUBIC_BEZIER
@@ -107,22 +112,15 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
         d.addDataSet(set)
 
         return d
-
     }
 
     // function to create a list of unique dates for spinner adapter
     fun dateCollector(): MutableList<String> {
-
-        val reversedDrinkData = if (_drinks.value != null) {
-            _drinks.value?.asReversed()
-        } else {
-            mutableListOf(Drink())
-        }
-
+        val reversedDrinkData = _drinks.value?.asReversed()
         // icecek icilen unique date listesini tutan liste
         val dateList = mutableListOf<String>()
-
-        // unique datelerin ve toplam icilen miktar gibi diger bilgileri iceren ve fonksiyonun icinde gelen drinkDatanin her birini dateListe ekle
+        // unique datelerin ve toplam icilen miktar gibi diger bilgileri iceren ve
+        // fonksiyonun icinde gelen drinkDatanin her birini dateListe ekle
         if (reversedDrinkData != null) {
             for (drink in reversedDrinkData) {
                 if (!dateList.contains(drink.date)) {
@@ -133,27 +131,21 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
             throw Exception("User need to drink first, drink list is null")
         }
 
-        // 01-02-2020 seklindeki datayi January 2020 seklinde tutan liste
+        // 2020-07-31 seklindeki datayi January 2020 seklinde tutan liste
         val formattedDateList = mutableListOf<String>()
-
-        // unique listte tutan her bir tarihi January 2020 olarak formatlayip formattedDateList listesine ekle
         for (date in dateList) {
-
             val month = monthIntToStringConverter(dateParser(date).month)
             val year = dateParser(date).year
-
             val formattedDatetobeIncluded = "$month $year"
-
             if (!formattedDateList.contains(formattedDatetobeIncluded)) {
                 formattedDateList.add(formattedDatetobeIncluded)
             }
         }
-
         return formattedDateList
-
     }
 
-    //TODO(accessing string from viewmodel is risky because, viewmodel doesnt react to configuration changes, try to improve it)
+    // TODO(accessing string from viewmodel is risky because,
+    //  viewmodel doesnt react to configuration changes, try to improve it)
     // If int version of the month (e.g 1,2 ) is given string version of a month (e.g January, February) is returned
     private fun monthIntToStringConverter(monthNumber: Int): String {
         var monthFormatted = ""
@@ -211,14 +203,15 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
                 it.date.substring(5, 7).toInt() == _monthNumber.value
             } as MutableList
 
-        // unique datelerin ve toplam icilen miktar gibi diger bilgileri iceren ve fonksiyonun icinde gelen drinkDatanin her birini dateListe ekle
+        // unique datelerin ve toplam icilen miktar gibi diger bilgileri iceren ve
+        // fonksiyonun icinde gelen drinkDatanin her birini dateListe ekle
         for (drink in reversedDrinkData) {
             if (!dateList.contains(drink.date)) {
                 dateList.add(drink.date)
             }
         }
 
-        //her bir tarih icin o gunde icilen icecekleri getir
+        // her bir tarih icin o gunde icilen icecekleri getir
         for (date in dateList) {
 
             val dateTextView = TextView(context).apply {
@@ -236,18 +229,17 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
                 setTextColor(ContextCompat.getColor(context, R.color.reply_white_50))
             }
 
-            // her gun icindeki iceceklerin toplu halde bulundugu linear layout sonra bunlari scroll edebilmek icin alttaki scroll view a koyuyorum
+            // her gun icindeki iceceklerin toplu halde bulundugu linear layout
+            // sonra bunlari scroll edebilmek icin alttaki scroll view a koyuyorum
             val linearLayoutForSelectedDayDrinks =
                 viewGenerator.createLinearLayout("horizontal", context)
-
-
             viewModelScope.launch {
 
                 // o gunde icilen butun iceceklerin listesi
                 val drinksInDate = Repository(dao).readDrinkDataDetailsSelectedDay(date)
 
                 if (drinksInDate != null) {
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         // Her bir drinkin adini, miktarini ve metrici getir
                         for (drink in drinksInDate) {
 
@@ -265,23 +257,26 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
                             // iceceklerin miktarini tutacak text view olustur
                             val amountText =
-                                viewGenerator.createAmountTextViewForDrinks(context, drinkAmount, metric)
+                                viewGenerator.createAmountTextViewForDrinks(
+                                    context,
+                                    drinkAmount,
+                                    metric
+                                )
 
                             // iceceklerin gorselini tutacak image button view olustur ve stylingi yap
-                            val imageView = viewGenerator.createImageViewForDrinks(context, drinkType)
+                            val imageView =
+                                viewGenerator.createImageViewForDrinks(context, drinkType)
 
-                            // son olarak yularida olusturdugun viewlari once linear layouta ekle sonra linear layout'u da scrollable view icerisine ekle
+                            // son olarak yularida olusturdugun viewlari once linear layouta ekle
+                            // sonra linear layout'u da scrollable view icerisine ekle
                             linearLayoutForEachDrink.addView(imageView)
                             linearLayoutForEachDrink.addView(drinkText)
                             linearLayoutForEachDrink.addView(amountText)
                             linearLayoutForSelectedDayDrinks.addView(linearLayoutForEachDrink)
-
                         }
                     }
                 }
             }
-
-
 
             // o gunde icilen butun icecekleri tutan scroll view
             val scrollViewForAllDrinksInSelectedDay =
@@ -291,10 +286,7 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
 
             linearLayoutForAllDrinkAndText.addView(dateTextView)
             linearLayoutForAllDrinkAndText.addView(scrollViewForAllDrinksInSelectedDay)
-
         }
-
         return linearLayoutForAllDrinkAndText
     }
-
 }

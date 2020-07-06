@@ -2,6 +2,7 @@ package com.afl.waterReminderDrinkAlarmMonitor.ui.notifications
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,17 +21,18 @@ import com.afl.waterReminderDrinkAlarmMonitor.utils.AlarmScheduler
 import com.afl.waterReminderDrinkAlarmMonitor.utils.AppDatabase
 import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.afl.waterReminderDrinkAlarmMonitor.utils.Repository
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class NotificationsFragment : Fragment() {
 
-    //TODO(Oncreate in icindekileri functionlara tasi ve asagiya gotur)
+    // TODO(Oncreate in icindekileri functionlara tasi ve asagiya gotur)
 
     private lateinit var notificationsViewModel: NotificationsViewModel
     private lateinit var binding: FragmentNotificationsBinding
-
+    private lateinit var mFirebaseAnalytics: FirebaseAnalytics
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -163,6 +165,20 @@ class NotificationsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mFirebaseAnalytics.setCurrentScreen(
+            this.activity!!,
+            this.javaClass.simpleName,
+            this.javaClass.simpleName
+        )
+    }
+
     private fun createChannel(channelId: String, channelName: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel =
@@ -178,7 +194,5 @@ class NotificationsFragment : Fragment() {
 
             notificationManager.createNotificationChannel(notificationChannel)
         }
-
     }
-
 }

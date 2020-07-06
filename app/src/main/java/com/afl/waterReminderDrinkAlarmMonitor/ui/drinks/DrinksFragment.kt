@@ -1,5 +1,6 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.drinks
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import com.afl.waterReminderDrinkAlarmMonitor.databinding.DrinksFragmentBinding
 import com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.launch
 
 class DrinksFragment : Fragment() {
@@ -26,10 +28,12 @@ class DrinksFragment : Fragment() {
 
     private lateinit var dashboardViewModel: DashboardViewModel
     private lateinit var binding: DrinksFragmentBinding
+    private lateinit var mFirebaseAnalytics: FirebaseAnalytics
     private var drinkButtonCheckStatus = false
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
@@ -46,12 +50,11 @@ class DrinksFragment : Fragment() {
         // This is used so that the binding can observe LiveData updates
         binding.lifecycleOwner = this
 
-        //admob setup
+        // admob setup
         // dummy ad banner id ca-app-pub-3940256099942544/6300978111
         // real ad banner id ca-app-pub-7954399632679605/9743680462
         val adRequest = AdRequest.Builder().build()
         binding.adView.loadAd(adRequest)
-
 
         binding.drinkButton.setOnClickListener {
             // oncelikle secili bir icecek var mi diye kontrol ediyor
@@ -64,14 +67,22 @@ class DrinksFragment : Fragment() {
                     dashboardViewModel.drink()
                     it.findNavController().navigate(R.id.action_drinksFragment_to_navigation_home)
                 }
-
             }
-
         }
 
         buttonListeners()
 
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mFirebaseAnalytics.setCurrentScreen(this.activity!!, this.javaClass.simpleName, this.javaClass.simpleName)
     }
 
     // onchecked lister to manage only one selected toggle button exist at a time
@@ -94,7 +105,6 @@ class DrinksFragment : Fragment() {
                 drinkButtonCheckStatus = true
 
                 dashboardViewModel.drinkTypeHandler(buttonView.tag.toString())
-
             }
         }
 
@@ -112,5 +122,4 @@ class DrinksFragment : Fragment() {
         binding.energyButton.setOnCheckedChangeListener(toggleButtonHandler)
         binding.lemonadeButton.setOnCheckedChangeListener(toggleButtonHandler)
     }
-
 }
