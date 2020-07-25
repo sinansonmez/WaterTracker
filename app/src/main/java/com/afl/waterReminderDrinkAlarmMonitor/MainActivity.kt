@@ -18,7 +18,6 @@ import timber.log.Timber
 // TODO back buttona basinca ana ekrana gitsin
 class MainActivity : AppCompatActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
-
     private lateinit var binding: ActivityMainBinding
 
     companion object {

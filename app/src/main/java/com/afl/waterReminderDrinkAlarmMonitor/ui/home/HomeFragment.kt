@@ -47,8 +47,9 @@ class HomeFragment : Fragment() {
     ): View? {
 
         val dao = AppDatabase.getDatabase(container?.context).dao()
+        //Inflate view and obtain an instance of the binding class
 
-        // Inflate view and obtain an instance of the binding class
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
         dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
