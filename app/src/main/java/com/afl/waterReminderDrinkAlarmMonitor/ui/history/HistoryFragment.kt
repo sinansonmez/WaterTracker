@@ -174,7 +174,7 @@ class HistoryFragment : Fragment() {
             months.add("")
         }
 
-        val adapter = ArrayAdapter(context, R.layout.dropdown_menu_popup_item, months)
+        val adapter = ArrayAdapter(context!!, R.layout.dropdown_menu_popup_item, months)
         binding.filledExposedDropdown.inputType = InputType.TYPE_NULL
         binding.filledExposedDropdown.setAdapter(adapter)
         binding.filledExposedDropdown.onItemClickListener = monthSpinnerListener

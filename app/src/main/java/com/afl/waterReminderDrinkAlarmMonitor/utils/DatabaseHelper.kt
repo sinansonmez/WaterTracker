@@ -41,8 +41,8 @@ class DatabaseHelper(val context: Context) :
     private val COL_INTERVAL_NOT = "intervalTime"
 
     companion object {
-        private const val DATABASE_NAME = "SQLITE_DATABASE.db"//database adı
-        private const val DATABASE_VERSION = 5
+        private const val DATABASE_NAME = "SQLITE_DATABASE.db" //database adı
+        private const val DATABASE_VERSION = 1
     }
 
     // iki tablo var birincisi user tablosu, her uygulamada bir user oluyor
