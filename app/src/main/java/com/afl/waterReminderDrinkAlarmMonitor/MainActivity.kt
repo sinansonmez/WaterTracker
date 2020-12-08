@@ -13,6 +13,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import com.kobakei.ratethisapp.RateThisApp
 import timber.log.Timber
 
 // TODO back buttona basinca ana ekrana gitsin
@@ -36,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment)
 
         // Passing each menu ID as a set of Ids because each
@@ -50,6 +50,10 @@ class MainActivity : AppCompatActivity() {
             )
         )
         Timber.plant(Timber.DebugTree())
+        // Monitor launch times and interval from installation
+        RateThisApp.onCreate(this);
+        // If the condition is satisfied, "Rate this app" dialog will be shown
+        RateThisApp.showRateDialogIfNeeded(this);
 
         navView.setupWithNavController(navController)
     }
