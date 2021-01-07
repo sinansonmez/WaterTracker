@@ -10,7 +10,6 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 
-
 android {
     compileSdkVersion 29
     defaultConfig {
@@ -21,9 +20,10 @@ android {
         versionName "1.8.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        resConfigs "af", "am", "ar", "as", "az", "be", "bg", "bn", "bs", "ca", "cs", "da", "de", "el", "en", "es", "et", "eu", "fa", "fi", "fil", "fr", "gl", "gsw", "gu", "he", "hi", "hr", "hu", "hy", "id", "is", "it", "iw", "ja", "ka", "kk", "km", "kn", "ko", "ky", "ln", "lo", "lt", "lv", "mk", "ml", "mn", "mo", "mr", "ms", "my", "nb", "ne", "nl", "no", "or", "pa", "pl", "pt", "ro", "ru", "si", "sk", "sl", "sq", "sr", "sv", "sw", "ta", "te", "th", "tl", "tr", "uk", "ur", "uz", "vi", "zh", "zh-rTW", "zu"
 
-        javaCompileOptions{
-            annotationProcessorOptions{
+        javaCompileOptions {
+            annotationProcessorOptions {
                 arguments = ["room.schemaLocation":
                                      "$projectDir/schemas".toString()]
 
