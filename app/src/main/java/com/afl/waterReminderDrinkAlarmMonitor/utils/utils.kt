@@ -10,6 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.core.app.NotificationCompat
 import com.afl.waterReminderDrinkAlarmMonitor.MainActivity
 import com.afl.waterReminderDrinkAlarmMonitor.R
@@ -20,7 +21,7 @@ import com.google.android.material.textfield.TextInputEditText
 private const val NOTIFICATION_ID = 0
 
 // change listener extension for TextInputEditText
-fun TextInputEditText.onChange(cb: (String) -> Unit) {
+fun EditText.onChange(cb: (String) -> Unit) {
 
     this.addTextChangedListener(object : TextWatcher {
 

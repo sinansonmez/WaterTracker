@@ -82,7 +82,7 @@
             app:startIconDrawable="@drawable/ic_people_black_24dp"
             app:startIconTint="@color/water_blue_100">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:id="@+id/age_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -107,7 +107,16 @@
             app:startIconDrawable="@drawable/ic_weight_black"
             app:startIconTint="@color/water_blue_100">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <!--            <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/weight_edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/weight"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:text="@{dashboardViewModel.weight}" />-->
+
+            <EditText
                 android:id="@+id/weight_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

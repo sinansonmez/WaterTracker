@@ -183,8 +183,7 @@ class DashboardFragment : Fragment() {
         }
 
         // set weight edit text
-        // TODO java.lang.IndexOutOfBoundsException: setSpan (4 ... 4) ends beyond length 3 hatasi cozumu olabilir
-        binding.weightEditText.setText("")
+        // TODO java.lang.IndexOutOfBoundsException: setSpan (4 ... 4) ends beyond length 3 hatasi
         Timber.d("weight length: ${user.weight}")
         val currentText = binding.weightEditText.text
         Timber.d("current text ${currentText?.length}")
