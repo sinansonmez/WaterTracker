@@ -78,9 +78,7 @@ class DashboardFragment : Fragment() {
 
         // observer for weight to calculate if age is also entered
         dashboardViewModel.weight.observe(this, Observer { newWeight ->
-            if (binding.ageEditText.text.isNullOrEmpty()) {
-                null
-            } else {
+            if (!binding.ageEditText.text.isNullOrEmpty()) {
                 val progress = dashboardViewModel.waterCalculate()
                 binding.waterSeekBar.setProgress(progress)
             }
@@ -88,9 +86,7 @@ class DashboardFragment : Fragment() {
 
         // observer for weight to calculate if weight is also entered
         dashboardViewModel.age.observe(this, Observer { newAge ->
-            if (binding.weightEditText.text.isNullOrEmpty()) {
-                null
-            } else {
+            if (!binding.weightEditText.text.isNullOrEmpty()) {
                 val progress = dashboardViewModel.waterCalculate()
                 binding.waterSeekBar.setProgress(progress)
             }
@@ -100,9 +96,7 @@ class DashboardFragment : Fragment() {
         dashboardViewModel.metric.observe(this, Observer { newMetric ->
 
             // this is second check if age and weight is empty do nothing otherwise recalculate water amount
-            if (binding.weightEditText.text.isNullOrEmpty() or binding.ageEditText.text.isNullOrEmpty()) {
-                null
-            } else {
+            if (!(binding.weightEditText.text.isNullOrEmpty() or binding.ageEditText.text.isNullOrEmpty())) {
                 val progress = dashboardViewModel.waterCalculate()
                 binding.waterSeekBar.setProgress(progress)
             }
@@ -158,7 +152,11 @@ class DashboardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        mFirebaseAnalytics.setCurrentScreen(this.activity!!, this.javaClass.simpleName, this.javaClass.simpleName)
+        mFirebaseAnalytics.setCurrentScreen(
+            this.activity!!,
+            this.javaClass.simpleName,
+            this.javaClass.simpleName
+        )
     }
 
     // function to read the data from database and set the values
@@ -186,7 +184,10 @@ class DashboardFragment : Fragment() {
 
         // set weight edit text
         // TODO java.lang.IndexOutOfBoundsException: setSpan (4 ... 4) ends beyond length 3 hatasi cozumu olabilir
-        // binding.weightEditText.setText("")
+        binding.weightEditText.setText("")
+        Timber.d("weight length: ${user.weight}")
+        val currentText = binding.weightEditText.text
+        Timber.d("current text ${currentText?.length}")
         binding.weightEditText.setText(user.weight.toString())
         // set age edit text
         binding.ageEditText.setText(user.age.toString())
