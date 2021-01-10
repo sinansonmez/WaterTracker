@@ -121,7 +121,7 @@ class DatabaseHelper(val context: Context) :
         contentValues.put(COL_METRIC, user.metric)
         contentValues.put(COL_WATER, user.water)
 
-        val result = sqliteDB.insert(TABLE_NAME, null, contentValues)
+        sqliteDB.insert(TABLE_NAME, null, contentValues)
 
         sqliteDB.close()
     }
@@ -190,7 +190,7 @@ class DatabaseHelper(val context: Context) :
         contentValues.put(COL_AMOUNT_DRUNK, drink.amount)
         contentValues.put(COL_METRIC_DRUNK, drink.metric)
 
-        val result = sqliteDB.insert(TABLE_NAME_DRUNK, null, contentValues)
+        sqliteDB.insert(TABLE_NAME_DRUNK, null, contentValues)
 
         sqliteDB.close()
     }

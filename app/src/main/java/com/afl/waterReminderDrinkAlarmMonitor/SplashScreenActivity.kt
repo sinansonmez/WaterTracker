@@ -11,14 +11,6 @@ class SplashScreenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        // hide title bar
-//        window.requestFeature(Window.FEATURE_NO_TITLE)
-//
-//        //make activity full screen
-//        window.setFlags(
-//            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//            WindowManager.LayoutParams.FLAG_FULLSCREEN
-//        )
 
         setContentView(R.layout.activity_splash_screen)
 

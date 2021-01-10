@@ -96,8 +96,6 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
             _age.value?.toInt()
         } else return 0F
 
-        //var water = _waterAmount.value
-
         _waterAmount.value = if (ageValue!! < 30) {
             weightValue!! * 40
         } else if (ageValue >= 30 || ageValue <= 55) {
