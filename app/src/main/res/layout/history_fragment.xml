@@ -43,6 +43,7 @@
             android:id="@+id/drunkChart"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/_12sdp"
             app:layout_constraintBottom_toTopOf="@id/drunkFullListContainer"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

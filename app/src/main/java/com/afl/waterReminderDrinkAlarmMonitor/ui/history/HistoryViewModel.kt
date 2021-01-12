@@ -51,16 +51,10 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
     // function to prepare line data for chart based on live data _drinks
     fun generateLineData(): LineData {
 
-        // TODO(sadece monthnumbera gore degil month number ve year number a gore filtrelemen lazim)
-        // çünkü kullanıcı uyguylamayı kullanırken 1 yıl geçtiyse
-        // hem önceki yılın Ocak ayını hem de bu senenin Ocak ayını getirir
         val selectedDrinks =
             _drinks.value?.filter {
                 it.date.substring(5, 7).toInt() == _monthNumber.value
             } as MutableList
-
-        Timber.d("drinks: ${drinks.value}")
-        Timber.d("selected drinks: ${selectedDrinks}")
 
         val amountGraph = mutableListOf<Int>()
 
@@ -90,24 +84,11 @@ class HistoryViewModel(private val app: Application) : AndroidViewModel(app) {
         val set = LineDataSet(entries, "Daily Drunk Amount")
         set.mode = LineDataSet.Mode.CUBIC_BEZIER
         set.setDrawFilled(true)
-        set.setDrawCircles(true)
+        set.setDrawCircles(false)
         set.fillColor = ContextCompat.getColor(app.applicationContext, R.color.water_blue_100)
-        set.fillAlpha = 255
         set.color = ContextCompat.getColor(app.applicationContext, R.color.water_blue_100)
-        set.lineWidth = 2.5f
-        set.setCircleColor(ContextCompat.getColor(app.applicationContext, R.color.water_blue_100))
-        set.circleRadius = 4f
-        set.fillColor = ContextCompat.getColor(app.applicationContext, R.color.water_blue_100)
-        set.mode = LineDataSet.Mode.CUBIC_BEZIER
-        set.setDrawValues(true)
-        set.valueTextSize = 10f
+        set.setDrawValues(false)
         set.axisDependency = YAxis.AxisDependency.LEFT
-        set.valueFormatter =
-            object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    return value.toInt().toString()
-                }
-            }
 
         d.addDataSet(set)
 

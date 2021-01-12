@@ -103,7 +103,11 @@ class HistoryFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        mFirebaseAnalytics.setCurrentScreen(this.activity!!, this.javaClass.simpleName, this.javaClass.simpleName)
+        mFirebaseAnalytics.setCurrentScreen(
+            this.activity!!,
+            this.javaClass.simpleName,
+            this.javaClass.simpleName
+        )
     }
 
     // grafigi olusturan fonksiyon
@@ -124,11 +128,7 @@ class HistoryFragment : Fragment() {
             binding.drunkChart.setTouchEnabled(false)
 
             val l = binding.drunkChart.legend
-            l.isWordWrapEnabled = true
-            l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-            l.orientation = Legend.LegendOrientation.HORIZONTAL
-            l.setDrawInside(false)
+            l.isEnabled = false
 
             val rightAxis = binding.drunkChart.axisRight
             rightAxis.isEnabled = false
@@ -140,19 +140,19 @@ class HistoryFragment : Fragment() {
 
             val ll = LimitLine(limit.toFloat(), getString(R.string.target))
             ll.lineColor = ContextCompat.getColor(context, R.color.reply_red_400)
-            ll.lineWidth = 4f
+            ll.lineWidth = 2f
+            ll.enableDashedLine(20F, 10F, 0F)
             ll.textColor = ContextCompat.getColor(context, R.color.reply_red_400)
             ll.textSize = 12f
 
             leftAxis.addLimitLine(ll)
-            leftAxis.setDrawGridLines(false)
+            leftAxis.setDrawGridLines(true)
             leftAxis.axisMaximum = limit.toFloat() + limit / 4.toFloat()
             leftAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
 
             val xAxis = binding.drunkChart.xAxis
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.setCenterAxisLabels(true)
-
             xAxis.setDrawGridLines(false)
             xAxis.axisMinimum = 0f
             xAxis.valueFormatter = object : ValueFormatter() {

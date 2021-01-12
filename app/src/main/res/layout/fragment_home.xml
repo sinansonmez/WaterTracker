@@ -31,7 +31,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:marginBtwText="@dimen/_15sdp"
-            app:percentage="270"
+            app:percentage="0"
             app:progressColor="@color/water_blue_100" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
