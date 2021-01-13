@@ -85,6 +85,13 @@ class DrinksFragment : Fragment() {
         mFirebaseAnalytics.setCurrentScreen(this.activity!!, this.javaClass.simpleName, this.javaClass.simpleName)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.adView.adListener = null
+        binding.adView.removeAllViews()
+        binding.adView.destroy()
+    }
+
     // onchecked lister to manage only one selected toggle button exist at a time
     private var toggleButtonHandler =
         CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->

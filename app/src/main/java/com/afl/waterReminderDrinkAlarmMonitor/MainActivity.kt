@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment)
 
         // Passing each menu ID as a set of Ids because each
@@ -58,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         val config = RateThisApp.Config(3, 5)
         RateThisApp.init(config)
 
-        navView.setupWithNavController(navController)
+        binding.navView.setupWithNavController(navController)
     }
 
     override fun onBackPressed() {

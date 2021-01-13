@@ -6,9 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -22,15 +21,15 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
-    private lateinit var binding: FragmentHomeBinding
+    private val dashboardViewModel: DashboardViewModel by viewModels()
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
 
     private val db by lazy {
@@ -48,23 +47,13 @@ class HomeFragment : Fragment() {
 
         val dao = AppDatabase.getDatabase(container?.context).dao()
         // Inflate view and obtain an instance of the binding class
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-
-        dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-
-        // Set the viewmodel for databinding - this allows the bound layout access
-        // to all the data in the VieWModel
-        binding.dashboardViewModel = dashboardViewModel
-
-        // Specify the current activity as the lifecycle owner of the binding.
-        // This is used so that the binding can observe LiveData updates
-        binding.lifecycleOwner = this
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // admob setup
         // dummy ad banner id ca-app-pub-3940256099942544/6300978111
         // real ad banner id ca-app-pub-7954399632679605/9743680462
         val adRequest = AdRequest.Builder().build()
-        binding.adView.loadAd(adRequest)
+        _binding!!.adView.loadAd(adRequest)
 
         // setting information in progress circle
         lifecycleScope.launch {
@@ -83,20 +72,21 @@ class HomeFragment : Fragment() {
 
             withContext(Dispatchers.Main) {
                 if (drunks != null) {
-                    binding.drinksRecyclerView.adapter = DrinksContainerAdapter(drunks)
+                    _binding!!.drinksRecyclerView.adapter = DrinksContainerAdapter(drunks)
                 }
             }
         }
-        binding.drinksRecyclerView.layoutManager =
+        _binding!!.drinksRecyclerView.layoutManager =
             LinearLayoutManager(container?.context, LinearLayoutManager.HORIZONTAL, false)
 
-        binding.drinksRecyclerView.isNestedScrollingEnabled = false
+        _binding!!.drinksRecyclerView.isNestedScrollingEnabled = false
 
-        binding.drinkWaterButton.setOnClickListener {
+        _binding!!.drinkWaterButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_navigation_home_to_drinksFragment)
         }
 
-        return binding.root
+        val view = binding.root
+        return view
     }
 
     override fun onAttach(context: Context) {
@@ -111,6 +101,14 @@ class HomeFragment : Fragment() {
             this.javaClass.simpleName,
             this.javaClass.simpleName
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding!!.adView.adListener = null
+        _binding!!.adView.removeAllViews()
+        _binding!!.adView.destroy()
+        _binding = null
     }
 
     private fun drunkAmountPercFormatter(drunkAmount: Int?, waterAmount: Int?): Int {
@@ -151,15 +149,15 @@ class HomeFragment : Fragment() {
     private suspend fun adjustProgressWheel(drunkAmount: Int?, waterAmount: Int?, metric: String?) {
 
         withContext(Dispatchers.Main) {
-            binding.wheelProgress.setStepCountText(
+            _binding!!.wheelProgress.setStepCountText(
                 drunkAmountPercTextFormatter(drunkAmount, waterAmount)
             )
-            binding.wheelProgress.setPercentage(
+            _binding!!.wheelProgress.setPercentage(
                 drunkAmountPercFormatter(drunkAmount, waterAmount)
             )
             val metricAbbr = if (metric == "American") " OZ" else " ML"
-            binding.drunkText.text = drunkAmount.toString() + metricAbbr
-            binding.targetText.text = waterAmount.toString() + metricAbbr
+            _binding!!.drunkText.text = drunkAmount.toString() + metricAbbr
+            _binding!!.targetText.text = waterAmount.toString() + metricAbbr
         }
     }
 

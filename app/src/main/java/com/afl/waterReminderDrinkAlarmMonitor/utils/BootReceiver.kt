@@ -12,8 +12,6 @@ class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
-        val db by lazy { DatabaseHelper(context!!) }
-
         val dao = AppDatabase.getDatabase(context).dao()
 
         Log.d("database", "onReceive is called")
