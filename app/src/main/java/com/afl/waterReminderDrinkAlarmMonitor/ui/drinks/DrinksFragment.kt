@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.afl.waterReminderDrinkAlarmMonitor.R
@@ -18,6 +20,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class DrinksFragment : Fragment() {
 
@@ -26,8 +29,9 @@ class DrinksFragment : Fragment() {
             DrinksFragment()
     }
 
-    private lateinit var dashboardViewModel: DashboardViewModel
-    private lateinit var binding: DrinksFragmentBinding
+    private val dashboardViewModel: DashboardViewModel by viewModels()
+    private var _binding: DrinksFragmentBinding? = null
+    private val binding get() = _binding!!
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
     private var drinkButtonCheckStatus = false
 
@@ -38,28 +42,22 @@ class DrinksFragment : Fragment() {
     ): View? {
 
         // Inflate view and obtain an instance of the binding class
-        binding = DataBindingUtil.inflate(inflater, R.layout.drinks_fragment, container, false)
-
-        dashboardViewModel = ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-
-        // Set the viewmodel for databinding - this allows the bound layout access
-        // to all the data in the VieWModel
-        binding.dashboardViewModel = dashboardViewModel
-
-        // Specify the current activity as the lifecycle owner of the binding.
-        // This is used so that the binding can observe LiveData updates
-        binding.lifecycleOwner = this
+        _binding = DrinksFragmentBinding.inflate(inflater, container, false)
 
         // admob setup
         // dummy ad banner id ca-app-pub-3940256099942544/6300978111
         // real ad banner id ca-app-pub-7954399632679605/9743680462
         val adRequest = AdRequest.Builder().build()
-        binding.adView.loadAd(adRequest)
+        _binding!!.adView.loadAd(adRequest)
 
-        binding.drinkButton.setOnClickListener {
+        _binding!!.drinkButton.setOnClickListener {
             // oncelikle secili bir icecek var mi diye kontrol ediyor
             if (!drinkButtonCheckStatus) {
-                Snackbar.make(binding.root, getString(R.string.select_drink), Snackbar.LENGTH_SHORT)
+                Snackbar.make(
+                    _binding!!.root,
+                    getString(R.string.select_drink),
+                    Snackbar.LENGTH_SHORT
+                )
                     .show()
             } else {
 
@@ -69,10 +67,24 @@ class DrinksFragment : Fragment() {
                 }
             }
         }
+        _binding!!.plusButton.setOnClickListener { dashboardViewModel.drinkAmountHandler("plus") }
+        _binding!!.minusButton.setOnClickListener { dashboardViewModel.drinkAmountHandler("minus") }
+
+        dashboardViewModel.drinkAmount.observe(this, Observer { newAmount ->
+            _binding!!.amountText.text = newAmount.toString()
+        })
+
+        dashboardViewModel.metric.observe(this, Observer { newMetric ->
+            when (newMetric) {
+                "American" -> { _binding!!.metricText.text = " oz" }
+                "Metric" -> { _binding!!.metricText.text = " ml" }
+            }
+        })
 
         buttonListeners()
 
-        return binding.root
+        val view = binding.root
+        return view
     }
 
     override fun onAttach(context: Context) {
@@ -80,34 +92,53 @@ class DrinksFragment : Fragment() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context)
     }
 
+    override fun onStart() {
+        super.onStart()
+        Timber.d("on start is called")
+    }
+
     override fun onResume() {
         super.onResume()
-        mFirebaseAnalytics.setCurrentScreen(this.activity!!, this.javaClass.simpleName, this.javaClass.simpleName)
+        mFirebaseAnalytics.setCurrentScreen(
+            this.activity!!,
+            this.javaClass.simpleName,
+            this.javaClass.simpleName
+        )
+        when (dashboardViewModel.metric.value) {
+            "American" -> { _binding!!.metricText.text = " oz" }
+            else -> { _binding!!.metricText.text = " ml" }
+        }
+        Timber.d("on resume is called")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.adView.adListener = null
-        binding.adView.removeAllViews()
-        binding.adView.destroy()
+        if (_binding != null) {
+            _binding!!.adView.adListener = null
+            _binding!!.adView.removeAllViews()
+            _binding!!.adView.destroy()
+        }
+        _binding = null
     }
 
     // onchecked lister to manage only one selected toggle button exist at a time
     private var toggleButtonHandler =
         CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                if (buttonView != binding.waterButton) binding.waterButton.isChecked = false
-                if (buttonView != binding.coffeeButton) binding.coffeeButton.isChecked = false
-                if (buttonView != binding.teaButton) binding.teaButton.isChecked = false
-                if (buttonView != binding.juiceButton) binding.juiceButton.isChecked = false
-                if (buttonView != binding.sodaButton) binding.sodaButton.isChecked = false
-                if (buttonView != binding.beerButton) binding.beerButton.isChecked = false
-                if (buttonView != binding.wineButton) binding.wineButton.isChecked = false
-                if (buttonView != binding.milkButton) binding.milkButton.isChecked = false
-                if (buttonView != binding.yogurtButton) binding.yogurtButton.isChecked = false
-                if (buttonView != binding.milkshakeButton) binding.milkshakeButton.isChecked = false
-                if (buttonView != binding.energyButton) binding.energyButton.isChecked = false
-                if (buttonView != binding.lemonadeButton) binding.lemonadeButton.isChecked = false
+                if (buttonView != _binding!!.waterButton) _binding!!.waterButton.isChecked = false
+                if (buttonView != _binding!!.coffeeButton) _binding!!.coffeeButton.isChecked = false
+                if (buttonView != _binding!!.teaButton) _binding!!.teaButton.isChecked = false
+                if (buttonView != _binding!!.juiceButton) _binding!!.juiceButton.isChecked = false
+                if (buttonView != _binding!!.sodaButton) _binding!!.sodaButton.isChecked = false
+                if (buttonView != _binding!!.beerButton) _binding!!.beerButton.isChecked = false
+                if (buttonView != _binding!!.wineButton) _binding!!.wineButton.isChecked = false
+                if (buttonView != _binding!!.milkButton) _binding!!.milkButton.isChecked = false
+                if (buttonView != _binding!!.yogurtButton) _binding!!.yogurtButton.isChecked = false
+                if (buttonView != _binding!!.milkshakeButton) _binding!!.milkshakeButton.isChecked =
+                    false
+                if (buttonView != _binding!!.energyButton) _binding!!.energyButton.isChecked = false
+                if (buttonView != _binding!!.lemonadeButton) _binding!!.lemonadeButton.isChecked =
+                    false
 
                 drinkButtonCheckStatus = true
 
@@ -116,17 +147,17 @@ class DrinksFragment : Fragment() {
         }
 
     private fun buttonListeners() {
-        binding.waterButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.coffeeButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.teaButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.juiceButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.sodaButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.beerButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.wineButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.milkButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.yogurtButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.milkshakeButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.energyButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.lemonadeButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.waterButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.coffeeButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.teaButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.juiceButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.sodaButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.beerButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.wineButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.milkButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.yogurtButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.milkshakeButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.energyButton.setOnCheckedChangeListener(toggleButtonHandler)
+        _binding!!.lemonadeButton.setOnCheckedChangeListener(toggleButtonHandler)
     }
 }

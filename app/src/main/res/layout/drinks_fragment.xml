@@ -351,7 +351,6 @@
                 android:id="@+id/plusButton"
                 android:layout_width="@dimen/_50ssp"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> dashboardViewModel.drinkAmountHandler(`plus`)}"
                 android:text="+"
                 android:textSize="@dimen/_20sdp" />
 
@@ -364,7 +363,7 @@
                 android:id="@+id/amountText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{dashboardViewModel.drinkAmount.toString()}"
+                android:text="200"
                 android:textColor="@color/reply_black_900"
                 android:textSize="@dimen/_20ssp" />
 
@@ -386,7 +385,6 @@
                 android:id="@+id/minusButton"
                 android:layout_width="@dimen/_50ssp"
                 android:layout_height="wrap_content"
-                android:onClick="@{() ->dashboardViewModel.drinkAmountHandler(`minus`)}"
                 android:text="-"
                 android:textSize="@dimen/_20sdp" />
 

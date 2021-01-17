@@ -105,9 +105,11 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding!!.adView.adListener = null
-        _binding!!.adView.removeAllViews()
-        _binding!!.adView.destroy()
+        if (_binding != null) {
+            _binding!!.adView.adListener = null
+            _binding!!.adView.removeAllViews()
+            _binding!!.adView.destroy()
+        }
         _binding = null
     }
 
