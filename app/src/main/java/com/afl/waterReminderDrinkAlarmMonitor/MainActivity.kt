@@ -59,9 +59,4 @@ class MainActivity : AppCompatActivity() {
 
         binding.navView.setupWithNavController(navController)
     }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finishAffinity()
-    }
 }

@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.DrinksFragmentBinding
 import com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel
@@ -49,6 +51,7 @@ class DrinksFragment : Fragment() {
         // real ad banner id ca-app-pub-7954399632679605/9743680462
         val adRequest = AdRequest.Builder().build()
         _binding!!.adView.loadAd(adRequest)
+        _binding!!.metricText.text = "sth"
 
         _binding!!.drinkButton.setOnClickListener {
             // oncelikle secili bir icecek var mi diye kontrol ediyor
@@ -76,10 +79,25 @@ class DrinksFragment : Fragment() {
 
         dashboardViewModel.metric.observe(this, Observer { newMetric ->
             when (newMetric) {
-                "American" -> { _binding!!.metricText.text = " oz" }
-                "Metric" -> { _binding!!.metricText.text = " ml" }
+                "American" -> {
+                    _binding!!.metricText.text = " oz"
+                }
+                "Metric" -> {
+                    _binding!!.metricText.text = " ml"
+                }
             }
+            Timber.d("new metric: $newMetric")
         })
+
+        // This callback will only be called when Fragment is at least Started.
+  /*      requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    Timber.d("back button is called")
+                    findNavController().navigateUp()
+                }
+
+            })*/
 
         buttonListeners()
 
@@ -104,11 +122,6 @@ class DrinksFragment : Fragment() {
             this.javaClass.simpleName,
             this.javaClass.simpleName
         )
-        when (dashboardViewModel.metric.value) {
-            "American" -> { _binding!!.metricText.text = " oz" }
-            else -> { _binding!!.metricText.text = " ml" }
-        }
-        Timber.d("on resume is called")
     }
 
     override fun onDestroy() {
@@ -120,6 +133,7 @@ class DrinksFragment : Fragment() {
         }
         _binding = null
     }
+
 
     // onchecked lister to manage only one selected toggle button exist at a time
     private var toggleButtonHandler =
