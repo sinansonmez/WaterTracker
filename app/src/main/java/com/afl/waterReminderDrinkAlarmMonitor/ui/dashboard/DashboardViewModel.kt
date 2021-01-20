@@ -50,13 +50,12 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
     // variable to hold drink amount from drinks fragment that user choose
     private val _drinkAmount = MutableLiveData<Int>().apply {
         val user = db.readData()
-
         value = if (user.metric == "American") 8 else 200
     }
     val drinkAmount: LiveData<Int> = _drinkAmount
 
     // variable to hold selected drink type
-    private val _drinkType = MutableLiveData<String>().apply { value = "" }
+    private val _drinkType = MutableLiveData<String>().apply { value = "water" }
     val drinkType: LiveData<String> = _drinkType
 
     fun ageHandler(userAge: String) {
@@ -181,14 +180,9 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
         val amount = (_drinkAmount.value!!.toInt() * drinkAmounts).toInt()
         val metric = if (user.metric == "American") "oz" else "ml"
 
-        val drink =
-            Drink(
-                date = date,
-                time = time,
-                drink = drinkType,
-                amount = amount,
-                metric = metric
-            )
+        val drink = Drink(
+            date = date, time = time, drink = drinkType, amount = amount, metric = metric
+        )
 
         db.insertDrinkData(drink)
         drunkAmountHandler()
@@ -214,35 +208,26 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
                 if (_drinkAmount.value!! < 50) _drinkAmount.value = 50
             }
         }
+    }
 
-        //TODO performance icin coroutine kullanabilir misin bak
-//        viewModelScope.launch {
-//            db.readData()
-//        }
+    fun resetDrinkAmount(value: Int) {
+        _drinkAmount.value = value
     }
 
     val seekbarHandler = object : BubbleSeekBar.OnProgressChangedListener {
         override fun onProgressChanged(
-            bubbleSeekBar: BubbleSeekBar?,
-            progress: Int,
-            progressFloat: Float,
-            fromUser: Boolean
+            bubbleSeekBar: BubbleSeekBar?, progress: Int, progressFloat: Float, fromUser: Boolean
         ) {
             _waterAmount.value = progress
         }
 
         override fun getProgressOnActionUp(
-            bubbleSeekBar: BubbleSeekBar?,
-            progress: Int,
-            progressFloat: Float
+            bubbleSeekBar: BubbleSeekBar?, progress: Int, progressFloat: Float
         ) {
         }
 
         override fun getProgressOnFinally(
-            bubbleSeekBar: BubbleSeekBar?,
-            progress: Int,
-            progressFloat: Float,
-            fromUser: Boolean
+            bubbleSeekBar: BubbleSeekBar?, progress: Int, progressFloat: Float, fromUser: Boolean
         ) {
         }
     }

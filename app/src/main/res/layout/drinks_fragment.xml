@@ -51,7 +51,7 @@
                 android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/toggle_selector"
-                android:checked="false"
+                android:checked="true"
                 android:drawableTop="@drawable/ic_water"
                 android:gravity="center"
                 android:tag="water"

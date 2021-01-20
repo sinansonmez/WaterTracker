@@ -1,23 +1,20 @@
 package com.afl.waterReminderDrinkAlarmMonitor.ui.drinks
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import androidx.activity.OnBackPressedCallback
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.DrinksFragmentBinding
 import com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel
+import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -27,20 +24,23 @@ import timber.log.Timber
 class DrinksFragment : Fragment() {
 
     companion object {
-        fun newInstance() =
-            DrinksFragment()
+        fun newInstance() = DrinksFragment()
     }
 
-    private val dashboardViewModel: DashboardViewModel by viewModels()
+    private val dashboardViewModel: DashboardViewModel by activityViewModels()
     private var _binding: DrinksFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
-    private var drinkButtonCheckStatus = false
+    private var drinkButtonCheckStatus = true
+
+    private val db by lazy {
+        DatabaseHelper(
+            this.requireContext()
+        )
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         // Inflate view and obtain an instance of the binding class
@@ -51,23 +51,25 @@ class DrinksFragment : Fragment() {
         // real ad banner id ca-app-pub-7954399632679605/9743680462
         val adRequest = AdRequest.Builder().build()
         _binding!!.adView.loadAd(adRequest)
-        _binding!!.metricText.text = "sth"
+        Timber.d("metric text first in on create: ${_binding!!.metricText.text}")
 
         _binding!!.drinkButton.setOnClickListener {
             // oncelikle secili bir icecek var mi diye kontrol ediyor
             if (!drinkButtonCheckStatus) {
                 Snackbar.make(
-                    _binding!!.root,
-                    getString(R.string.select_drink),
-                    Snackbar.LENGTH_SHORT
-                )
-                    .show()
+                    _binding!!.root, getString(R.string.select_drink), Snackbar.LENGTH_SHORT
+                ).show()
             } else {
-
                 lifecycleScope.launch {
                     dashboardViewModel.drink()
                     it.findNavController().navigate(R.id.action_drinksFragment_to_navigation_home)
                 }
+                drinkButtonCheckStatus = false
+
+                val user = db.readData()
+                val value = if (user.metric == "American") 8 else 200
+                dashboardViewModel.resetDrinkAmount(value)
+
             }
         }
         _binding!!.plusButton.setOnClickListener { dashboardViewModel.drinkAmountHandler("plus") }
@@ -86,20 +88,13 @@ class DrinksFragment : Fragment() {
                     _binding!!.metricText.text = " ml"
                 }
             }
+            // TODO: 1/18/21 metric her seferinde Metric oluyor American yerine
             Timber.d("new metric: $newMetric")
         })
 
-        // This callback will only be called when Fragment is at least Started.
-  /*      requireActivity().onBackPressedDispatcher.addCallback(this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    Timber.d("back button is called")
-                    findNavController().navigateUp()
-                }
-
-            })*/
-
         buttonListeners()
+
+        Timber.d("metric text as last on create text setting: ${_binding!!.metricText.text}")
 
         val view = binding.root
         return view
@@ -110,17 +105,10 @@ class DrinksFragment : Fragment() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context)
     }
 
-    override fun onStart() {
-        super.onStart()
-        Timber.d("on start is called")
-    }
-
     override fun onResume() {
         super.onResume()
         mFirebaseAnalytics.setCurrentScreen(
-            this.activity!!,
-            this.javaClass.simpleName,
-            this.javaClass.simpleName
+            this.activity!!, this.javaClass.simpleName, this.javaClass.simpleName
         )
     }
 
@@ -133,7 +121,6 @@ class DrinksFragment : Fragment() {
         }
         _binding = null
     }
-
 
     // onchecked lister to manage only one selected toggle button exist at a time
     private var toggleButtonHandler =
@@ -155,8 +142,10 @@ class DrinksFragment : Fragment() {
                     false
 
                 drinkButtonCheckStatus = true
-
                 dashboardViewModel.drinkTypeHandler(buttonView.tag.toString())
+            } else {
+                drinkButtonCheckStatus = false
+                dashboardViewModel.drinkTypeHandler("")
             }
         }
 

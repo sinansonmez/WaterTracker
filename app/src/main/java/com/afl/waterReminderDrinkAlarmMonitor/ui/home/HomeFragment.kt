@@ -87,6 +87,12 @@ class HomeFragment : Fragment() {
             it.findNavController().navigate(R.id.action_navigation_home_to_drinksFragment)
         }
 
+        // This disables back button
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(false) {
+                override fun handleOnBackPressed() {}
+            })
+
         val view = binding.root
         return view
     }

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,7 +16,6 @@ import com.afl.waterReminderDrinkAlarmMonitor.utils.*
 import com.google.firebase.analytics.FirebaseAnalytics
 import timber.log.Timber
 
-// TODO coroutine gecisi tamamla
 class DashboardFragment : Fragment() {
 
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -93,7 +91,7 @@ class DashboardFragment : Fragment() {
             }
         })
 
-        // observer for metric value, if value is metric max value is set to 200 or vice versa
+        // observer for metric value, if value is American max value is set to 200 or otherwise to 5000
         dashboardViewModel.metric.observe(this, Observer { newMetric ->
 
             // this is second check if age and weight is empty do nothing otherwise recalculate water amount
@@ -140,7 +138,7 @@ class DashboardFragment : Fragment() {
         })
 
         if (db.checkUserTableCount() == 1) {
-            readUserData(dao)
+            readUserData()
         }
 
         return binding.root
@@ -161,10 +159,11 @@ class DashboardFragment : Fragment() {
     }
 
     // function to read the data from database and set the values
-    private fun readUserData(dao: Dao) {
+    private fun readUserData() {
 
         val user = db.readData()
 
+        // TODO: 1/18/21 drink fragment bug sebebi bu olabilir
         // set metric selector
         if (user.metric == "Metric") {
             binding.metricRadio.position = 0
