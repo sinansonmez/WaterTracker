@@ -174,6 +174,7 @@ class DashboardViewModel(private val app: Application) : AndroidViewModel(app) {
         }
 
         val date = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
+        Timber.d("date: $date")
         val time = SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().time).toString()
         val drinkType = _drinkType.value.toString()
 
