@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="notificationsViewModel"
+            type="com.afl.waterReminderDrinkAlarmMonitor.ui.notifications.NotificationsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/notificationPermissionContainer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/notification_container_border"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/notificationPermissionText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:layout_weight="0.6"
+                android:text="@string/allow_notifications"
+                android:textColor="@color/reply_black_900"
+                android:textSize="@dimen/_14ssp" />
+
+            <com.suke.widget.SwitchButton
+                android:id="@+id/notificationPermissionSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                app:sb_checked_color="@color/water_blue_100" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notificationContainerTobeHidden"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/notificationPermissionContainer">
+
+            <LinearLayout
+                android:id="@+id/notificationStartTimeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_56sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/notification_container_border"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/notificationPermissionContainer">
+
+                <TextView
+                    android:id="@+id/notificationStartTimeText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_weight="0.7"
+                    android:text="@string/start_time"
+                    android:textColor="@color/reply_black_900"
+                    android:textSize="@dimen/_14ssp" />
+
+                <Spinner
+                    android:spinnerMode="dialog"
+                    android:tag="starting_time"
+                    android:id="@+id/startingTimeSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/notificationEndTimeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_56sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/notification_container_border"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/notificationPermissionContainer">
+
+                <TextView
+                    android:id="@+id/notificationEndTimeText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_weight="0.7"
+                    android:text="@string/finish_time"
+                    android:textColor="@color/reply_black_900"
+                    android:textSize="@dimen/_14ssp" />
+
+                <Spinner
+                    android:spinnerMode="dialog"
+                    android:tag="finishing_time"
+                    android:id="@+id/finishingTimeSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/notificationIntervalContainer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_56sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/notification_container_border"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/notificationPermissionContainer">
+
+                <TextView
+                    android:id="@+id/notificationIntervalText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_weight="0.7"
+                    android:text="@string/interval"
+                    android:textColor="@color/reply_black_900"
+                    android:textSize="@dimen/_14ssp" />
+
+                <Spinner
+                    android:spinnerMode="dialog"
+                    android:tag="interval_time"
+                    android:id="@+id/intervalSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

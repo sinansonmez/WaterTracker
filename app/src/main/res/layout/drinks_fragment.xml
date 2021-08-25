@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.drinks.DrinksFragment">
+
+    <data>
+
+        <variable
+            name="dashboardViewModel"
+            type="com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/selectDrinkText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_6sdp"
+            android:text="@string/select_your_drink"
+            android:textAlignment="center"
+            android:textColor="@color/reply_black_900"
+            android:textSize="@dimen/_20ssp"
+            app:layout_constraintBottom_toTopOf="@id/firstRowDrinkContainer"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/firstRowDrinkContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/secondRowDrinkContainer"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/selectDrinkText">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/waterButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="true"
+                android:drawableTop="@drawable/ic_water"
+                android:gravity="center"
+                android:tag="water"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/water"
+                android:textOn="@string/water"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/coffeeButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_coffee"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="coffee"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/coffee"
+                android:textOn="@string/coffee"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/teaButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_tea"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="tea"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/tea"
+                android:textOn="@string/tea"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/juiceButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_juice"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="juice"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/juice"
+                android:textOn="@string/juice"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/secondRowDrinkContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/thirdRowDrinkContainer"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/firstRowDrinkContainer">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/sodaButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_soda"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="soda"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/soda"
+                android:textOn="@string/soda"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/beerButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_beer"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="beer"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/beer"
+                android:textOn="@string/beer"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/wineButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_wine"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="wine"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/wine"
+                android:textOn="@string/wine"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/milkButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_milk"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="milk"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/milk"
+                android:textOn="@string/milk"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/thirdRowDrinkContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/guidelineDrinkFragment"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/secondRowDrinkContainer">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/yogurtButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_yogurt"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="yogurt"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/yogurt"
+                android:textOn="@string/yogurt"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/milkshakeButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_milkshake"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="milkshake"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/milkshake"
+                android:textOn="@string/milkshake"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/energyButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_energy"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="energy"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/energy"
+                android:textOn="@string/energy"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/lemonadeButton"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:background="@drawable/toggle_selector"
+                android:checked="false"
+                android:drawableTop="@drawable/ic_lemonade"
+                android:drawablePadding="0dp"
+                android:gravity="center"
+                android:tag="lemonade"
+                android:textColor="@color/reply_white_50"
+                android:textOff="@string/lemonade"
+                android:textOn="@string/lemonade"
+                android:textSize="@dimen/_8ssp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineDrinkFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+
+        <LinearLayout
+            android:id="@+id/amountContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/drinkButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guidelineDrinkFragment">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/plusButton"
+                android:layout_width="@dimen/_50ssp"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> dashboardViewModel.drinkAmountHandler(`plus`)}"
+                android:text="+"
+                android:textSize="@dimen/_20sdp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/amountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{dashboardViewModel.drinkAmount.toString()}"
+                android:textColor="@color/reply_black_900"
+                android:textSize="@dimen/_20ssp" />
+
+            <TextView
+                android:id="@+id/metricText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" ml"
+                android:textColor="@color/reply_black_900"
+                android:textSize="@dimen/_20ssp" />
+
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/minusButton"
+                android:layout_width="@dimen/_50ssp"
+                android:layout_height="wrap_content"
+                android:onClick="@{() ->dashboardViewModel.drinkAmountHandler(`minus`)}"
+                android:text="-"
+                android:textSize="@dimen/_20sdp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/drinkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:text="@string/drink"
+            app:layout_constraintBottom_toTopOf="@id/adView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/amountContainer" />
+
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="[YOUR_AD_UNIT_ID]"
+            ads:layout_constraintBottom_toBottomOf="parent"
+            ads:layout_constraintTop_toBottomOf="@id/drinkButton" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="app_name">Water Reminder</string>
+        <string name="title_home">Ana Sayfa</string>
+        <string name="title_setting">Ayarlar</string>
+        <string name="title_notifications">Bildirimler</string>
+        <string name="info_text">İçmen gereken su miktarı budur. İstersen tabi ki arttırabilirsin</string>
+        <string name="water_notification_channel_id">water_channel</string>
+        <string name="notification_title">Su İçmeyi Unutma</string>
+        <string name="water_notification_channel_name">Water</string>
+        <string name="select_your_drink">İçecek Seç</string>
+        <string name="water">Su</string>
+        <string name="coffee">Kahve</string>
+        <string name="tea">Çay</string>
+        <string name="juice">Meyve</string>
+        <string name="soda">Kola</string>
+        <string name="beer">Bira</string>
+        <string name="wine">Şarap</string>
+        <string name="milk">Süt</string>
+        <string name="yogurt">Yoğurt</string>
+        <string name="milkshake">Milkshake</string>
+        <string name="energy">Enerji</string>
+        <string name="lemonade">Limonata</string>
+        <string name="drink">İç</string>
+        <string name="age">Yaş</string>
+        <string name="weight">Kilo</string>
+        <string name="male">Erkek</string>
+        <string name="female">Kadın</string>
+        <string name="metric">Metrik</string>
+        <string name="american">Amerikan</string>
+        <string name="drunk">İçilen</string>
+        <string name="target">Hedef</string>
+        <string name="allow_notifications">Bildirimlere izin ver</string>
+        <string name="start_time">Başlangıç saati</string>
+        <string name="finish_time">Bitiş saati</string>
+        <string name="interval">Bildirim aralığı</string>
+    <string name="please_type_age">Oops. Lütfen yaşınızı giriniz</string>
+    <string name="please_type_weight">Oops. Lütfen kilonuzu giriniz</string>
+    <string name="please_type_age_weigh">Oops. Lütfen kilonuzu/yaşınızı giriniz</string>
+    <string name="select_drink">Oops. Lütfen önce içeceğinizi seçiniz</string>
+    <string name="notification_info">Su içme zamani geldi</string>
+    <string name="drink_image_button_dialog_message">İçecegi silmek ister misin?</string>
+    <string name="drunk_list_action_dialog_yes_button">EVET</string>
+
+        <string-array name="starting_hours_array">
+            <item>07:00</item>
+            <item>08:00</item>
+            <item>09:00</item>
+            <item>10:00</item>
+            <item>11:00</item>
+            <item>12:00</item>
+            <item>13:00</item>
+            <item>14:00</item>
+            <item>15:00</item>
+            <item>16:00</item>
+            <item>17:00</item>
+            <item>18:00</item>
+            <item>19:00</item>
+            <item>20:00</item>
+            <item>21:00</item>
+            <item>22:00</item>
+            <item>23:00</item>
+        </string-array>
+
+        <string-array name="finishing_hours_array">
+            <item>23:00</item>
+            <item>22:00</item>
+            <item>21:00</item>
+            <item>20:00</item>
+            <item>19:00</item>
+            <item>18:00</item>
+            <item>17:00</item>
+            <item>16:00</item>
+            <item>15:00</item>
+            <item>14:00</item>
+            <item>13:00</item>
+            <item>12:00</item>
+            <item>11:00</item>
+            <item>10:00</item>
+            <item>09:00</item>
+            <item>08:00</item>
+            <item>07:00</item>
+        </string-array>
+
+        <string-array name="interval_array">
+            <item>1 saat</item>
+            <item>2 saat</item>
+            <item>3 saat</item>
+        </string-array>
+    <string name="drunk_list_action_dialog_no_button">HAYIR</string>
+    <string name="history">Geçmiş</string>
+    <string name="title_history">Geçmiş</string>
+    <string name="selected_month">Seçilen ay</string>
+    <string name="january">Ocak</string>
+    <string name="july">Temmuz</string>
+    <string name="august">Ağustos</string>
+    <string name="september">Eylül</string>
+    <string name="april">Nisan</string>
+    <string name="december">Aralık</string>
+    <string name="february">Şubat</string>
+    <string name="june">Haziran</string>
+    <string name="march">Mart</string>
+    <string name="may">Mayıs</string>
+    <string name="november">Kasım</string>
+    <string name="october">Ekim</string>
+
+
+</resources>

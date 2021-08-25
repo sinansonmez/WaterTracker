@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="dashboardViewModel"
+            type="com.afl.waterReminderDrinkAlarmMonitor.ui.dashboard.DashboardViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/water_blue_100"
+            android:indeterminateTintMode="src_atop"
+            android:visibility="invisible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <co.ceryle.radiorealbutton.RadioRealButtonGroup
+            android:id="@+id/metric_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            app:layout_constraintBottom_toTopOf="@id/age_edit_text_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progress_bar"
+            app:rrbg_backgroundColor="@color/reply_blue_50"
+            app:rrbg_dividerSize="@dimen/_1sdp"
+            app:rrbg_radius="@dimen/_6sdp"
+            app:rrbg_selectorSize="@dimen/_6sdp">
+
+            <co.ceryle.radiorealbutton.RadioRealButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:rrb_checked="true"
+                app:rrb_drawable="@drawable/ic_male_black"
+                app:rrb_drawableHeight="@dimen/_36sdp"
+                app:rrb_drawableTint="@color/reply_blue_50"
+                app:rrb_drawableWidth="@dimen/_1sdp"
+                app:rrb_ripple="true"
+                app:rrb_rippleColor="@color/water_blue_100"
+                app:rrb_selectorColor="@color/reply_black_800"
+                app:rrb_text="@string/metric"
+                app:rrb_textColor="@color/reply_black_900" />
+
+            <co.ceryle.radiorealbutton.RadioRealButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:rrb_ripple="true"
+                app:rrb_rippleColor="@color/water_blue_100"
+                app:rrb_text="@string/american"
+                app:rrb_textColor="@color/reply_black_900" />
+
+        </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/age_edit_text_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            app:boxBackgroundColor="@color/reply_blue_50"
+            app:layout_constraintBottom_toTopOf="@id/weight_edit_text_layout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/metric_radio"
+            app:startIconDrawable="@drawable/ic_people_black_24dp"
+            app:startIconTint="@color/water_blue_100">
+
+            <EditText
+                android:id="@+id/age_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/age"
+                android:inputType="number"
+                android:maxLength="2"
+                android:text="@{dashboardViewModel.age}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/weight_edit_text_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            app:boxBackgroundColor="@color/reply_blue_50"
+            app:layout_constraintBottom_toTopOf="@id/gender_radio"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/age_edit_text_layout"
+            app:startIconDrawable="@drawable/ic_weight_black"
+            app:startIconTint="@color/water_blue_100">
+
+
+            <EditText
+                android:id="@+id/weight_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/weight"
+                android:inputType="number"
+                android:maxLength="3"
+                android:text="@{dashboardViewModel.weight}" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <co.ceryle.radiorealbutton.RadioRealButtonGroup
+            android:id="@+id/gender_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
+            app:layout_constraintBottom_toTopOf="@id/guideline"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/weight_edit_text_layout"
+            app:rrbg_backgroundColor="@color/reply_blue_50"
+            app:rrbg_dividerSize="@dimen/_1sdp"
+            app:rrbg_radius="@dimen/_6sdp"
+            app:rrbg_selectorSize="@dimen/_6sdp">
+
+            <co.ceryle.radiorealbutton.RadioRealButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:rrb_checked="true"
+                app:rrb_drawable="@drawable/ic_male_black"
+                app:rrb_drawableHeight="@dimen/_30sdp"
+                app:rrb_drawablePadding="@dimen/_8sdp"
+                app:rrb_drawableTint="@color/water_blue_100"
+                app:rrb_drawableWidth="@dimen/_36sdp"
+                app:rrb_ripple="true"
+                app:rrb_rippleColor="@color/water_blue_100"
+                app:rrb_selectorColor="@color/reply_black_800"
+                app:rrb_text="@string/male"
+                app:rrb_textColor="@color/reply_black_900" />
+
+            <co.ceryle.radiorealbutton.RadioRealButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:rrb_drawable="@drawable/ic_female_black"
+                app:rrb_drawableGravity="right"
+                app:rrb_drawableHeight="@dimen/_36sdp"
+                app:rrb_drawablePadding="@dimen/_8sdp"
+                app:rrb_drawableTint="@color/water_blue_100"
+                app:rrb_drawableWidth="@dimen/_30sdp"
+                app:rrb_ripple="true"
+                app:rrb_rippleColor="@color/water_blue_100"
+                app:rrb_text="@string/female"
+                app:rrb_textColor="@color/reply_black_900" />
+        </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.7" />
+
+
+        <TextView
+            android:id="@+id/info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_16sdp"
+            android:text="@string/info_text"
+            android:textAlignment="center"
+            android:textColor="@color/reply_black_900"
+            app:layout_constraintBottom_toTopOf="@id/water_seek_bar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline" />
+
+        <com.xw.repo.BubbleSeekBar
+            android:id="@+id/water_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            app:bsb_auto_adjust_section_mark="true"
+            app:bsb_bubble_color="@color/water_blue_100"
+            app:bsb_bubble_text_color="@color/reply_blue_50"
+            app:bsb_max="5000"
+            app:bsb_min="0"
+            app:bsb_second_track_color="@color/water_blue_100"
+            app:bsb_section_count="10"
+            app:bsb_section_text_color="@color/reply_blue_800"
+            app:bsb_section_text_interval="2"
+            app:bsb_section_text_position="below_section_mark"
+            app:bsb_seek_step_section="true"
+            app:bsb_show_section_mark="false"
+            app:bsb_touch_to_seek="true"
+            app:bsb_track_color="@color/reply_blue_800"
+            app:bsb_track_size="@dimen/_4sdp"
+            app:layout_constraintBottom_toBottomOf="@id/water_amount_text"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/info_text" />
+
+        <TextView
+            android:id="@+id/water_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_16sdp"
+            android:text="@{dashboardViewModel.text}"
+            android:textAlignment="center"
+            android:textColor="@color/reply_black_900"
+            android:textSize="@dimen/_20ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/water_seek_bar" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

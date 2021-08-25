@@ -1,0 +1,106 @@
+<resources>
+    <string name="app_name">Water Reminder</string>
+    <string name="title_home">Home</string>
+    <string name="title_setting">Settings</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="info_text">Here is water amount you should drink, but feel free to change it</string>
+    <string name="water_notification_channel_id">water_channel</string>
+    <string name="notification_title">Water Reminder</string>
+    <string name="water_notification_channel_name">Water</string>
+    <string name="select_your_drink">Select Your Drink</string>
+    <string name="water">Water</string>
+    <string name="coffee">Coffee</string>
+    <string name="tea">Tea</string>
+    <string name="juice">Juice</string>
+    <string name="soda">Soda</string>
+    <string name="beer">Beer</string>
+    <string name="wine">Wine</string>
+    <string name="milk">Milk</string>
+    <string name="yogurt">Yogurt</string>
+    <string name="milkshake">Milkshake</string>
+    <string name="energy">Energy</string>
+    <string name="lemonade">Lemonade</string>
+    <string name="drink">DRINK</string>
+    <string name="age">Age</string>
+    <string name="weight">Weight</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="metric">Metric</string>
+    <string name="american">American</string>
+    <string name="drunk">Drunk</string>
+    <string name="target">Target</string>
+    <string name="allow_notifications">Allow notifications</string>
+    <string name="start_time">Start time</string>
+    <string name="finish_time">Finish time</string>
+    <string name="interval">Interval</string>
+    <string name="please_type_age">Please type your age</string>
+    <string name="please_type_weight">Please type your weight</string>
+    <string name="please_type_age_weigh">Please type your age/weight</string>
+    <string name="select_drink">Please select your drink</string>
+    <string name="notification_info">It is time to drink water</string>
+    <string name="drink_image_button_dialog_message">Delete the drink?</string>
+    <string name="drunk_list_action_dialog_yes_button">YES</string>
+    <string name="drunk_list_action_dialog_no_button">NO</string>
+    <string name="history">History</string>
+    <string name="title_history">History</string>
+    <string name="selected_month">Selected month</string>
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+
+    <string-array name="starting_hours_array">
+        <item>07:00</item>
+        <item>08:00</item>
+        <item>09:00</item>
+        <item>10:00</item>
+        <item>11:00</item>
+        <item>12:00</item>
+        <item>13:00</item>
+        <item>14:00</item>
+        <item>15:00</item>
+        <item>16:00</item>
+        <item>17:00</item>
+        <item>18:00</item>
+        <item>19:00</item>
+        <item>20:00</item>
+        <item>21:00</item>
+        <item>22:00</item>
+        <item>23:00</item>
+    </string-array>
+
+    <string-array name="finishing_hours_array">
+        <item>23:00</item>
+        <item>22:00</item>
+        <item>21:00</item>
+        <item>20:00</item>
+        <item>19:00</item>
+        <item>18:00</item>
+        <item>17:00</item>
+        <item>16:00</item>
+        <item>15:00</item>
+        <item>14:00</item>
+        <item>13:00</item>
+        <item>12:00</item>
+        <item>11:00</item>
+        <item>10:00</item>
+        <item>09:00</item>
+        <item>08:00</item>
+        <item>07:00</item>
+    </string-array>
+
+    <string-array name="interval_array">
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>3 hours</item>
+    </string-array>
+
+</resources>
