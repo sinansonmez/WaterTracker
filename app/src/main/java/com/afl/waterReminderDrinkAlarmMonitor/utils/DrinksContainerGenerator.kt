@@ -36,7 +36,7 @@ class DrinksContainerGenerator {
 
     fun createTextViewForDrinks(context: Context?, drinkType: String): TextView {
 
-        // iciecek adini tutacak text view olustur
+        // create the text view to store drink name
         return TextView(context).apply {
             text = when (drinkType) {
                 "water" -> context?.getString(R.string.water)

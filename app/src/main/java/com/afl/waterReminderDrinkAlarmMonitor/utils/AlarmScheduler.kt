@@ -25,9 +25,6 @@ object AlarmScheduler {
             datetimeToAlarm.set(Calendar.SECOND, 0)
 
             val pendingIntent = createPendingIntent(context, time)
-
-            Log.d("database", "alarm is scheduled for $time")
-
             startAlarm(
                 datetimeToAlarm,
                 context,
@@ -38,16 +35,15 @@ object AlarmScheduler {
 
     }
 
-    // yukaridaki fonksiyonun devami
     private fun startAlarm(datetimeToAlarm: Calendar, context: Context, intent: PendingIntent) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        // eger gecmis bir zaman secilirse ertesi gune notification kuruyor
+        // if user selects previous day, set an alarm for next day
         if (datetimeToAlarm.before(Calendar.getInstance())) {
             datetimeToAlarm.add(Calendar.DATE, 1)
         }
 
-        // TODO: 3/5/21 bunu setexact'a cevirebilirsin. alarm receiver'da kullanicinin talebine göre (saatte 1 iki saatte bir olarak kurabilirsin)
+        // TODO: 3/5/21 think about to convert it to setexact'a
         // alarmManager.setExact(AlarmManager.RTC_WAKEUP, datetimeToAlarm.timeInMillis, pendingIntent)
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
@@ -89,7 +85,6 @@ object AlarmScheduler {
     ): PendingIntent? {
         // create the intent using a unique type
         val intent = Intent(context.applicationContext, AlarmReceiver::class.java)
-
         return PendingIntent.getBroadcast(context, alarmHour, intent, 0)
     }
 }

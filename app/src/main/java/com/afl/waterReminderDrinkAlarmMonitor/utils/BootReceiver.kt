@@ -52,8 +52,6 @@ class BootReceiver : BroadcastReceiver() {
 
                 notPermission = notification.notificationPreference
 
-                Log.d("database", " permission is $notification")
-
                 if (notPermission == 1) {
                     startingTime = notification.startingTime
                     finishingTime = notification.finishingTime
@@ -65,11 +63,7 @@ class BootReceiver : BroadcastReceiver() {
                     )
 
                     if (context != null && intent?.action.equals("android.intent.action.BOOT_COMPLETED")) {
-
-                        Log.d("database", "alarm scheduler is called")
-
                          AlarmScheduler.scheduleAlarm(context, notTimes)
-
                     }
                 }
             }

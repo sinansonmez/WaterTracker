@@ -24,9 +24,7 @@ class DrinksContainerAdapter(private val drinks: MutableList<Drink>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-
         val containerForDrinks = layoutInflater.inflate(R.layout.single_drink_container, parent, false)
-
         return CustomViewHolder(containerForDrinks)
     }
 

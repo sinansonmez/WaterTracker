@@ -13,7 +13,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.d("database", "onReceive() called with: context = [$context], intent = [$intent]")
         if (context != null && intent != null) {
             if (intent.extras != null) {
                 val notificationManager =

@@ -62,7 +62,6 @@ class DatabaseHelper(val context: Context) :
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
 
     // her günün toplam içilen miktarı bir liste olarak getiriyor
-    //
     fun readDrinkDataDetailsDaySum(): MutableList<Drink> {
         val drunkList = mutableListOf<Drink>()
         val sqliteDB = this.writableDatabase
@@ -111,7 +110,7 @@ class DatabaseHelper(val context: Context) :
         sqliteDB.close()
     }
 
-    // yeni kullanici ekliyor
+    // add new user to database
     fun insertData(user: User) {
         val sqliteDB = this.writableDatabase
         val contentValues = ContentValues()
@@ -126,7 +125,7 @@ class DatabaseHelper(val context: Context) :
         sqliteDB.close()
     }
 
-    // user tablosundaki tum datayi okuyor
+    // read all data from user table
     fun readData(): User {
         val sqliteDB = this.writableDatabase
         val query = "SELECT * FROM $TABLE_NAME LIMIT 1"
@@ -145,7 +144,7 @@ class DatabaseHelper(val context: Context) :
         return user
     }
 
-    // user tablosunda kullanici var mi kontrol ediyor
+    // checks if there is an existing user in database
     fun checkUserTableCount(): Int {
         val sqliteDB = this.writableDatabase
         val query = "SELECT * FROM $TABLE_NAME"
@@ -158,7 +157,7 @@ class DatabaseHelper(val context: Context) :
         return count
     }
 
-    // bu fonksiyon sadece son gunun toplam icilen miktari getiriyor
+    // get the total drunk amount on the last day
     fun readDrinkData(): Int {
         val sqliteDB = this.writableDatabase
         val query =
@@ -176,11 +175,10 @@ class DatabaseHelper(val context: Context) :
         val date = SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().time).toString()
         result.close()
         sqliteDB.close()
-        // eger gun bugunun gunu degilse 0 getiriyor
+        // if not today set it to zero
         return if (sum.date == date) sum.total else 0
     }
 
-    // icilen icecegi ek bilgiler ile birlikte database yaziyor
     fun insertDrinkData(drink: Drink) {
         val sqliteDB = this.writableDatabase
         val contentValues = ContentValues()
