@@ -1,0 +1,41 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:1-8:12
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:1-8:12
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:1-8:12
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:1-8:12
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:1-8:12
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:1-8:12
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:1-8:12
+	package
+		ADDED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:2:3-51
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+		ADDED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:1-8:12
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+		ADDED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:1-8:12
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:1:11-69
+application
+ADDED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:3:3-5:17
+	android:supportsRtl
+		ADDED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml:3:16-42
+uses-sdk
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+		ADDED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+		ADDED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
+		INJECTED from /Users/sinansonmez/AndroidStudioProjects/WaterReminderApp/nativetemplates/src/main/AndroidManifest.xml
