@@ -37,7 +37,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -89,7 +92,7 @@ dependencies {
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
 
     // google admob
-    implementation 'com.google.android.gms:play-services-ads:18.3.0'
+    implementation 'com.google.android.gms:play-services-ads:20.3.0'
 
     // chart library https://github.com/PhilJay/MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
@@ -102,9 +105,9 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // firebase
-    implementation 'com.google.firebase:firebase-analytics:17.2.2'
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
-    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
+    implementation 'com.google.firebase:firebase-analytics:19.0.1'
+    implementation 'com.google.firebase:firebase-analytics-ktx:19.0.1'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.1'
 
     // Android rate this app library
     implementation 'io.github.kobakei:ratethisapp:1.2.0'
