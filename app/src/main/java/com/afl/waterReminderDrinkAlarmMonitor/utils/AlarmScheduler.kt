@@ -9,7 +9,6 @@ import java.util.*
 
 object AlarmScheduler {
 
-
     /**
      * Schedules a single alarm
      */
@@ -25,7 +24,7 @@ object AlarmScheduler {
             datetimeToAlarm.set(Calendar.MINUTE, 0)
             datetimeToAlarm.set(Calendar.SECOND, 0)
 
-            val pendingIntent = createPendingIntent(context,time)
+            val pendingIntent = createPendingIntent(context, time)
 
             Log.d("database", "alarm is scheduled for $time")
 
@@ -37,19 +36,19 @@ object AlarmScheduler {
 
         }
 
-
     }
 
     // yukaridaki fonksiyonun devami
     private fun startAlarm(datetimeToAlarm: Calendar, context: Context, intent: PendingIntent) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-//        eger gecmis bir zaman secilirse ertesi gune notification kuruyor
+        // eger gecmis bir zaman secilirse ertesi gune notification kuruyor
         if (datetimeToAlarm.before(Calendar.getInstance())) {
             datetimeToAlarm.add(Calendar.DATE, 1)
         }
 
-//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, datetimeToAlarm.timeInMillis, pendingIntent)
+        // TODO: 3/5/21 bunu setexact'a cevirebilirsin. alarm receiver'da kullanicinin talebine göre (saatte 1 iki saatte bir olarak kurabilirsin)
+        // alarmManager.setExact(AlarmManager.RTC_WAKEUP, datetimeToAlarm.timeInMillis, pendingIntent)
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             datetimeToAlarm.timeInMillis,
@@ -57,11 +56,10 @@ object AlarmScheduler {
             intent
         )
 
-//        Log.d("database", "start alarm is called ${datetimeToAlarm.time}")
     }
 
     // function to cancel all alarms
-    fun cancelAlarm(context: Context ) {
+    fun cancelAlarm(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(context, AlarmReceiver::class.java)
@@ -74,14 +72,8 @@ object AlarmScheduler {
 
         for (time in times) {
             val pendingIntent = PendingIntent.getBroadcast(context, time, intent, 0)
-
             alarmManager.cancel(pendingIntent)
-
-//            Log.d("database", "alarm is canceled $pendingIntent")
         }
-
-
-//        Log.d("database", "alarm is canceled")
     }
 
     /**
@@ -91,8 +83,10 @@ object AlarmScheduler {
      * @param reminderData ReminderData for the notification
      * @param day          String representation of the day
      */
-    private fun createPendingIntent(context: Context,
-                                    alarmHour: Int): PendingIntent? {
+    private fun createPendingIntent(
+        context: Context,
+        alarmHour: Int
+    ): PendingIntent? {
         // create the intent using a unique type
         val intent = Intent(context.applicationContext, AlarmReceiver::class.java)
 

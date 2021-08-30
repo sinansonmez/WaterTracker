@@ -68,7 +68,7 @@ class BootReceiver : BroadcastReceiver() {
 
                         Log.d("database", "alarm scheduler is called")
 
-                        AlarmScheduler.scheduleAlarm(context, notTimes)
+                         AlarmScheduler.scheduleAlarm(context, notTimes)
 
                     }
                 }
