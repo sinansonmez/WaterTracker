@@ -17,10 +17,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
-import timber.log.Timber
 
 private const val count = 30
 

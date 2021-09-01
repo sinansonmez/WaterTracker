@@ -16,16 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.afl.waterReminderDrinkAlarmMonitor.R
 import com.afl.waterReminderDrinkAlarmMonitor.databinding.HistoryFragmentBinding
 import com.afl.waterReminderDrinkAlarmMonitor.utils.*
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 

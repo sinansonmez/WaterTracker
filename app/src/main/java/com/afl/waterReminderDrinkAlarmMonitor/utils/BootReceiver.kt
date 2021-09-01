@@ -3,7 +3,6 @@ package com.afl.waterReminderDrinkAlarmMonitor.utils
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -13,8 +12,6 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
 
         val dao = AppDatabase.getDatabase(context).dao()
-
-        Log.d("database", "onReceive is called")
 
         var notPermission: Int = 0
         var startingTime: Int = 0

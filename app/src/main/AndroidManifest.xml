@@ -24,7 +24,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="[ADD_ID]" />
+            android:value="ca-app-pub-7954399632679605~8733851129" />
 
         <activity
             android:name="com.afl.waterReminderDrinkAlarmMonitor.SplashScreenActivity"

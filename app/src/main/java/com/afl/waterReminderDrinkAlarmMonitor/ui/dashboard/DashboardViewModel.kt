@@ -9,7 +9,6 @@ import com.afl.waterReminderDrinkAlarmMonitor.utils.DatabaseHelper
 import com.afl.waterReminderDrinkAlarmMonitor.model.Drink
 import com.afl.waterReminderDrinkAlarmMonitor.model.User
 import com.xw.repo.BubbleSeekBar
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 

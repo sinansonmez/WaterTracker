@@ -49,7 +49,6 @@ class DrinksFragment : Fragment() {
 
         // admob setup
         // dummy ad banner id ca-app-pub-3940256099942544/6300978111
-        // real ad banner id ca-app-pub-7954399632679605/9743680462
         val adRequest = AdRequest.Builder().build()
         binding.adView.loadAd(adRequest)
 
