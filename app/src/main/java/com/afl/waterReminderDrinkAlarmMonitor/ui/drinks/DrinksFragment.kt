@@ -22,7 +22,8 @@ import kotlinx.coroutines.launch
 class DrinksFragment : Fragment() {
 
     companion object {
-        fun newInstance() = DrinksFragment()
+        fun newInstance() =
+            DrinksFragment()
     }
 
     private lateinit var dashboardViewModel: DashboardViewModel
@@ -116,17 +117,20 @@ class DrinksFragment : Fragment() {
         }
 
     private fun buttonListeners() {
-        binding.waterButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.coffeeButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.teaButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.juiceButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.sodaButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.beerButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.wineButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.milkButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.yogurtButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.milkshakeButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.energyButton.setOnCheckedChangeListener(toggleButtonHandler)
-        binding.lemonadeButton.setOnCheckedChangeListener(toggleButtonHandler)
+        val buttons = mutableListOf(
+            binding.waterButton,
+            binding.coffeeButton,
+            binding.teaButton,
+            binding.juiceButton,
+            binding.sodaButton,
+            binding.beerButton,
+            binding.wineButton,
+            binding.milkButton,
+            binding.yogurtButton,
+            binding.milkshakeButton,
+            binding.energyButton,
+            binding.lemonadeButton
+        )
+        buttons.forEach { it.setOnCheckedChangeListener(toggleButtonHandler) }
     }
 }
